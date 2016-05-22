@@ -1,0 +1,3 @@
+rootProject.name = 'exbin-utils-java'
+
+include ":modules:simplyhtml"

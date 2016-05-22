@@ -1,0 +1,49 @@
+apply plugin: 'base'
+apply plugin: 'distribution'
+apply plugin: 'maven-publish'
+version = '0.1.0-SNAPSHOT'
+
+task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
+    gradleVersion = '2.1'
+}
+
+subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
+
+publish.dependsOn {
+    project(':modules').subprojects.publish
+}
+
+distributions {
+    main {
+        contents {
+            duplicatesStrategy = 'exclude'
+
+            from project.rootDir
+            from 'src/dist'
+            include 'readme.txt'
+
+            project(':modules').subprojects.each { p ->
+                p.plugins.withType(JavaPlugin) {
+                    into('') {
+                        from p.jar
+                        include '*'
+                        from p.sourceJar
+                        include '*'
+                        from p.javadocJar
+                        include '*'
+                    }
+                }
+            }
+
+            into('doc') {
+                from 'doc'
+                include '**'
+            }
+            into('resources') {
+                from 'resources'
+                include '**'
+                exclude 'private'
+            }
+        }
+    }
+}
