@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.utils.data.paged;
+package org.exbin.utils.binary_data;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, long length) {
         if (startFrom > data.length) {
-            throw new IndexOutOfBoundsException("Cannot insert after document");
+            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
         }
         if (length > 0) {
             byte[] newData = new byte[(int) (data.length + length)];
@@ -70,7 +70,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, byte[] insertedData) {
         if (startFrom > data.length) {
-            throw new IndexOutOfBoundsException("Cannot insert after document");
+            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
         }
         int length = insertedData.length;
         if (length > 0) {
@@ -85,7 +85,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, BinaryData insertedData) {
         if (startFrom > data.length) {
-            throw new IndexOutOfBoundsException("Cannot insert after document");
+            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
         }
         if (insertedData instanceof ByteArrayData) {
             insert(startFrom, ((ByteArrayData) insertedData).data);
