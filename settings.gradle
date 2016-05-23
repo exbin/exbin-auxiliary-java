@@ -1,3 +1,4 @@
 rootProject.name = 'exbin-utils-java'
 
 include ":modules:simplyhtml"
+include ":modules:exbin-binary_data"
