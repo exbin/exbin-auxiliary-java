@@ -49,44 +49,67 @@ public class PagedData implements EditableBinaryData {
     }
 
     @Override
-    public void insert(long startFrom, long length) {
-        insertUninitialized(startFrom, length);
-        fillData(startFrom, length);
+    public boolean isEmpty() {
+        return data.isEmpty();
     }
 
     @Override
-    public void insert(long startFrom, BinaryData insertedData) {
-        long dataSize = insertedData.getDataSize();
-        insertUninitialized(startFrom, dataSize);
-        replace(startFrom, insertedData, 0, dataSize);
+    public long getDataSize() {
+        return (data.size() > 1 ? (data.size() - 1) * pageSize : 0) + (data.size() > 0 ? data.get(data.size() - 1).length : 0);
     }
 
     @Override
-    public void insert(long startFrom, byte[] insertedData) {
-        insert(startFrom, insertedData, 0, insertedData.length);
-    }
-
-    @Override
-    public void insert(long startFrom, byte[] insertedData, int insertedDataOffset, int insertedDataLength) {
-        if (insertedDataLength <= 0) {
-            return;
-        }
-
-        insertUninitialized(startFrom, insertedDataLength);
-
-        while (insertedDataLength > 0) {
-            byte[] targetPage = getPage((int) (startFrom / pageSize));
-            int targetOffset = (int) (startFrom % pageSize);
-            int blockLength = pageSize - targetOffset;
-            if (blockLength > insertedDataLength) {
-                blockLength = insertedDataLength;
+    public void setDataSize(long size) {
+        long dataSize = getDataSize();
+        if (size > dataSize) {
+            int lastPage = (int) (dataSize / pageSize);
+            int lastPageSize = (int) (dataSize % pageSize);
+            long remaining = size - dataSize;
+            // extend last page
+            if (lastPageSize > 0) {
+                byte[] page = getPage(lastPage);
+                int nextPageSize = remaining + lastPageSize > pageSize ? pageSize : (int) remaining + lastPageSize;
+                byte[] newPage = new byte[nextPageSize];
+                System.arraycopy(page, 0, newPage, 0, lastPageSize);
+                setPage(lastPage, newPage);
+                remaining -= (nextPageSize - lastPageSize);
+                lastPage++;
             }
 
-            System.arraycopy(insertedData, insertedDataOffset, targetPage, targetOffset, blockLength);
-            insertedDataOffset += blockLength;
-            insertedDataLength -= blockLength;
-            startFrom += blockLength;
+            while (remaining > 0) {
+                int nextPageSize = remaining > pageSize ? pageSize : (int) remaining;
+                data.add(new byte[nextPageSize]);
+                remaining -= nextPageSize;
+            }
+        } else if (size < dataSize) {
+            int lastPage = (int) (size / pageSize);
+            int lastPageSize = (int) (size % pageSize);
+            // shrink last page
+            if (lastPageSize > 0) {
+                byte[] page = getPage(lastPage);
+                byte[] newPage = new byte[lastPageSize];
+                System.arraycopy(page, 0, newPage, 0, lastPageSize);
+                setPage(lastPage, newPage);
+                lastPage++;
+            }
+
+            for (int pageIndex = data.size() - 1; pageIndex >= lastPage; pageIndex--) {
+                data.remove(pageIndex);
+            }
         }
+    }
+
+    @Override
+    public byte getByte(long position) {
+        byte[] page = getPage((int) (position / pageSize));
+        return page[(int) (position % pageSize)];
+    }
+
+    @Override
+    public void setByte(long position, byte value) {
+        byte[] page;
+        page = getPage((int) (position / pageSize));
+        page[(int) (position % pageSize)] = value;
     }
 
     @Override
@@ -140,6 +163,54 @@ public class PagedData implements EditableBinaryData {
     }
 
     @Override
+    public void insert(long startFrom, long length) {
+        insertUninitialized(startFrom, length);
+        fillData(startFrom, length);
+    }
+
+    @Override
+    public void insert(long startFrom, BinaryData insertedData) {
+        long dataSize = insertedData.getDataSize();
+        insertUninitialized(startFrom, dataSize);
+        replace(startFrom, insertedData, 0, dataSize);
+    }
+
+    @Override
+    public void insert(long startFrom, BinaryData insertedData, long insertedDataOffset, long insertedDataLength) {
+        long dataSize = insertedData.getDataSize();
+        insertUninitialized(startFrom, dataSize);
+        replace(startFrom, insertedData, insertedDataOffset, insertedDataLength);
+    }
+
+    @Override
+    public void insert(long startFrom, byte[] insertedData) {
+        insert(startFrom, insertedData, 0, insertedData.length);
+    }
+
+    @Override
+    public void insert(long startFrom, byte[] insertedData, int insertedDataOffset, int insertedDataLength) {
+        if (insertedDataLength <= 0) {
+            return;
+        }
+
+        insertUninitialized(startFrom, insertedDataLength);
+
+        while (insertedDataLength > 0) {
+            byte[] targetPage = getPage((int) (startFrom / pageSize));
+            int targetOffset = (int) (startFrom % pageSize);
+            int blockLength = pageSize - targetOffset;
+            if (blockLength > insertedDataLength) {
+                blockLength = insertedDataLength;
+            }
+
+            System.arraycopy(insertedData, insertedDataOffset, targetPage, targetOffset, blockLength);
+            insertedDataOffset += blockLength;
+            insertedDataLength -= blockLength;
+            startFrom += blockLength;
+        }
+    }
+
+    @Override
     public void fillData(long startFrom, long length) {
         fillData(startFrom, length, (byte) 0);
     }
@@ -185,6 +256,27 @@ public class PagedData implements EditableBinaryData {
     }
 
     @Override
+    public void copyToArray(long startFrom, byte[] target, int offset, int length) {
+        while (length > 0) {
+            byte[] page = getPage((int) (startFrom / pageSize));
+            int pageOffset = (int) (startFrom % pageSize);
+            int copySize = pageSize - pageOffset;
+            if (copySize > length) {
+                copySize = length;
+            }
+
+            try {
+                System.arraycopy(page, pageOffset, target, offset, copySize);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                throw new OutOfBoundsException(ex);
+            }
+            length -= copySize;
+            offset += copySize;
+            startFrom += copySize;
+        }
+    }
+
+    @Override
     public void remove(long startFrom, long length) {
         if (length < 0) {
             throw new IllegalArgumentException("Length of removed block must be nonnegative");
@@ -203,11 +295,6 @@ public class PagedData implements EditableBinaryData {
     }
 
     @Override
-    public boolean isEmpty() {
-        return data.isEmpty();
-    }
-
-    @Override
     public void clear() {
         data.clear();
     }
@@ -218,52 +305,6 @@ public class PagedData implements EditableBinaryData {
 
     public int getPageSize() {
         return pageSize;
-    }
-
-    @Override
-    public long getDataSize() {
-        return (data.size() > 1 ? (data.size() - 1) * pageSize : 0) + (data.size() > 0 ? data.get(data.size() - 1).length : 0);
-    }
-
-    @Override
-    public void setDataSize(long size) {
-        long dataSize = getDataSize();
-        if (size > dataSize) {
-            int lastPage = (int) (dataSize / pageSize);
-            int lastPageSize = (int) (dataSize % pageSize);
-            long remaining = size - dataSize;
-            // extend last page
-            if (lastPageSize > 0) {
-                byte[] page = getPage(lastPage);
-                int nextPageSize = remaining + lastPageSize > pageSize ? pageSize : (int) remaining + lastPageSize;
-                byte[] newPage = new byte[nextPageSize];
-                System.arraycopy(page, 0, newPage, 0, lastPageSize);
-                setPage(lastPage, newPage);
-                remaining -= (nextPageSize - lastPageSize);
-                lastPage++;
-            }
-
-            while (remaining > 0) {
-                int nextPageSize = remaining > pageSize ? pageSize : (int) remaining;
-                data.add(new byte[nextPageSize]);
-                remaining -= nextPageSize;
-            }
-        } else if (size < dataSize) {
-            int lastPage = (int) (size / pageSize);
-            int lastPageSize = (int) (size % pageSize);
-            // shrink last page
-            if (lastPageSize > 0) {
-                byte[] page = getPage(lastPage);
-                byte[] newPage = new byte[lastPageSize];
-                System.arraycopy(page, 0, newPage, 0, lastPageSize);
-                setPage(lastPage, newPage);
-                lastPage++;
-            }
-
-            for (int pageIndex = data.size() - 1; pageIndex >= lastPage; pageIndex--) {
-                data.remove(pageIndex);
-            }
-        }
     }
 
     /**
@@ -287,16 +328,113 @@ public class PagedData implements EditableBinaryData {
     }
 
     @Override
-    public byte getByte(long position) {
-        byte[] page = getPage((int) (position / pageSize));
-        return page[(int) (position % pageSize)];
+    public void replace(long targetPosition, BinaryData sourceData) {
+        replace(targetPosition, sourceData, 0, sourceData.getDataSize());
     }
 
     @Override
-    public void setByte(long position, byte value) {
-        byte[] page;
-        page = getPage((int) (position / pageSize));
-        page[(int) (position % pageSize)] = value;
+    public void replace(long targetPosition, BinaryData sourceData, long startFrom, long length) {
+        if (targetPosition + length > getDataSize()) {
+            setDataSize(targetPosition + length);
+        }
+
+        if (sourceData instanceof PagedData) {
+            if (sourceData != this || (startFrom > targetPosition) || (startFrom + length < targetPosition)) {
+                while (length > 0) {
+                    byte[] page = getPage((int) (targetPosition / pageSize));
+                    int offset = (int) (targetPosition % pageSize);
+
+                    byte[] sourcePage = ((PagedData) sourceData).getPage((int) (startFrom / ((PagedData) sourceData).getPageSize()));
+                    int sourceOffset = (int) (startFrom % ((PagedData) sourceData).getPageSize());
+
+                    int copySize = pageSize - offset;
+                    if (copySize > ((PagedData) sourceData).getPageSize() - sourceOffset) {
+                        copySize = (int) (((PagedData) sourceData).getPageSize() - sourceOffset);
+                    }
+                    if (copySize > length) {
+                        copySize = (int) length;
+                    }
+
+                    try {
+                        System.arraycopy(sourcePage, sourceOffset, page, offset, copySize);
+                    } catch (ArrayIndexOutOfBoundsException ex) {
+                        throw new OutOfBoundsException(ex);
+                    }
+                    length -= copySize;
+                    targetPosition += copySize;
+                    startFrom += copySize;
+                }
+            } else {
+                targetPosition += length - 1;
+                startFrom += length - 1;
+                while (length > 0) {
+                    byte[] page = getPage((int) (targetPosition / pageSize));
+                    int upTo = (int) (targetPosition % pageSize) + 1;
+
+                    byte[] sourcePage = ((PagedData) sourceData).getPage((int) (startFrom / ((PagedData) sourceData).getPageSize()));
+                    int sourceUpTo = (int) (startFrom % ((PagedData) sourceData).getPageSize()) + 1;
+
+                    int copySize = upTo;
+                    if (copySize > sourceUpTo) {
+                        copySize = sourceUpTo;
+                    }
+                    if (copySize > length) {
+                        copySize = (int) length;
+                    }
+                    int offset = upTo - copySize;
+                    int sourceOffset = sourceUpTo - copySize;
+
+                    System.arraycopy(sourcePage, sourceOffset, page, offset, copySize);
+                    length -= copySize;
+                    targetPosition -= copySize;
+                    startFrom -= copySize;
+                }
+            }
+        } else {
+            while (length > 0) {
+                byte[] page = getPage((int) (targetPosition / pageSize));
+                int offset = (int) (targetPosition % pageSize);
+
+                int copySize = pageSize - offset;
+                if (copySize > length) {
+                    copySize = (int) length;
+                }
+
+                sourceData.copyToArray(startFrom, page, offset, copySize);
+
+                length -= copySize;
+                targetPosition += copySize;
+                startFrom += copySize;
+            }
+        }
+    }
+
+    @Override
+    public void replace(long targetPosition, byte[] replacingData) {
+        replace(targetPosition, replacingData, 0, replacingData.length);
+    }
+
+    @Override
+    public void replace(long targetPosition, byte[] replacingData, int replacingDataOffset, int length) {
+        if (targetPosition + length > getDataSize()) {
+            setDataSize(targetPosition + length);
+        }
+
+        while (length > 0) {
+            byte[] page = getPage((int) (targetPosition / pageSize));
+            int offset = (int) (targetPosition % pageSize);
+
+            int copySize = pageSize - offset;
+            if (copySize > length) {
+                copySize = (int) length;
+            }
+
+            System.arraycopy(replacingData, replacingDataOffset, page, offset, copySize);
+
+            length -= copySize;
+            targetPosition += copySize;
+            replacingDataOffset += copySize;
+        }
     }
 
     @Override
@@ -327,8 +465,10 @@ public class PagedData implements EditableBinaryData {
     }
 
     @Override
-    public void loadFromStream(InputStream inputStream, long startFrom, long dataSize) throws IOException {
-        try {
+    public long loadFromStream(InputStream inputStream, long startFrom, long dataSize) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet.");
+        /*try {
+            long loadedData = 0;
             data.clear();
             while (dataSize > 0) {
                 int blockSize = dataSize < pageSize ? (int) dataSize : pageSize;
@@ -350,7 +490,7 @@ public class PagedData implements EditableBinaryData {
             }
         } catch (IOException ex) {
             Logger.getLogger(PagedData.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } */
     }
 
     @Override
@@ -358,54 +498,5 @@ public class PagedData implements EditableBinaryData {
         for (byte[] dataPage : data) {
             outputStream.write(dataPage);
         }
-    }
-
-    @Override
-    public void replace(long targetPosition, BinaryData sourceData) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void replace(long targetPosition, BinaryData sourceData, long startFrom, long length) {
-        throw new UnsupportedOperationException("Not supported yet.");
-        /* if (targetData instanceof PagedData) {
-            if (targetData.getDataSize() < targetPos + length) {
-                targetData.setDataSize(targetPos + length);
-            }
-
-            while (length > 0) {
-                byte[] sourcePage = getPage((int) (startFrom / pageSize));
-                int sourceOffset = (int) (startFrom % pageSize);
-
-                byte[] targetPage;
-                int targetOffset;
-                targetPage = ((PagedData) targetData).getPage((int) (targetPos / ((PagedData) targetData).getPageSize()));
-                targetOffset = (int) (targetPos % ((PagedData) targetData).getPageSize());
-
-                int copySize = pageSize - sourceOffset;
-                if (copySize > ((PagedData) targetData).getPageSize() - targetOffset) {
-                    copySize = (int) (((PagedData) targetData).getPageSize() - targetOffset);
-                }
-                if (copySize > length) {
-                    copySize = (int) length;
-                }
-
-                System.arraycopy(sourcePage, sourceOffset, targetPage, targetOffset, copySize);
-                length -= copySize;
-                startFrom += copySize;
-                targetPos += copySize;
-            }
-        } else {
-            long targetDataSize = targetData.getDataSize();
-            if (targetDataSize > targetPos) {
-                if (targetDataSize > targetPos + length) {
-                    targetData.remove(targetPos, length);
-                } else {
-                    targetData.setDataSize(targetPos);
-                }
-            }
-
-            targetData.insert(targetPos, startFrom == 0 ? this : new XBOffsetBlockData(this, startFrom));
-        } */
     }
 }

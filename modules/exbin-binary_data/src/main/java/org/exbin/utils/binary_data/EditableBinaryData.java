@@ -21,10 +21,10 @@ import java.io.InputStream;
 /**
  * Interface for editable binary data.
  *
- * @version 0.1.0 2016/05/23
+ * @version 0.1.0 2016/05/24
  * @author ExBin Project (http://exbin.org)
  */
-interface EditableBinaryData extends BinaryData {
+public interface EditableBinaryData extends BinaryData {
 
     /**
      * Sets data size.
@@ -45,14 +45,6 @@ interface EditableBinaryData extends BinaryData {
     void setByte(long position, byte value);
 
     /**
-     * Inserts empty data of given length to given position.
-     *
-     * @param startFrom position to insert to
-     * @param length length of data
-     */
-    void insert(long startFrom, long length);
-
-    /**
      * Inserts data space of given length to given position without setting any
      * data to it.
      *
@@ -62,12 +54,30 @@ interface EditableBinaryData extends BinaryData {
     void insertUninitialized(long startFrom, long length);
 
     /**
+     * Inserts empty data of given length to given position.
+     *
+     * @param startFrom position to insert to
+     * @param length length of data
+     */
+    void insert(long startFrom, long length);
+
+    /**
      * Inserts given data to given position.
      *
      * @param startFrom position to insert to
      * @param insertedData data to insert
      */
     void insert(long startFrom, byte[] insertedData);
+
+    /**
+     * Inserts given data to given position.
+     *
+     * @param startFrom position to insert to
+     * @param insertedData data to insert
+     * @param insertedDataOffset inserted data offset
+     * @param insertedDataLength inserted data length
+     */
+    void insert(long startFrom, byte[] insertedData, int insertedDataOffset, int insertedDataLength);
 
     /**
      * Inserts given data to given position.
@@ -85,31 +95,55 @@ interface EditableBinaryData extends BinaryData {
      * @param insertedDataOffset inserted data offset
      * @param insertedDataLength inserted data length
      */
-    void insert(long startFrom, byte[] insertedData, int insertedDataOffset, int insertedDataLength);
+    void insert(long startFrom, BinaryData insertedData, long insertedDataOffset, long insertedDataLength);
 
     /**
-     * Replaces data in given area to target data.
+     * Replaces data in given area with given data.
      *
-     * Replace must support replacing segment from itself (last-first
-     * direction).
+     * If sourceData are the same instance, data are replaced as it would be
+     * copied to buffer first and replaced then.
      *
      * @param targetPosition target position to write to
-     * @param sourceData data to copy from
+     * @param replacingData data to read from
      */
-    void replace(long targetPosition, BinaryData sourceData);
+    void replace(long targetPosition, BinaryData replacingData);
 
     /**
-     * Replaces data in given area to target data.
+     * Replaces data in given area with given data.
      *
-     * Replace must support replacing segment from itself (last-first
-     * direction).
+     * If sourceData are the same instance, data are replaced as it would be
+     * copied to buffer first and replaced then.
      *
      * @param targetPosition target position to write to
-     * @param sourceData data to copy from
+     * @param replacingData data to read from
      * @param startFrom position to start copy from
      * @param length length of data to copy
      */
-    void replace(long targetPosition, BinaryData sourceData, long startFrom, long length);
+    void replace(long targetPosition, BinaryData replacingData, long startFrom, long length);
+
+    /**
+     * Replaces data in given area with given data.
+     *
+     * If sourceData are the same instance, data are replaced as it would be
+     * copied to buffer first and replaced then.
+     *
+     * @param targetPosition target position to write to
+     * @param replacingData data to read from
+     */
+    void replace(long targetPosition, byte[] replacingData);
+
+    /**
+     * Replaces data in given area with given data.
+     *
+     * If sourceData are the same instance, data are replaced as it would be
+     * copied to buffer first and replaced then.
+     *
+     * @param targetPosition target position to write to
+     * @param replacingData data to read from
+     * @param replacingDataOffset position to start copy from
+     * @param length length of data to copy
+     */
+    void replace(long targetPosition, byte[] replacingData, int replacingDataOffset, int length);
 
     /**
      * Fills given area with empty data.
@@ -141,10 +175,12 @@ interface EditableBinaryData extends BinaryData {
      *
      * Simply releases all references to data pages.
      */
-    public void clear();
+    void clear();
 
     /**
      * Loads data from given stream.
+     *
+     * Always replaces all data.
      *
      * @param inputStream input stream
      * @throws java.io.IOException if input/output error
@@ -154,10 +190,13 @@ interface EditableBinaryData extends BinaryData {
     /**
      * Loads data from given stream expecting given size.
      *
+     * Preserves original data outside loaded range. Extends data if needed.
+     *
      * @param inputStream input stream
      * @param startFrom start position to load data to
-     * @param dataSize data size
+     * @param maximumDataSize size of data to load
+     * @return length of loaded data
      * @throws java.io.IOException if input/output error
      */
-    public void loadFromStream(InputStream inputStream, long startFrom, long dataSize) throws IOException;
+    long loadFromStream(InputStream inputStream, long startFrom, long maximumDataSize) throws IOException;
 }

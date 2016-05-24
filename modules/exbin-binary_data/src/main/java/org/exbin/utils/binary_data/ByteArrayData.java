@@ -22,7 +22,7 @@ import java.util.Arrays;
 /**
  * Basic implementation of binary data interface using byte array.
  *
- * @version 0.1.0 2016/05/23
+ * @version 0.1.0 2016/05/24
  * @author ExBin Project (http://exbin.org)
  */
 public class ByteArrayData implements BinaryData {
@@ -63,12 +63,11 @@ public class ByteArrayData implements BinaryData {
 
     @Override
     public byte getByte(long position) {
-        return data[(int) position];
-    }
-
-    @Override
-    public void saveToStream(OutputStream outputStream) throws IOException {
-        outputStream.write(data);
+        try {
+            return data[(int) position];
+        } catch (IndexOutOfBoundsException ex) {
+            throw new OutOfBoundsException(ex);
+        }
     }
 
     @Override
@@ -79,7 +78,25 @@ public class ByteArrayData implements BinaryData {
 
     @Override
     public BinaryData copy(long startFrom, long length) {
+        if (startFrom + length > data.length) {
+            throw new OutOfBoundsException("Attemt to copy outside of data");
+        }
+
         byte[] copy = Arrays.copyOfRange(data, (int) startFrom, (int) (startFrom + length));
         return new ByteArrayData(copy);
+    }
+
+    @Override
+    public void copyToArray(long startFrom, byte[] target, int offset, int length) {
+        try {
+            System.arraycopy(data, (int) startFrom, target, offset, length);
+        } catch (IndexOutOfBoundsException ex) {
+            throw new OutOfBoundsException(ex);
+        }
+    }
+
+    @Override
+    public void saveToStream(OutputStream outputStream) throws IOException {
+        outputStream.write(data);
     }
 }

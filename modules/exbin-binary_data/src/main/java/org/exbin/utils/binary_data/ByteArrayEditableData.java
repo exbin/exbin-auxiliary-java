@@ -23,7 +23,7 @@ import java.util.Arrays;
 /**
  * Basic implementation of editable binary data interface using byte array.
  *
- * @version 0.1.0 2016/05/23
+ * @version 0.1.0 2016/05/24
  * @author ExBin Project (http://exbin.org)
  */
 public class ByteArrayEditableData extends ByteArrayData implements EditableBinaryData {
@@ -51,7 +51,24 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
 
     @Override
     public void setByte(long position, byte value) {
-        data[(int) position] = value;
+        try {
+            data[(int) position] = value;
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new OutOfBoundsException(ex);
+        }
+    }
+
+    @Override
+    public void insertUninitialized(long startFrom, long length) {
+        if (startFrom > data.length) {
+            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
+        }
+        if (length > 0) {
+            byte[] newData = new byte[(int) (data.length + length)];
+            System.arraycopy(data, 0, newData, 0, (int) startFrom);
+            System.arraycopy(data, (int) (startFrom), newData, (int) (startFrom + length), (int) (data.length - startFrom));
+            data = newData;
+        }
     }
 
     @Override
@@ -83,6 +100,20 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     }
 
     @Override
+    public void insert(long startFrom, byte[] insertedData, int insertedDataOffset, int length) {
+        if (startFrom > data.length) {
+            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
+        }
+        if (length > 0) {
+            byte[] newData = new byte[(int) (data.length + length)];
+            System.arraycopy(data, 0, newData, 0, (int) startFrom);
+            System.arraycopy(insertedData, insertedDataOffset, newData, (int) startFrom, length);
+            System.arraycopy(data, (int) (startFrom), newData, (int) (startFrom + length), (int) (data.length - startFrom));
+            data = newData;
+        }
+    }
+
+    @Override
     public void insert(long startFrom, BinaryData insertedData) {
         if (startFrom > data.length) {
             throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
@@ -90,12 +121,24 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
         if (insertedData instanceof ByteArrayData) {
             insert(startFrom, ((ByteArrayData) insertedData).data);
         } else {
-            long length = insertedData.getDataSize();
+            insert(startFrom, insertedData, 0, insertedData.getDataSize());
+        }
+    }
+
+    @Override
+    public void insert(long startFrom, BinaryData insertedData, long insertedDataOffset, long insertedDataLength) {
+        if (startFrom > data.length) {
+            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
+        }
+        if (insertedData instanceof ByteArrayData) {
+            insert(startFrom, ((ByteArrayData) insertedData).data);
+        } else {
+            long length = insertedDataLength;
             if (length > 0) {
                 byte[] newData = new byte[(int) (data.length + length)];
                 System.arraycopy(data, 0, newData, 0, (int) startFrom);
                 for (int i = 0; i < length; i++) {
-                    newData[(int) (startFrom + i)] = insertedData.getByte(i);
+                    newData[(int) (startFrom + i)] = insertedData.getByte(insertedDataOffset + i);
                 }
                 System.arraycopy(data, (int) (startFrom), newData, (int) (startFrom + length), (int) (data.length - startFrom));
                 data = newData;
@@ -104,18 +147,56 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     }
 
     @Override
-    public void insert(long startFrom, byte[] insertedData, int insertedDataOffset, int insertedDataLength) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void fillData(long startFrom, long length) {
+        fillData(startFrom, length, (byte) 0);
+    }
+
+    @Override
+    public void fillData(long startFrom, long length, byte fill) {
+        if (length > 0) {
+            Arrays.fill(data, (int) startFrom, (int) (startFrom + length), fill);
+        }
     }
 
     @Override
     public void replace(long targetPosition, BinaryData sourceData) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        replace(targetPosition, sourceData, 0, sourceData.getDataSize());
     }
 
     @Override
     public void replace(long targetPosition, BinaryData sourceData, long startFrom, long length) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (targetPosition + length > getDataSize()) {
+            throw new IndexOutOfBoundsException("Data can be replaced only inside or at the end");
+        }
+
+        if (sourceData instanceof ByteArrayData) {
+            replace(targetPosition, ((ByteArrayData) sourceData).data, (int) startFrom, (int) length);
+        } else {
+            while (length > 0) {
+                setByte(targetPosition, sourceData.getByte(startFrom));
+                targetPosition++;
+                startFrom++;
+                length--;
+            }
+        }
+    }
+
+    @Override
+    public void replace(long targetPosition, byte[] replacingData) {
+        replace(targetPosition, replacingData, 0, replacingData.length);
+    }
+
+    @Override
+    public void replace(long targetPosition, byte[] replacingData, int replacingDataOffset, int length) {
+        if (targetPosition + length > getDataSize()) {
+            throw new IndexOutOfBoundsException("Data can be replaced only inside or at the end");
+        }
+
+        try {
+            System.arraycopy(replacingData, replacingDataOffset, data, (int) targetPosition, length);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new OutOfBoundsException(ex);
+        }
     }
 
     @Override
@@ -133,7 +214,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        data = new byte[0];
     }
 
     @Override
@@ -151,22 +232,27 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     }
 
     @Override
-    public void loadFromStream(InputStream inputStream, long startFrom, long dataSize) throws IOException {
+    public long loadFromStream(InputStream inputStream, long startFrom, long maximumDataSize) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
+        /* long loadedData = 0;
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            output.skip(startFrom);
+            byte[] buffer = new byte[1024];
+            while (inputStream.available() > 0 && maximumDataSize > 0) {
+                int toRead = buffer.length;
+                if (toRead > maximumDataSize) {
+                    toRead = (int) maximumDataSize;
+                }
+                int read = inputStream.read(buffer, 0, toRead);
+                if (read > 0) {
+                    output.write(buffer, 0, read);
+                    loadedData += read;
+                    maximumDataSize -= read;
+                }
+            }
+            data = output.toByteArray();
+        }
+        return loadedData; */
     }
 
-    @Override
-    public void insertUninitialized(long startFrom, long length) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void fillData(long startFrom, long length) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void fillData(long startFrom, long length, byte fill) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

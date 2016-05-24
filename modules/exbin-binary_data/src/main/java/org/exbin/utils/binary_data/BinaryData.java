@@ -21,7 +21,7 @@ import java.io.OutputStream;
 /**
  * Interface for binary data.
  *
- * @version 0.1.0 2016/05/23
+ * @version 0.1.0 2016/05/24
  * @author ExBin Project (http://exbin.org)
  */
 public interface BinaryData {
@@ -31,14 +31,14 @@ public interface BinaryData {
      *
      * @return true if data empty
      */
-    public boolean isEmpty();
+    boolean isEmpty();
 
     /**
      * Returns size of data or -1 if size is not available.
      *
      * @return size of data in bytes
      */
-    public long getDataSize();
+    long getDataSize();
 
     /**
      * Returns particular byte from data.
@@ -46,7 +46,7 @@ public interface BinaryData {
      * @param position position
      * @return byte on requested position
      */
-    public byte getByte(long position);
+    byte getByte(long position);
 
     /**
      * Saves data to given stream.
@@ -54,14 +54,14 @@ public interface BinaryData {
      * @param outputStream output stream
      * @throws java.io.IOException if input/output error
      */
-    public void saveToStream(OutputStream outputStream) throws IOException;
+    void saveToStream(OutputStream outputStream) throws IOException;
 
     /**
      * Creates copy of all data.
      *
      * @return copy of data
      */
-    public BinaryData copy();
+    BinaryData copy();
 
     /**
      * Creates copy of given area.
@@ -70,5 +70,15 @@ public interface BinaryData {
      * @param length length of area
      * @return copy of data
      */
-    public BinaryData copy(long startFrom, long length);
+    BinaryData copy(long startFrom, long length);
+
+    /**
+     * Creates copy of given area into array of bytes.
+     *
+     * @param startFrom position to start copy from
+     * @param target target byte array
+     * @param offset offset position in target
+     * @param length length of area to copy
+     */
+    void copyToArray(long startFrom, byte[] target, int offset, int length);
 }

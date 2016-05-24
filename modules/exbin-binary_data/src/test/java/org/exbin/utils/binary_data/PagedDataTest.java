@@ -20,59 +20,69 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Tests for ByteArrayData class.
+ * Tests for PagedData class.
  *
  * @version 0.1.0 2016/05/24
  * @author ExBin Project (http://exbin.org)
  */
-public class ByteArrayDataTest {
+public class PagedDataTest {
 
     private final TestUtils testUtils = new TestUtils();
 
-    public ByteArrayDataTest() {
+    public PagedDataTest() {
     }
 
     @Test
     public void testGetDataSize() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        PagedData instanceA = new PagedData();
+        instanceA.insert(0, testUtils.getSampleDataA());
         assertEquals(5l, instanceA.getDataSize());
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        PagedData instanceB = new PagedData();
+        instanceB.insert(0, testUtils.getSampleDataB());
         assertEquals(10l, instanceB.getDataSize());
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        PagedData instanceC = new PagedData();
+        instanceC.insert(0, testUtils.getSampleDataC());
         assertEquals(256l, instanceC.getDataSize());
     }
 
     @Test
     public void testIsEmpty() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        PagedData instanceA = new PagedData();
+        instanceA.insert(0, testUtils.getSampleDataA());
         assertEquals(false, instanceA.isEmpty());
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        PagedData instanceB = new PagedData();
+        instanceB.insert(0, testUtils.getSampleDataB());
         assertEquals(false, instanceB.isEmpty());
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        PagedData instanceC = new PagedData();
+        instanceC.insert(0, testUtils.getSampleDataC());
         assertEquals(false, instanceC.isEmpty());
 
-        ByteArrayData instanceD = new ByteArrayData();
+        PagedData instanceD = new PagedData();
         assertEquals(true, instanceD.isEmpty());
 
-        ByteArrayData instanceE = new ByteArrayData(new byte[0]);
+        PagedData instanceE = new PagedData();
+        instanceE.insert(0, new byte[0]);
         assertEquals(true, instanceE.isEmpty());
     }
 
     @Test
     public void testGetByte() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        PagedData instanceA = new PagedData();
+        instanceA.insert(0, testUtils.getSampleDataA());
         assertEquals(0x12, instanceA.getByte(0));
         assertEquals(0x9a, instanceA.getByte(4) & 0xff);
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        PagedData instanceB = new PagedData();
+        instanceB.insert(0, testUtils.getSampleDataB());
         assertEquals(0x41, instanceB.getByte(0));
         assertEquals(0x4a, instanceB.getByte(9));
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        PagedData instanceC = new PagedData();
+        instanceC.insert(0, testUtils.getSampleDataC());
         assertEquals(0x0, instanceC.getByte(0));
         assertEquals(0x7f, instanceC.getByte(0x7f) & 0xff);
         assertEquals(0xff, instanceC.getByte(0xff) & 0xff);
@@ -80,32 +90,38 @@ public class ByteArrayDataTest {
 
     @Test
     public void testCopy_0args() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        PagedData instanceA = new PagedData();
+        instanceA.insert(0, testUtils.getSampleDataA());
         BinaryData copyA = instanceA.copy();
         assertEquals(5l, copyA.getDataSize());
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        PagedData instanceB = new PagedData();
+        instanceB.insert(0, testUtils.getSampleDataB());
         BinaryData copyB = instanceB.copy();
         assertEquals(10l, copyB.getDataSize());
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        PagedData instanceC = new PagedData();
+        instanceC.insert(0, testUtils.getSampleDataC());
         BinaryData copyC = instanceC.copy();
         assertEquals(256l, copyC.getDataSize());
     }
 
     @Test
     public void testCopy() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        PagedData instanceA = new PagedData();
+        instanceA.insert(0, testUtils.getSampleDataA());
         BinaryData copyA = instanceA.copy(1, 2);
         assertEquals(2l, copyA.getDataSize());
         assertEquals(0x34, copyA.getByte(0));
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        PagedData instanceB = new PagedData();
+        instanceB.insert(0, testUtils.getSampleDataB());
         BinaryData copyB = instanceB.copy(2, 6);
         assertEquals(6l, copyB.getDataSize());
         assertEquals(0x43, copyB.getByte(0));
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        PagedData instanceC = new PagedData();
+        instanceC.insert(0, testUtils.getSampleDataC());
         BinaryData copyC = instanceC.copy(100, 100);
         assertEquals(100l, copyC.getDataSize());
         assertEquals((byte) 100, copyC.getByte(0));
@@ -119,18 +135,21 @@ public class ByteArrayDataTest {
 
     @Test
     public void testCopyToArray() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        PagedData instanceA = new PagedData();
+        instanceA.insert(0, testUtils.getSampleDataA());
         byte[] copyA = new byte[2];
         instanceA.copyToArray(1, copyA, 0, 2);
         assertEquals(0x34, copyA[0]);
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        PagedData instanceB = new PagedData();
+        instanceB.insert(0, testUtils.getSampleDataB());
         byte[] copyB = new byte[8];
         instanceB.copyToArray(2, copyB, 2, 6);
         assertEquals((byte) 0, copyB[0]);
         assertEquals(0x43, copyB[2]);
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        PagedData instanceC = new PagedData();
+        instanceC.insert(0, testUtils.getSampleDataC());
         byte[] copyC = new byte[100];
         instanceC.copyToArray(100, copyC, 0, 100);
         assertEquals((byte) 100, copyC[0]);
@@ -153,19 +172,22 @@ public class ByteArrayDataTest {
     @Test
     public void testSaveToStream() throws Exception {
         ByteArrayOutputStream outputA = new ByteArrayOutputStream();
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        PagedData instanceA = new PagedData();
+        instanceA.insert(0, testUtils.getSampleDataA());
         instanceA.saveToStream(outputA);
         outputA.close();
         assertArrayEquals(testUtils.getSampleDataA(), outputA.toByteArray());
 
         ByteArrayOutputStream outputB = new ByteArrayOutputStream();
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        PagedData instanceB = new PagedData();
+        instanceB.insert(0, testUtils.getSampleDataB());
         instanceB.saveToStream(outputB);
         outputB.close();
         assertArrayEquals(testUtils.getSampleDataB(), outputB.toByteArray());
 
         ByteArrayOutputStream outputC = new ByteArrayOutputStream();
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        PagedData instanceC = new PagedData();
+        instanceC.insert(0, testUtils.getSampleDataC());
         instanceC.saveToStream(outputC);
         outputC.close();
         assertArrayEquals(testUtils.getSampleDataC(), outputC.toByteArray());
