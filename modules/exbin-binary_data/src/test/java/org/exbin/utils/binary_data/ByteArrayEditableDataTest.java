@@ -15,7 +15,6 @@
  */
 package org.exbin.utils.binary_data;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import org.junit.Test;
 import static org.junit.Assert.*;

@@ -16,6 +16,7 @@
 package org.exbin.utils.binary_data;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -49,14 +50,6 @@ public interface BinaryData {
     byte getByte(long position);
 
     /**
-     * Saves data to given stream.
-     *
-     * @param outputStream output stream
-     * @throws java.io.IOException if input/output error
-     */
-    void saveToStream(OutputStream outputStream) throws IOException;
-
-    /**
      * Creates copy of all data.
      *
      * @return copy of data
@@ -81,4 +74,19 @@ public interface BinaryData {
      * @param length length of area to copy
      */
     void copyToArray(long startFrom, byte[] target, int offset, int length);
+
+    /**
+     * Saves data to given stream.
+     *
+     * @param outputStream output stream
+     * @throws java.io.IOException if input/output error
+     */
+    void saveToStream(OutputStream outputStream) throws IOException;
+
+    /**
+     * Provides handler for input stream generation.
+     *
+     * @return new instance of input stream
+     */
+    InputStream getDataInputStream();
 }

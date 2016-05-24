@@ -18,6 +18,7 @@ package org.exbin.utils.binary_data;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 
 /**
@@ -233,10 +234,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
 
     @Override
     public long loadFromStream(InputStream inputStream, long startFrom, long maximumDataSize) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-        /* long loadedData = 0;
         try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
-            output.skip(startFrom);
             byte[] buffer = new byte[1024];
             while (inputStream.available() > 0 && maximumDataSize > 0) {
                 int toRead = buffer.length;
@@ -246,13 +244,22 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
                 int read = inputStream.read(buffer, 0, toRead);
                 if (read > 0) {
                     output.write(buffer, 0, read);
-                    loadedData += read;
                     maximumDataSize -= read;
                 }
             }
-            data = output.toByteArray();
+            byte[] newData = output.toByteArray();
+            if (getDataSize() > startFrom + newData.length) {
+                replace(startFrom, newData);
+            } else {
+                setDataSize(startFrom);
+                insert(startFrom, newData);
+            }
+            return newData.length;
         }
-        return loadedData; */
     }
 
+    @Override
+    public OutputStream getDataOutputStream() {
+        return new ByteArrayDataOutputStream(this);
+    }
 }

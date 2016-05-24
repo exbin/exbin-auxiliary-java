@@ -16,6 +16,7 @@
 package org.exbin.utils.binary_data;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
@@ -98,5 +99,10 @@ public class ByteArrayData implements BinaryData {
     @Override
     public void saveToStream(OutputStream outputStream) throws IOException {
         outputStream.write(data);
+    }
+
+    @Override
+    public InputStream getDataInputStream() {
+        return new ByteArrayDataInputStream(this);
     }
 }

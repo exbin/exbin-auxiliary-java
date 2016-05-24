@@ -17,6 +17,7 @@ package org.exbin.utils.binary_data;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Interface for editable binary data.
@@ -199,4 +200,13 @@ public interface EditableBinaryData extends BinaryData {
      * @throws java.io.IOException if input/output error
      */
     long loadFromStream(InputStream inputStream, long startFrom, long maximumDataSize) throws IOException;
+
+    /**
+     * Provides handler for output stream generation.
+     *
+     * Received data are appended to existing data.
+     *
+     * @return new instance of output stream
+     */
+    OutputStream getDataOutputStream();
 }

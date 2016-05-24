@@ -22,8 +22,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Encapsulation class for binary data blob.
@@ -31,7 +29,7 @@ import java.util.logging.Logger;
  * Data are stored using paging. Last page might be shorter than page size, but
  * not empty.
  *
- * @version 0.1.0 2016/05/23
+ * @version 0.1.0 2016/05/24
  * @author ExBin Project (http://exbin.org)
  */
 public class PagedData implements EditableBinaryData {
@@ -335,7 +333,7 @@ public class PagedData implements EditableBinaryData {
     @Override
     public void replace(long targetPosition, BinaryData sourceData, long startFrom, long length) {
         if (targetPosition + length > getDataSize()) {
-            setDataSize(targetPosition + length);
+            throw new IndexOutOfBoundsException("Data can be replaced only inside or at the end");
         }
 
         if (sourceData instanceof PagedData) {
@@ -417,7 +415,7 @@ public class PagedData implements EditableBinaryData {
     @Override
     public void replace(long targetPosition, byte[] replacingData, int replacingDataOffset, int length) {
         if (targetPosition + length > getDataSize()) {
-            setDataSize(targetPosition + length);
+            throw new IndexOutOfBoundsException("Data can be replaced only inside or at the end");
         }
 
         while (length > 0) {
@@ -438,59 +436,69 @@ public class PagedData implements EditableBinaryData {
     }
 
     @Override
-    public void loadFromStream(InputStream inputStream) {
-        try {
-            data.clear();
-            byte[] buffer = new byte[pageSize];
-            int cnt;
-            int offset = 0;
-            while ((cnt = inputStream.read(buffer, offset, buffer.length - offset)) > 0) {
-                if (cnt + offset < pageSize) {
-                    offset = offset + cnt;
-                } else {
-                    data.add(buffer);
-                    buffer = new byte[pageSize];
-                    offset = 0;
-                }
+    public void loadFromStream(InputStream inputStream) throws IOException {
+        data.clear();
+        byte[] buffer = new byte[pageSize];
+        int cnt;
+        int offset = 0;
+        while ((cnt = inputStream.read(buffer, offset, buffer.length - offset)) > 0) {
+            if (cnt + offset < pageSize) {
+                offset = offset + cnt;
+            } else {
+                data.add(buffer);
+                buffer = new byte[pageSize];
+                offset = 0;
             }
+        }
 
-            if (offset > 0) {
-                byte[] tail = new byte[offset];
-                System.arraycopy(buffer, 0, tail, 0, offset);
-                data.add(tail);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(PagedData.class.getName()).log(Level.SEVERE, null, ex);
+        if (offset > 0) {
+            byte[] tail = new byte[offset];
+            System.arraycopy(buffer, 0, tail, 0, offset);
+            data.add(tail);
         }
     }
 
     @Override
     public long loadFromStream(InputStream inputStream, long startFrom, long dataSize) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-        /*try {
-            long loadedData = 0;
-            data.clear();
-            while (dataSize > 0) {
-                int blockSize = dataSize < pageSize ? (int) dataSize : pageSize;
-                byte[] page = new byte[blockSize];
+        if (startFrom > getDataSize()) {
+            setDataSize(startFrom);
+        }
+        long loadedData = 0;
+        int pageOffset = (int) (startFrom % pageSize);
+        byte[] buffer = new byte[pageSize];
+        while (dataSize > 0) {
+            int blockSize = pageSize - pageOffset;
+            if (dataSize < blockSize) {
+                blockSize = (int) dataSize;
+            }
 
-                int offset = 0;
-                while (blockSize > 0) {
-                    int red = inputStream.read(page, offset, blockSize);
-                    if (red == -1) {
-                        throw new IOException("Unexpected data processed - " + dataSize + " expected, but not met.");
-                    } else {
-                        offset += red;
-                        blockSize -= red;
-                    }
+            int readOffset = 0;
+            int length = blockSize;
+            while (length > 0) {
+                int read = inputStream.read(buffer, readOffset, length);
+                if (read == -1) {
+                    throw new IOException("Unexpected data processed - " + dataSize + " expected, but not met.");
+                } else {
+                    readOffset += read;
+                    length -= read;
+                }
+            }
+
+            if (getDataSize() == startFrom) {
+                insert(startFrom, buffer);
+                startFrom += blockSize;
+            } else {
+                if (startFrom + blockSize > getDataSize()) {
+                    setDataSize(startFrom + blockSize);
                 }
 
-                data.add(page);
-                dataSize -= page.length;
+                replace(startFrom, buffer);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(PagedData.class.getName()).log(Level.SEVERE, null, ex);
-        } */
+            dataSize -= blockSize;
+            loadedData += blockSize;
+            pageOffset = 0;
+        }
+        return loadedData;
     }
 
     @Override
@@ -498,5 +506,15 @@ public class PagedData implements EditableBinaryData {
         for (byte[] dataPage : data) {
             outputStream.write(dataPage);
         }
+    }
+
+    @Override
+    public OutputStream getDataOutputStream() {
+        return new PagedDataOutputStream(this);
+    }
+
+    @Override
+    public InputStream getDataInputStream() {
+        return new PagedDataInputStream(this);
     }
 }
