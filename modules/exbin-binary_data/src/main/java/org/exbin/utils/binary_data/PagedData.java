@@ -100,14 +100,22 @@ public class PagedData implements EditableBinaryData {
     @Override
     public byte getByte(long position) {
         byte[] page = getPage((int) (position / pageSize));
-        return page[(int) (position % pageSize)];
+        try {
+            return page[(int) (position % pageSize)];
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new OutOfBoundsException(ex);
+        }
     }
 
     @Override
     public void setByte(long position, byte value) {
         byte[] page;
         page = getPage((int) (position / pageSize));
-        page[(int) (position % pageSize)] = value;
+        try {
+            page[(int) (position % pageSize)] = value;
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new OutOfBoundsException(ex);
+        }
     }
 
     @Override
@@ -120,7 +128,7 @@ public class PagedData implements EditableBinaryData {
         }
         long dataSize = getDataSize();
         if (startFrom > dataSize) {
-            throw new IllegalArgumentException("Inserted block must be inside or directly after existing data");
+            throw new OutOfBoundsException("Inserted block must be inside or directly after existing data");
         }
 
         if (startFrom >= dataSize) {
@@ -201,7 +209,11 @@ public class PagedData implements EditableBinaryData {
                 blockLength = insertedDataLength;
             }
 
-            System.arraycopy(insertedData, insertedDataOffset, targetPage, targetOffset, blockLength);
+            try {
+                System.arraycopy(insertedData, insertedDataOffset, targetPage, targetOffset, blockLength);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                throw new OutOfBoundsException(ex);
+            }
             insertedDataOffset += blockLength;
             insertedDataLength -= blockLength;
             startFrom += blockLength;
@@ -222,7 +234,7 @@ public class PagedData implements EditableBinaryData {
             throw new IllegalArgumentException("Position of filler block must be nonnegative");
         }
         if (startFrom + length > getDataSize()) {
-            throw new IllegalArgumentException("Filled block must be inside existing data");
+            throw new OutOfBoundsException("Filled block must be inside existing data");
         }
 
         while (length > 0) {
@@ -241,7 +253,7 @@ public class PagedData implements EditableBinaryData {
     @Override
     public PagedData copy() {
         PagedData targetData = new PagedData();
-        targetData.replace(0, this);
+        targetData.insert(0, this);
         return targetData;
     }
 
@@ -283,7 +295,7 @@ public class PagedData implements EditableBinaryData {
             throw new IllegalArgumentException("Position of removed block must be nonnegative");
         }
         if (startFrom + length > getDataSize()) {
-            throw new IllegalArgumentException("Removed block must be inside existing data");
+            throw new OutOfBoundsException("Removed block must be inside existing data");
         }
 
         if (length > 0) {
@@ -312,7 +324,11 @@ public class PagedData implements EditableBinaryData {
      * @return data page
      */
     public byte[] getPage(int pageIndex) {
-        return data.get(pageIndex);
+        try {
+            return data.get(pageIndex);
+        } catch (IndexOutOfBoundsException ex) {
+            throw new OutOfBoundsException(ex);
+        }
     }
 
     /**
@@ -322,7 +338,11 @@ public class PagedData implements EditableBinaryData {
      * @param dataPage data page
      */
     public void setPage(int pageIndex, byte[] dataPage) {
-        data.set(pageIndex, dataPage);
+        try {
+            data.set(pageIndex, dataPage);
+        } catch (IndexOutOfBoundsException ex) {
+            throw new OutOfBoundsException(ex);
+        }
     }
 
     @Override
@@ -333,7 +353,7 @@ public class PagedData implements EditableBinaryData {
     @Override
     public void replace(long targetPosition, BinaryData replacingData, long startFrom, long length) {
         if (targetPosition + length > getDataSize()) {
-            throw new IndexOutOfBoundsException("Data can be replaced only inside or at the end");
+            throw new OutOfBoundsException("Data can be replaced only inside or at the end");
         }
 
         if (replacingData instanceof PagedData) {
@@ -415,7 +435,7 @@ public class PagedData implements EditableBinaryData {
     @Override
     public void replace(long targetPosition, byte[] replacingData, int replacingDataOffset, int length) {
         if (targetPosition + length > getDataSize()) {
-            throw new IndexOutOfBoundsException("Data can be replaced only inside or at the end");
+            throw new OutOfBoundsException("Data can be replaced only inside or at the end");
         }
 
         while (length > 0) {
@@ -427,7 +447,11 @@ public class PagedData implements EditableBinaryData {
                 copySize = (int) length;
             }
 
-            System.arraycopy(replacingData, replacingDataOffset, page, offset, copySize);
+            try {
+                System.arraycopy(replacingData, replacingDataOffset, page, offset, copySize);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                throw new OutOfBoundsException(ex);
+            }
 
             length -= copySize;
             targetPosition += copySize;

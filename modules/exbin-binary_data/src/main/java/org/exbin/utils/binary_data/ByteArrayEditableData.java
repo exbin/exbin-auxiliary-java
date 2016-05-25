@@ -62,7 +62,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insertUninitialized(long startFrom, long length) {
         if (startFrom > data.length) {
-            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
         }
         if (length > 0) {
             byte[] newData = new byte[(int) (data.length + length)];
@@ -75,7 +75,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, long length) {
         if (startFrom > data.length) {
-            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
         }
         if (length > 0) {
             byte[] newData = new byte[(int) (data.length + length)];
@@ -88,13 +88,17 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, byte[] insertedData) {
         if (startFrom > data.length) {
-            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
         }
         int length = insertedData.length;
         if (length > 0) {
             byte[] newData = new byte[(int) (data.length + length)];
             System.arraycopy(data, 0, newData, 0, (int) startFrom);
-            System.arraycopy(insertedData, 0, newData, (int) startFrom, length);
+            try {
+                System.arraycopy(insertedData, 0, newData, (int) startFrom, length);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                throw new OutOfBoundsException(ex);
+            }
             System.arraycopy(data, (int) (startFrom), newData, (int) (startFrom + length), (int) (data.length - startFrom));
             data = newData;
         }
@@ -103,12 +107,16 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, byte[] insertedData, int insertedDataOffset, int length) {
         if (startFrom > data.length) {
-            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
         }
         if (length > 0) {
             byte[] newData = new byte[(int) (data.length + length)];
             System.arraycopy(data, 0, newData, 0, (int) startFrom);
-            System.arraycopy(insertedData, insertedDataOffset, newData, (int) startFrom, length);
+            try {
+                System.arraycopy(insertedData, insertedDataOffset, newData, (int) startFrom, length);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                throw new OutOfBoundsException(ex);
+            }
             System.arraycopy(data, (int) (startFrom), newData, (int) (startFrom + length), (int) (data.length - startFrom));
             data = newData;
         }
@@ -117,7 +125,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, BinaryData insertedData) {
         if (startFrom > data.length) {
-            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
         }
         if (insertedData instanceof ByteArrayData) {
             insert(startFrom, ((ByteArrayData) insertedData).data);
@@ -129,7 +137,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, BinaryData insertedData, long insertedDataOffset, long insertedDataLength) {
         if (startFrom > data.length) {
-            throw new IndexOutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
         }
         if (insertedData instanceof ByteArrayData) {
             insert(startFrom, ((ByteArrayData) insertedData).data);
@@ -155,7 +163,11 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void fillData(long startFrom, long length, byte fill) {
         if (length > 0) {
-            Arrays.fill(data, (int) startFrom, (int) (startFrom + length), fill);
+            try {
+                Arrays.fill(data, (int) startFrom, (int) (startFrom + length), fill);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                throw new OutOfBoundsException(ex);
+            }
         }
     }
 
@@ -167,7 +179,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void replace(long targetPosition, BinaryData sourceData, long startFrom, long length) {
         if (targetPosition + length > getDataSize()) {
-            throw new IndexOutOfBoundsException("Data can be replaced only inside or at the end");
+            throw new OutOfBoundsException("Data can be replaced only inside or at the end");
         }
 
         if (sourceData instanceof ByteArrayData) {
@@ -190,7 +202,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void replace(long targetPosition, byte[] replacingData, int replacingDataOffset, int length) {
         if (targetPosition + length > getDataSize()) {
-            throw new IndexOutOfBoundsException("Data can be replaced only inside or at the end");
+            throw new OutOfBoundsException("Data can be replaced only inside or at the end");
         }
 
         try {
@@ -203,7 +215,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void remove(long startFrom, long length) {
         if (startFrom + length > data.length) {
-            throw new IndexOutOfBoundsException("Cannot remove from " + startFrom + " with length " + length);
+            throw new OutOfBoundsException("Cannot remove from " + startFrom + " with length " + length);
         }
         if (length > 0) {
             byte[] newData = new byte[(int) (data.length - length)];

@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 /**
  * Tests for ByteArrayEditableData class.
  *
- * @version 0.1.0 2016/05/24
+ * @version 0.1.0 2016/05/25
  * @author ExBin Project (http://exbin.org)
  */
 public class ByteArrayEditableDataTest {
@@ -71,7 +71,7 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.insertUninitialized(20, 1);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
     }
 
@@ -90,7 +90,7 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.insert(20, 1);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
     }
 
@@ -109,7 +109,7 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.insert(20, new byte[]{1});
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
     }
 
@@ -128,7 +128,7 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.insert(20, new ByteArrayData(new byte[]{1}));
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
     }
 
@@ -147,14 +147,14 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.insert(20, new byte[]{5, 7, 1, 2, 10}, 2, 1);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
 
         ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.insert(0, new byte[]{5, 7, 1, 2, 10}, 10, 1);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
     }
 
@@ -173,14 +173,14 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.fillData(20, 1);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
 
         ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.fillData(0, 20);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
     }
 
@@ -199,14 +199,14 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.fillData(20, 1, (byte) 55);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
 
         ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.fillData(0, 20, (byte) 55);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
     }
 
@@ -225,7 +225,7 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.replace(20, new ByteArrayData(new byte[]{1}));
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
     }
 
@@ -244,7 +244,7 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.replace(20, new ByteArrayData(new byte[]{5, 7, 1, 2, 10}), 2, 2);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
 
         ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
@@ -270,7 +270,7 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.replace(20, new byte[]{1});
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
     }
 
@@ -289,7 +289,7 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.replace(20, new byte[]{5, 7, 1, 2, 10}, 2, 2);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
 
         ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
@@ -313,14 +313,14 @@ public class ByteArrayEditableDataTest {
         try {
             instanceB.remove(20, 1);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
 
         ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.remove(5, 100);
             fail();
-        } catch (IndexOutOfBoundsException ex) {
+        } catch (OutOfBoundsException ex) {
         }
     }
 
@@ -361,12 +361,13 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testLoadFromStream_offset() throws Exception {
-//        ByteArrayEditableData instanceA = new ByteArrayEditableData();
-//        try (InputStream streamA = testUtils.getSampleDataStream(TestUtils.SAMPLE_ALLBYTES)) {
-//            instanceA.loadFromStream(streamA, 100, 100);
-//        }
-//        assertEquals(100l, instanceA.getDataSize());
-//        assertEquals((byte) 100, instanceA.getByte(0));
-//        assertEquals((byte) 199, instanceA.getByte(99) & 0xff);
+        ByteArrayEditableData instanceA = new ByteArrayEditableData();
+        try (InputStream streamA = testUtils.getSampleDataStream(TestUtils.SAMPLE_ALLBYTES)) {
+            instanceA.loadFromStream(streamA, 100, 100);
+        }
+        assertEquals(200l, instanceA.getDataSize());
+        assertEquals((byte) 0, instanceA.getByte(100));
+        assertEquals((byte) 1, instanceA.getByte(101));
+        assertEquals((byte) 99, instanceA.getByte(199));
     }
 }
