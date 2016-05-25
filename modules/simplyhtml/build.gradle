@@ -1,4 +1,4 @@
-group = 'net.sf.simplyhtml'
+group = 'org.exbin.utils'
 ext.libraryName = 'Simply HTML'
 ext.libraryDescription = 'Library for richtext/HTML editor support'
 
