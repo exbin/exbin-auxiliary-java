@@ -2,7 +2,7 @@ group = 'org.exbin.utils'
 ext.libraryName = 'Simply HTML'
 ext.libraryDescription = 'Library for richtext/HTML editor support'
 
-apply from: '../modules.gradle'
+apply from: '../exbin-utils-modules.gradle'
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'com.lightdev.app.shtm.App'
