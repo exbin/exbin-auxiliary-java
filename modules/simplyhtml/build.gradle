@@ -17,6 +17,7 @@ buildscript {
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'com.lightdev.app.shtm.App'
 }
+
 repositories {
     mavenCentral()
 }
