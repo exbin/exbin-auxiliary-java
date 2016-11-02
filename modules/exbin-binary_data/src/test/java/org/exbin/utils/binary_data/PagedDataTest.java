@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 /**
  * Tests for PagedData class.
  *
- * @version 0.1.0 2016/05/24
+ * @version 0.1.1 2016/11/02
  * @author ExBin Project (http://exbin.org)
  */
 public class PagedDataTest {
@@ -563,7 +563,7 @@ public class PagedDataTest {
     public void testLoadFromStream_offset() throws Exception {
         PagedData instanceA = new PagedData();
         try (InputStream streamA = testUtils.getSampleDataStream(TestUtils.SAMPLE_ALLBYTES)) {
-            instanceA.loadFromStream(streamA, 100, 100);
+            instanceA.insert(100, streamA, 100);
         }
         assertEquals(200l, instanceA.getDataSize());
         assertEquals((byte) 0, instanceA.getByte(100));
