@@ -1,6 +1,6 @@
 // Shared modules build
 
-version = '0.1.1'
+version = '0.1.2-SNAPSHOT'
 def repositoryName = "exbin-utils-java"
 def libraryUrl = 'http://exbin.org'
 
@@ -123,6 +123,7 @@ if (gradle.startParameter.taskNames.contains("uploadArchives") && !version.endsW
                     packaging 'jar'
                     description libraryDescription
                     url libraryUrl
+                    organization 'ExBin Project'
                 
                     scm {
                         url "https://github.com/exbin/${repositoryName}"
