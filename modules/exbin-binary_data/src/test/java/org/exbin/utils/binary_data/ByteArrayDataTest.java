@@ -16,8 +16,8 @@
 package org.exbin.utils.binary_data;
 
 import java.io.ByteArrayOutputStream;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Tests for ByteArrayData class.
