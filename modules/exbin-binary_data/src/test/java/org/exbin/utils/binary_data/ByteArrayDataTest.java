@@ -16,17 +16,19 @@
 package org.exbin.utils.binary_data;
 
 import java.io.ByteArrayOutputStream;
+import javax.annotation.Nonnull;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
  * Tests for ByteArrayData class.
  *
- * @version 0.1.0 2016/05/24
+ * @version 0.1.3 2017/05/26
  * @author ExBin Project (http://exbin.org)
  */
 public class ByteArrayDataTest {
 
+    @Nonnull
     private final TestUtils testUtils = new TestUtils();
 
     public ByteArrayDataTest() {

@@ -17,17 +17,19 @@ package org.exbin.utils.binary_data;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import javax.annotation.Nonnull;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
  * Tests for PagedData class.
  *
- * @version 0.1.1 2016/11/02
+ * @version 0.1.3 2017/05/26
  * @author ExBin Project (http://exbin.org)
  */
 public class PagedDataTest {
 
+    @Nonnull
     private final TestUtils testUtils = new TestUtils();
 
     public PagedDataTest() {

@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Tests for ByteArrayData class.
@@ -34,8 +36,11 @@ public class TestUtils {
     public final static String SAMPLE_10BYTES = SAMPLE_FILES_PATH + "10bytes.dat";
     public final static String SAMPLE_ALLBYTES = SAMPLE_FILES_PATH + "allbytes.dat";
 
+    @Nonnull
     private final byte[] sampleDataA;
+    @Nonnull
     private final byte[] sampleDataB;
+    @Nonnull
     private final byte[] sampleDataC;
 
     public TestUtils() {
@@ -44,23 +49,28 @@ public class TestUtils {
         sampleDataC = getSampleData(SAMPLE_ALLBYTES);
     }
 
+    @Nonnull
     public byte[] getSampleDataA() {
         return sampleDataA;
     }
 
+    @Nonnull
     public byte[] getSampleDataB() {
         return sampleDataB;
     }
 
+    @Nonnull
     public byte[] getSampleDataC() {
         return sampleDataC;
     }
 
-    public InputStream getSampleDataStream(String sampleDataPath) {
+    @Nullable
+    public InputStream getSampleDataStream(@Nonnull String sampleDataPath) {
         return TestUtils.class.getResourceAsStream(sampleDataPath);
     }
 
-    private byte[] getSampleData(String dataPath) {
+    @Nullable
+    private byte[] getSampleData(@Nonnull String dataPath) {
         byte[] buffer = new byte[1024];
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (InputStream stream = getSampleDataStream(dataPath)) {
