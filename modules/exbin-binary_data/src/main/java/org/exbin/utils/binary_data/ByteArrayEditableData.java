@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * Basic implementation of editable binary data interface using byte array.
  *
- * @version 0.1.3 2017/05/26
+ * @version 0.1.3 2018/07/25
  * @author ExBin Project (http://exbin.org)
  */
 public class ByteArrayEditableData extends ByteArrayData implements EditableBinaryData {
@@ -143,7 +143,10 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
             throw new OutOfBoundsException("Data can be inserted only inside or at the end");
         }
         if (insertedData instanceof ByteArrayData) {
-            insert(startFrom, ((ByteArrayData) insertedData).data);
+            if (insertedDataOffset > Integer.MAX_VALUE || insertedDataLength > Integer.MAX_VALUE) {
+                throw new OutOfBoundsException("Out of range");
+            }
+            insert(startFrom, ((ByteArrayData) insertedData).data, (int) insertedDataOffset, (int) insertedDataLength);
         } else {
             long length = insertedDataLength;
             if (length > 0) {
