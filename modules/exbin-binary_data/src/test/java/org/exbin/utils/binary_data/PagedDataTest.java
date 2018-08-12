@@ -25,7 +25,7 @@ import org.junit.Test;
  * Tests for PagedData class.
  *
  * @version 0.1.3 2017/05/26
- * @author ExBin Project (http://exbin.org)
+ * @author ExBin Project (https://exbin.org)
  */
 public class PagedDataTest {
 

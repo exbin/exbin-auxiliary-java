@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * Paged data output stream.
  *
  * @version 0.1.3 2017/05/26
- * @author ExBin Project (http://exbin.org)
+ * @author ExBin Project (https://exbin.org)
  */
 public class PagedDataOutputStream extends OutputStream implements SeekableStream, FinishableStream {
 

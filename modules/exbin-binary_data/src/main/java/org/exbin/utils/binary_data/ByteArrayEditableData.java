@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * Basic implementation of editable binary data interface using byte array.
  *
  * @version 0.1.3 2018/07/25
- * @author ExBin Project (http://exbin.org)
+ * @author ExBin Project (https://exbin.org)
  */
 public class ByteArrayEditableData extends ByteArrayData implements EditableBinaryData {
 

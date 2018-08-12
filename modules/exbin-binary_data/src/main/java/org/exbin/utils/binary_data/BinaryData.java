@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * Interface for binary data.
  *
  * @version 0.1.3 2017/05/26
- * @author ExBin Project (http://exbin.org)
+ * @author ExBin Project (https://exbin.org)
  */
 public interface BinaryData {
 

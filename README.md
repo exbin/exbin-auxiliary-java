@@ -3,14 +3,14 @@ ExBin Project Utilities
 
 Utility tools and libraries for ExBin Project in Java.
 
-Homepage: http://exbin.org  
+Homepage: https://exbin.org  
 
 Compiling
 ---------
 
-Java Development Kit (JDK) version 7 or later is required to build this project.
+Java Development Kit (JDK) version 8 or later is required to build this project.
 
-For project compiling Gradle 2.0 build system is used. You can either download and install gradle and run
+For project compiling Gradle 4 build system is used. You can either download and install gradle and run
 
   gradle build
 

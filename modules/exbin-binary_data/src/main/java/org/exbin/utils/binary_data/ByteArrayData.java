@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * Basic implementation of binary data interface using byte array.
  *
  * @version 0.1.3 2017/05/26
- * @author ExBin Project (http://exbin.org)
+ * @author ExBin Project (https://exbin.org)
  */
 public class ByteArrayData implements BinaryData {
 

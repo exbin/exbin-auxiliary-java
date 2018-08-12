@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  * Tests for ByteArrayData class.
  *
  * @version 0.1.0 2016/05/24
- * @author ExBin Project (http://exbin.org)
+ * @author ExBin Project (https://exbin.org)
  */
 public class TestUtils {
 

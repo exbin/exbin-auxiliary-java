@@ -3,7 +3,7 @@ ExBin Project Utilities
 
 Utility tools and libraries for ExBin Project in Java.
 
-Homepage: http://exbin.org  
+Homepage: https://exbin.org  
 
 Compiling
 ---------
