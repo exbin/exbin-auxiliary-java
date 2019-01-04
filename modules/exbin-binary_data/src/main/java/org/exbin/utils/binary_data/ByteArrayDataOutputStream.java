@@ -18,6 +18,7 @@ package org.exbin.utils.binary_data;
 import java.io.IOException;
 import java.io.OutputStream;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Byte array data output stream.
@@ -25,13 +26,14 @@ import javax.annotation.Nonnull;
  * @version 0.1.3 2017/05/26
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ByteArrayDataOutputStream extends OutputStream implements SeekableStream, FinishableStream {
 
     @Nonnull
     private final ByteArrayEditableData data;
     private long position = 0;
 
-    public ByteArrayDataOutputStream(@Nonnull ByteArrayEditableData data) {
+    public ByteArrayDataOutputStream(ByteArrayEditableData data) {
         this.data = data;
     }
 

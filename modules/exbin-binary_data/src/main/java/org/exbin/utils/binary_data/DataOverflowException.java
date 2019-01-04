@@ -19,31 +19,31 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Exception type for out of bounds issues with binary data manipulation
- * operations.
+ * Exception type for overflow situation where more data is inserted/added than
+ * it is allowed to handle.
  *
  * @version 0.1.3 2019/01/05
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class OutOfBoundsException extends RuntimeException {
+public class DataOverflowException extends RuntimeException {
 
-    public OutOfBoundsException() {
+    public DataOverflowException() {
     }
 
-    public OutOfBoundsException(@Nullable String message) {
+    public DataOverflowException(@Nullable String message) {
         super(message);
     }
 
-    public OutOfBoundsException(@Nullable String message, @Nullable Throwable cause) {
+    public DataOverflowException(@Nullable String message, @Nullable Throwable cause) {
         super(message, cause);
     }
 
-    public OutOfBoundsException(@Nullable Throwable cause) {
+    public DataOverflowException(@Nullable Throwable cause) {
         super(cause);
     }
 
-    public OutOfBoundsException(@Nullable String message, @Nullable Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public DataOverflowException(@Nullable String message, @Nullable Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

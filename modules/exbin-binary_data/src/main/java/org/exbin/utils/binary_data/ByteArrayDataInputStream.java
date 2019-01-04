@@ -18,6 +18,7 @@ package org.exbin.utils.binary_data;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Byte array data input stream.
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
  * @version 0.1.3 2017/05/26
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ByteArrayDataInputStream extends InputStream implements SeekableStream, FinishableStream {
 
     @Nonnull

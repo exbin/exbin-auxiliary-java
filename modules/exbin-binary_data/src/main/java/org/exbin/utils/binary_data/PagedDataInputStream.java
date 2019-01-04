@@ -18,6 +18,7 @@ package org.exbin.utils.binary_data;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Paged data input stream.
@@ -25,13 +26,14 @@ import javax.annotation.Nonnull;
  * @version 0.1.3 2017/05/26
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class PagedDataInputStream extends InputStream implements SeekableStream, FinishableStream {
 
     @Nonnull
     private final PagedData data;
     private long position = 0;
 
-    public PagedDataInputStream(@Nonnull PagedData data) {
+    public PagedDataInputStream(PagedData data) {
         this.data = data;
     }
 
@@ -55,7 +57,7 @@ public class PagedDataInputStream extends InputStream implements SeekableStream,
     }
 
     @Override
-    public int read(@Nonnull byte[] output, int off, int len) throws IOException {
+    public int read(byte[] output, int off, int len) throws IOException {
         if (output.length == 0 || len == 0) {
             return 0;
         }

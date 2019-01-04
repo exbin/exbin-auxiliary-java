@@ -19,13 +19,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for binary data.
  *
- * @version 0.1.3 2017/05/26
+ * @version 0.1.3 2019/01/05
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface BinaryData {
 
     /**
@@ -84,7 +86,7 @@ public interface BinaryData {
      * @param outputStream output stream
      * @throws java.io.IOException if input/output error
      */
-    void saveToStream(@Nonnull OutputStream outputStream) throws IOException;
+    void saveToStream(OutputStream outputStream) throws IOException;
 
     /**
      * Provides handler for input stream generation.

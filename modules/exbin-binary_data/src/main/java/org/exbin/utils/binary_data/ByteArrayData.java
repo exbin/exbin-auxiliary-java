@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Basic implementation of binary data interface using byte array.
@@ -28,6 +29,7 @@ import javax.annotation.Nullable;
  * @version 0.1.3 2017/05/26
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class ByteArrayData implements BinaryData {
 
     @Nonnull
@@ -77,15 +79,15 @@ public class ByteArrayData implements BinaryData {
         }
     }
 
-    @Override
     @Nonnull
+    @Override
     public BinaryData copy() {
         byte[] copy = Arrays.copyOf(data, data.length);
         return new ByteArrayData(copy);
     }
 
-    @Override
     @Nonnull
+    @Override
     public BinaryData copy(long startFrom, long length) {
         if (startFrom + length > data.length) {
             throw new OutOfBoundsException("Attemt to copy outside of data");
@@ -105,12 +107,12 @@ public class ByteArrayData implements BinaryData {
     }
 
     @Override
-    public void saveToStream(@Nonnull OutputStream outputStream) throws IOException {
+    public void saveToStream(OutputStream outputStream) throws IOException {
         outputStream.write(data);
     }
 
-    @Override
     @Nonnull
+    @Override
     public InputStream getDataInputStream() {
         return new ByteArrayDataInputStream(this);
     }
