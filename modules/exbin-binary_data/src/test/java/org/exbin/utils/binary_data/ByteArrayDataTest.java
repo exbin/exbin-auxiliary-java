@@ -23,7 +23,7 @@ import org.junit.Test;
 /**
  * Tests for ByteArrayData class.
  *
- * @version 0.1.3 2017/05/26
+ * @version 0.1.3 2019/07/16
  * @author ExBin Project (https://exbin.org)
  */
 public class ByteArrayDataTest {
@@ -171,5 +171,18 @@ public class ByteArrayDataTest {
         instanceC.saveToStream(outputC);
         outputC.close();
         assertArrayEquals(testUtils.getSampleDataC(), outputC.toByteArray());
+    }
+
+    @Test
+    public void testEquals() {
+        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+
+        ByteArrayData instanceA1 = new ByteArrayData(testUtils.getSampleDataA());
+
+        assertTrue(instanceA.equals(instanceA1));
+
+        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+
+        assertFalse(instanceA.equals(instanceB));
     }
 }

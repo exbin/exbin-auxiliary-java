@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -31,7 +32,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Data are stored using paging. Last page might be shorter than page size, but
  * not empty.
  *
- * @version 0.1.3 2019/01/05
+ * @version 0.1.3 2019/07/16
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -556,6 +557,86 @@ public class PagedData implements EditableBinaryData {
     @Override
     public InputStream getDataInputStream() {
         return new PagedDataInputStream(this);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            if (obj instanceof BinaryData) {
+                BinaryData other = (BinaryData) obj;
+                long dataSize = getDataSize();
+                if (other.getDataSize() != dataSize) {
+                    return false;
+                }
+
+                int pageIndex = 0;
+                int bufferSize = dataSize > pageSize ? pageSize : (int) dataSize;
+                byte[] buffer = new byte[bufferSize];
+                int offset = 0;
+                int remain = (int) dataSize;
+                while (remain > 0) {
+                    int length = remain > bufferSize ? bufferSize : remain;
+                    other.copyToArray(offset, buffer, 0, length);
+                    for (int i = 0; i < length; i++) {
+                        if (data.get(pageIndex)[i] != buffer[i]) {
+                            return false;
+                        }
+                    }
+
+                    offset += length;
+                    remain -= length;
+                    pageIndex++;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        final PagedData other = (PagedData) obj;
+        long dataSize = getDataSize();
+        if (other.getDataSize() != dataSize) {
+            return false;
+        }
+
+        int pageIndex = 0;
+        int otherPageIndex = 0;
+        long offset = 0;
+        long remain = dataSize;
+        while (remain > 0) {
+            int pageOffset = (int) (offset % pageSize);
+            int otherPageOffset = (int) (offset % other.pageSize);
+
+            int length = remain > pageSize - pageOffset ? pageSize - pageOffset : (int) remain;
+            if (length > other.pageSize - otherPageOffset) {
+                length = other.pageSize - otherPageOffset;
+            }
+
+            for (int i = 0; i < length; i++) {
+                if (data.get(pageIndex)[pageOffset + i] != other.data.get(otherPageIndex)[otherPageOffset + i]) {
+                    return false;
+                }
+            }
+
+            offset += length;
+            remain -= length;
+            pageIndex++;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
     }
 
     @Override

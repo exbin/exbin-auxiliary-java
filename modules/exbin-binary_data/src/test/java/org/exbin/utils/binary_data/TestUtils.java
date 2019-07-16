@@ -22,13 +22,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Tests for ByteArrayData class.
  *
- * @version 0.1.0 2016/05/24
+ * @version 0.1.3 2019/07/16
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public class TestUtils {
 
     public final static String SAMPLE_FILES_PATH = "/org/exbin/utils/binary_data/resources/";
@@ -65,12 +67,12 @@ public class TestUtils {
     }
 
     @Nullable
-    public InputStream getSampleDataStream(@Nonnull String sampleDataPath) {
+    public InputStream getSampleDataStream(String sampleDataPath) {
         return TestUtils.class.getResourceAsStream(sampleDataPath);
     }
 
     @Nullable
-    private byte[] getSampleData(@Nonnull String dataPath) {
+    private byte[] getSampleData(String dataPath) {
         byte[] buffer = new byte[1024];
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (InputStream stream = getSampleDataStream(dataPath)) {

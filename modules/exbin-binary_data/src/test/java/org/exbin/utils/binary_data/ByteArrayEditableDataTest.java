@@ -23,7 +23,7 @@ import org.junit.Test;
 /**
  * Tests for ByteArrayEditableData class.
  *
- * @version 0.1.3 2017/05/26
+ * @version 0.1.3 2019/07/16
  * @author ExBin Project (https://exbin.org)
  */
 public class ByteArrayEditableDataTest {
@@ -371,5 +371,18 @@ public class ByteArrayEditableDataTest {
         assertEquals((byte) 0, instanceA.getByte(100));
         assertEquals((byte) 1, instanceA.getByte(101));
         assertEquals((byte) 99, instanceA.getByte(199));
+    }
+
+    @Test
+    public void testEquals() {
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+
+        ByteArrayEditableData instanceA1 = new ByteArrayEditableData(testUtils.getSampleDataA());
+
+        assertTrue(instanceA.equals(instanceA1));
+
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+
+        assertFalse(instanceA.equals(instanceB));
     }
 }

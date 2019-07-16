@@ -30,7 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * This implementation is highly inefficient with resources and is not
  * recommended for frequently changed data as each change creates copy of data.
  *
- * @version 0.1.3 2019/01/05
+ * @version 0.1.3 2019/07/16
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -296,15 +296,15 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
         }
     }
 
-    @Override
     @Nonnull
+    @Override
     public BinaryData copy() {
         byte[] copy = Arrays.copyOf(data, data.length);
         return new ByteArrayEditableData(copy);
     }
 
-    @Override
     @Nonnull
+    @Override
     public BinaryData copy(long startFrom, long length) {
         if (startFrom + length > data.length) {
             throw new OutOfBoundsException("Attemt to copy outside of data");
@@ -333,8 +333,8 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
         }
     }
 
-    @Override
     @Nonnull
+    @Override
     public OutputStream getDataOutputStream() {
         return new ByteArrayDataOutputStream(this);
     }

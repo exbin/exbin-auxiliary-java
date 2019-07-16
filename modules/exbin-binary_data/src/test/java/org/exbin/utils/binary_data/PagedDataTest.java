@@ -24,7 +24,7 @@ import org.junit.Test;
 /**
  * Tests for PagedData class.
  *
- * @version 0.1.3 2017/05/26
+ * @version 0.1.3 2019/07/16
  * @author ExBin Project (https://exbin.org)
  */
 public class PagedDataTest {
@@ -571,5 +571,21 @@ public class PagedDataTest {
         assertEquals((byte) 0, instanceA.getByte(100));
         assertEquals((byte) 1, instanceA.getByte(101));
         assertEquals((byte) 99, instanceA.getByte(199));
+    }
+
+    @Test
+    public void testEquals() {
+        PagedData instanceA = new PagedData();
+        instanceA.insert(0, testUtils.getSampleDataA());
+
+        PagedData instanceA1 = new PagedData(8);
+        instanceA1.insert(0, testUtils.getSampleDataA());
+
+        assertTrue(instanceA.equals(instanceA1));
+
+        PagedData instanceB = new PagedData();
+        instanceB.insert(0, testUtils.getSampleDataB());
+
+        assertFalse(instanceA.equals(instanceB));
     }
 }

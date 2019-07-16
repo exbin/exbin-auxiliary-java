@@ -26,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Basic implementation of binary data interface using byte array.
  *
- * @version 0.1.3 2017/05/26
+ * @version 0.1.3 2019/07/16
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -133,16 +133,27 @@ public class ByteArrayData implements BinaryData {
 
         if (getClass() != obj.getClass()) {
             if (obj instanceof BinaryData) {
-                // TODO Simple byte comparision, optimize ussing buffer later
                 BinaryData other = (BinaryData) obj;
-                if (other.getDataSize() != getDataSize()) {
+                long dataSize = getDataSize();
+                if (other.getDataSize() != dataSize) {
                     return false;
                 }
 
-                for (long position = 0; position < getDataSize(); position++) {
-                    if (other.getByte(position) != getByte(position)) {
-                        return false;
+                int bufferSize = dataSize > ByteArrayEditableData.BUFFER_SIZE ? ByteArrayEditableData.BUFFER_SIZE : (int) dataSize;
+                byte[] buffer = new byte[bufferSize];
+                int offset = 0;
+                int remain = (int) dataSize;
+                while (remain > 0) {
+                    int length = remain > bufferSize ? bufferSize : remain;
+                    other.copyToArray(offset, buffer, 0, length);
+                    for (int i = 0; i < length; i++) {
+                        if (data[offset + i] != buffer[i]) {
+                            return false;
+                        }
                     }
+
+                    offset += length;
+                    remain -= length;
                 }
 
                 return true;
