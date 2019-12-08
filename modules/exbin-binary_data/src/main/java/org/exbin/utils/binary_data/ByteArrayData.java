@@ -47,12 +47,22 @@ public class ByteArrayData implements BinaryData {
         }
     }
 
+    /**
+     * Returns internal data.
+     *
+     * @return byte array
+     */
     @Nonnull
     public byte[] getData() {
         return data;
     }
 
-    public void setData(@Nonnull byte[] data) {
+    /**
+     * Sets internal data.
+     *
+     * @param data byte array
+     */
+    public void setData(byte[] data) {
         if (data == null) {
             throw new NullPointerException();
         }

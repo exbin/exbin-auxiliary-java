@@ -102,7 +102,7 @@ public class PagedDataInputStream extends InputStream implements SeekableStream,
     }
 
     @Override
-    public long getLength() {
+    public long getProcessedSize() {
         return position;
     }
 

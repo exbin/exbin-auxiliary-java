@@ -48,7 +48,7 @@ public class ByteArrayDataOutputStream extends OutputStream implements SeekableS
     }
 
     @Override
-    public void write(@Nonnull byte[] input, int off, int len) throws IOException {
+    public void write(byte[] input, int off, int len) throws IOException {
         if (len == 0) {
             return;
         }
@@ -74,7 +74,7 @@ public class ByteArrayDataOutputStream extends OutputStream implements SeekableS
     }
 
     @Override
-    public long getLength() {
+    public long getProcessedSize() {
         return position;
     }
 

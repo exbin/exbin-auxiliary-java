@@ -243,7 +243,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     }
 
     @Override
-    public void replace(long targetPosition, @Nonnull BinaryData sourceData) {
+    public void replace(long targetPosition, BinaryData sourceData) {
         replace(targetPosition, sourceData, 0, sourceData.getDataSize());
     }
 

@@ -90,7 +90,7 @@ public class PagedDataOutputStream extends OutputStream implements SeekableStrea
     }
 
     @Override
-    public long getLength() {
+    public long getProcessedSize() {
         return position;
     }
 

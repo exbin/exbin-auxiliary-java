@@ -22,6 +22,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -366,10 +367,20 @@ public class PagedData implements EditableBinaryData {
         data.clear();
     }
 
+    /**
+     * returns number of pages currently used.
+     *
+     * @return count of pages
+     */
     public int getPagesCount() {
         return data.size();
     }
 
+    /**
+     * Returns currently used page size.
+     *
+     * @return page size in bytes
+     */
     public int getPageSize() {
         return pageSize;
     }
@@ -636,7 +647,7 @@ public class PagedData implements EditableBinaryData {
 
     @Override
     public int hashCode() {
-        return 0;
+        return Objects.hash(getDataSize());
     }
 
     @Override

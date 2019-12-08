@@ -15,29 +15,36 @@
  */
 package org.exbin.utils.binary_data;
 
-import java.io.IOException;
+import java.util.concurrent.Future;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for finishable stream.
+ * Interface for binary data.
  *
- * @version 0.1.3 2019/12/08
+ * @version 0.1.3 2019/10/08
  * @author ExBin Project (https://exbin.org)
  */
-public interface FinishableStream {
+@ParametersAreNonnullByDefault
+public interface OnDemandBinaryData {
 
     /**
-     * Reads remaining data and returns size of all data processed by this
-     * stream.
+     * Returns true if data are currently available.
      *
-     * @return size of data in bytes
-     * @throws IOException if input/output error occurs
+     * @param startFrom position to start copy from
+     * @param length length of area
+     *
+     * @return true if data available
      */
-    long finish() throws IOException;
+    boolean isAvailable(long startFrom, long length);
 
     /**
-     * Returns size of data processed so far.
+     * Requests retrieval of data.
      *
-     * @return size of data in bytes
+     * @param startFrom position to start copy from
+     * @param length length of area
+     * @return retrieval future object
      */
-    long getProcessedSize();
+    @Nonnull
+    Future retrieveData(long startFrom, long length);
 }

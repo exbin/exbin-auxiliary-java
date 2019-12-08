@@ -33,7 +33,7 @@ public class ByteArrayDataInputStream extends InputStream implements SeekableStr
     private final ByteArrayData data;
     private long position = 0;
 
-    public ByteArrayDataInputStream(@Nonnull ByteArrayData data) {
+    public ByteArrayDataInputStream(ByteArrayData data) {
         this.data = data;
     }
 
@@ -57,7 +57,7 @@ public class ByteArrayDataInputStream extends InputStream implements SeekableStr
     }
 
     @Override
-    public int read(@Nonnull byte[] output, int off, int len) throws IOException {
+    public int read(byte[] output, int off, int len) throws IOException {
         if (output.length == 0 || len == 0) {
             return 0;
         }
@@ -87,7 +87,7 @@ public class ByteArrayDataInputStream extends InputStream implements SeekableStr
     }
 
     @Override
-    public long getLength() {
+    public long getProcessedSize() {
         return position;
     }
 
