@@ -15,6 +15,9 @@
  */
 package org.exbin.utils.binary_data;
 
+import org.exbin.auxiliary.binary_data.BinaryData;
+import org.exbin.auxiliary.binary_data.ByteArrayData;
+import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 import java.io.ByteArrayOutputStream;
 import javax.annotation.Nonnull;
 import static org.junit.Assert.*;

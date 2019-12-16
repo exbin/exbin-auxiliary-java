@@ -15,6 +15,10 @@
  */
 package org.exbin.utils.binary_data;
 
+import org.exbin.auxiliary.binary_data.BinaryData;
+import org.exbin.auxiliary.binary_data.PagedData;
+import org.exbin.auxiliary.binary_data.ByteArrayData;
+import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import javax.annotation.Nonnull;

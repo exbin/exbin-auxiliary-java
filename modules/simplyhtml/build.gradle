@@ -1,8 +1,8 @@
-group = 'org.exbin.utils'
+group = 'org.exbin.auxiliary'
 ext.libraryName = 'Simply HTML'
 ext.libraryDescription = 'Library for richtext/HTML editor support'
 
-apply from: '../exbin-utils-modules.gradle'
+apply from: '../exbin-auxiliary-modules.gradle'
 
 buildscript {
     repositories {
