@@ -1,7 +1,0 @@
-rootProject.name = 'exbin-binary_data-delta'
-
-if (rootProject.path == ':') {
-    include ":modules:exbin-binary_data"
-}
-
-apply from: '../exbin-auxiliary-modules-settings.gradle'

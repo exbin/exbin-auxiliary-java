@@ -1,0 +1,33 @@
+group = 'org.exbin.auxiliary'
+ext.libraryName = 'Delta Paged Binary Data Library'
+ext.libraryDescription = 'Library for paged binary data handling with support for delta changes'
+
+apply from: '../exbin-auxiliary-modules.gradle'
+
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
+    }
+}
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+repositories {
+    flatDir {
+        dirs "../../lib"
+    }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    compile moduleDep('ExbinAuxiliaryJava', 'org.exbin.utils', 'paged_data')
+    testCompile group : 'junit', name: 'junit', version: '4.10'
+}

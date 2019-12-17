@@ -1,0 +1,3 @@
+rootProject.name = 'paged_data'
+
+apply from: '../exbin-auxiliary-modules-settings.gradle'

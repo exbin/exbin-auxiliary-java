@@ -1,6 +1,6 @@
 rootProject.name = 'exbin-auxiliary-java'
 
 include ":modules:simplyhtml"
-include ":modules:exbin-binary_data"
-include ":modules:exbin-binary_data-delta"
-include ":modules:exbin-binary_data-swap"
+include ":modules:paged_data"
+include ":modules:paged_data-delta"
+include ":modules:paged_data-swap"
