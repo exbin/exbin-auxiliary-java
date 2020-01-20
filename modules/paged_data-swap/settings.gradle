@@ -1,7 +1,8 @@
 rootProject.name = 'paged_data-delta'
 
 if (rootProject.path == ':') {
-    include ":modules:paged_data"
+    include ':modules:paged_data'
+    include ':modules:paged_data-delta'
 }
 
 apply from: '../exbin-auxiliary-modules-settings.gradle'

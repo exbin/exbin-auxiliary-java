@@ -28,6 +28,6 @@ repositories {
 
 dependencies {
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
-    compile moduleDep('ExbinAuxiliaryJava', 'org.exbin.utils', 'paged_data')
+    compile moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'paged_data')
     testCompile group : 'junit', name: 'junit', version: '4.10'
 }
