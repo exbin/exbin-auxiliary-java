@@ -53,15 +53,19 @@ public class DeltaDataPageWindow {
         long pagePosition = pageIndex * PAGE_SIZE;
         RandomAccessFile file = data.getAccessFile();
         try {
-            file.seek(pagePosition);
+            long fileLength = file.length();
             byte[] page = dataPages[index].page;
             int offset = 0;
             int toRead = PAGE_SIZE;
-            if (pagePosition + PAGE_SIZE > file.length()) {
-                toRead = (int) (file.length() - pagePosition);
+            if (pagePosition + PAGE_SIZE > fileLength) {
+                toRead = (int) (fileLength - pagePosition);
             }
+            file.seek(pagePosition);
             while (toRead > 0) {
                 int red = file.read(page, offset, toRead);
+                if (red == -1) {
+                    throw new IOException("Unexpected read error ");
+                }
                 toRead -= red;
                 offset += red;
             }

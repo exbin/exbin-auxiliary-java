@@ -1,4 +1,4 @@
-rootProject.name = 'paged_data-delta'
+rootProject.name = 'paged_data-swap'
 
 if (rootProject.path == ':') {
     include ':modules:paged_data'
