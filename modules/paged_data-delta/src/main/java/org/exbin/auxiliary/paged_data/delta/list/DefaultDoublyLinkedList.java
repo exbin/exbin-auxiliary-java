@@ -19,14 +19,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.auxiliary.paged_data.OutOfBoundsException;
 
 /**
  * Default implementation of doubly linked list of items.
  *
- * @version 0.2.0 2017/05/31
+ * @version 0.2.0 2020/11/18
  * @author ExBin Project (https://exbin.org)
  * @param <T> doubly linked list item
  */
@@ -39,26 +41,26 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
     private T last;
     private int size = 0;
 
-    @Override
     @Nullable
+    @Override
     public T first() {
         return first;
     }
 
-    @Override
     @Nullable
+    @Override
     public T last() {
         return last;
     }
 
-    @Override
     @Nullable
+    @Override
     public T nextTo(T item) {
         return item.getNext();
     }
 
-    @Override
     @Nullable
+    @Override
     public T prevTo(T item) {
         return item.getPrev();
     }
@@ -94,6 +96,10 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
             index--;
         }
 
+        if (item == null) {
+            throw new OutOfBoundsException("No item for index " + index);
+        }
+
         T itemPrev = item.getPrev();
         T itemNext = item.getNext();
         item.setNext(null);
@@ -125,6 +131,7 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Nonnull
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
@@ -184,17 +191,17 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
     }
 
     @Override
-    public boolean add(T e) {
+    public boolean add(T item) {
         if (last != null) {
-            last.setNext(e);
-            e.setPrev(last);
-            e.setNext(null);
-            last = e;
+            last.setNext(item);
+            item.setPrev(last);
+            item.setNext(null);
+            last = item;
         } else {
-            first = e;
-            last = e;
-            e.setNext(null);
-            e.setPrev(null);
+            first = item;
+            last = item;
+            item.setNext(null);
+            item.setPrev(null);
         }
 
         size++;
@@ -228,8 +235,8 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
             element.setNext(first);
             first = element;
         } else {
-            T item = get(index);
-            T prevItem = item.getPrev();
+            T item = Objects.requireNonNull(get(index));
+            T prevItem = Objects.requireNonNull(item.getPrev());
             element.setPrev(prevItem);
             element.setNext(item);
             prevItem.setNext(element);
@@ -338,8 +345,9 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
                 last = null;
             }
         } else {
-            T prev = item.getPrev();
+            T prev = Objects.requireNonNull(item.getPrev());
             T next = item.getNext();
+
             prev.setNext(next);
             if (next != null) {
                 next.setPrev(prev);
