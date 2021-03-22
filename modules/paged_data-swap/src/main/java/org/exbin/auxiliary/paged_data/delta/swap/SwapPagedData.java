@@ -18,6 +18,7 @@ package org.exbin.auxiliary.paged_data.delta.swap;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.paged_data.BinaryData;
 import org.exbin.auxiliary.paged_data.EditableBinaryData;
@@ -49,82 +50,82 @@ public class SwapPagedData implements EditableBinaryData {
     }
 
     @Override
-    public void setDataSize(long l) {
+    public void setDataSize(long size) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void setByte(long l, byte b) {
+    public void setByte(long position, byte value) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void insertUninitialized(long l, long l1) {
+    public void insertUninitialized(long startFrom, long length) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void insert(long l, long l1) {
+    public void insert(long startFrom, long length) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void insert(long l, byte[] bytes) {
+    public void insert(long startFrom, byte[] insertedData) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void insert(long l, byte[] bytes, int i, int i1) {
+    public void insert(long startFrom, byte[] insertedData, int insertedDataOffset, int insertedDataLength) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void insert(long l, BinaryData bd) {
+    public void insert(long startFrom, BinaryData insertedData) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void insert(long l, BinaryData bd, long l1, long l2) {
+    public void insert(long startFrom, BinaryData insertedData, long insertedDataOffset, long insertedDataLength) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public long insert(long l, InputStream in, long l1) throws IOException {
+    public long insert(long startFrom, InputStream inputStream, long maximumDataSize) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void replace(long l, BinaryData bd) {
+    public void replace(long targetPosition, BinaryData replacingData) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void replace(long l, BinaryData bd, long l1, long l2) {
+    public void replace(long targetPosition, BinaryData replacingData, long startFrom, long length) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void replace(long l, byte[] bytes) {
+    public void replace(long targetPosition, byte[] replacingData) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void replace(long l, byte[] bytes, int i, int i1) {
+    public void replace(long targetPosition, byte[] replacingData, int replacingDataOffset, int length) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void fillData(long l, long l1) {
+    public void fillData(long startFrom, long length) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void fillData(long l, long l1, byte b) {
+    public void fillData(long startFrom, long length, byte fill) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void remove(long l, long l1) {
+    public void remove(long startFrom, long length) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -134,7 +135,7 @@ public class SwapPagedData implements EditableBinaryData {
     }
 
     @Override
-    public void loadFromStream(InputStream in) throws IOException {
+    public void loadFromStream(InputStream inputStream) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -154,30 +155,33 @@ public class SwapPagedData implements EditableBinaryData {
     }
 
     @Override
-    public byte getByte(long l) {
+    public byte getByte(long position) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Nonnull
     @Override
     public BinaryData copy() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Nonnull
     @Override
-    public BinaryData copy(long l, long l1) {
+    public BinaryData copy(long startFrom, long length) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void copyToArray(long l, byte[] bytes, int i, int i1) {
+    public void copyToArray(long startFrom, byte[] target, int offset, int length) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void saveToStream(OutputStream out) throws IOException {
+    public void saveToStream(OutputStream outputStream) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Nonnull
     @Override
     public InputStream getDataInputStream() {
         throw new UnsupportedOperationException("Not supported yet.");

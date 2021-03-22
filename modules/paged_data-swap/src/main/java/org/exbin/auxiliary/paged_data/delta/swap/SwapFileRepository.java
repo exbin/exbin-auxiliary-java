@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.paged_data.PagedData;
@@ -144,6 +145,7 @@ public class SwapFileRepository {
         }
     }
 
+    @Nonnull
     public byte[] getPage(long pageIndex) {
         byte[] page = new byte[pageSize];
         getPage(pageIndex, page);
