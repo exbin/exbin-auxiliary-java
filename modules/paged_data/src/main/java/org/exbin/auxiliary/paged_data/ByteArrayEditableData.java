@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.security.InvalidParameterException;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -30,7 +31,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * This implementation is highly inefficient with resources and is not
  * recommended for frequently changed data as each change creates copy of data.
  *
- * @version 0.1.3 2019/07/16
+ * @version 0.2.0 2021/04/16
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -40,10 +41,10 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     public static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 5;
 
     public ByteArrayEditableData() {
-        this(new byte[0]);
+        this(null);
     }
 
-    public ByteArrayEditableData(byte[] data) {
+    public ByteArrayEditableData(@Nullable byte[] data) {
         super(data);
     }
 

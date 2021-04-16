@@ -29,6 +29,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.paged_data.BinaryData;
+import org.exbin.auxiliary.paged_data.DataPageProvider;
+import org.exbin.auxiliary.paged_data.PagedData;
 import org.exbin.auxiliary.paged_data.delta.list.DefaultDoublyLinkedList;
 import org.exbin.auxiliary.paged_data.delta.list.DoublyLinkedItem;
 
@@ -52,8 +54,15 @@ public class SegmentsRepository {
      * Limit for save processing in bytes.
      */
     private static final int PROCESSING_LIMIT = 4096;
+    @Nullable
+    private final DataPageProvider dataPageProvider;
 
     public SegmentsRepository() {
+        this(null);
+    }
+
+    public SegmentsRepository(DataPageProvider dataPageProvider) {
+        this.dataPageProvider = dataPageProvider;
     }
 
     @Nonnull
@@ -77,7 +86,11 @@ public class SegmentsRepository {
 
     @Nonnull
     public MemoryDataSource openMemorySource() {
-        MemoryDataSource memorySource = new MemoryDataSource();
+        PagedData pagedData = new PagedData();
+        if (dataPageProvider != null) {
+            pagedData.setDataPageProvider(dataPageProvider);
+        }
+        MemoryDataSource memorySource = new MemoryDataSource(pagedData);
         memorySources.put(memorySource, new DataSegmentsMap());
         return memorySource;
     }

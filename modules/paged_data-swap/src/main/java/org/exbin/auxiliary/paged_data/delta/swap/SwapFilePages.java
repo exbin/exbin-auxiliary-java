@@ -27,17 +27,18 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.auxiliary.paged_data.OutOfBoundsException;
 import org.exbin.auxiliary.paged_data.PagedData;
 import org.exbin.auxiliary.paged_data.delta.FileDataSource;
 
 /**
  * Repository for swap file.
  *
- * @version 0.2.0 2019/10/08
+ * @version 0.2.0 2021/04/16
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class SwapFileRepository {
+public class SwapFilePages {
 
     private static final String DEFAULT_SWAPFILE_PREFIX = "swap";
     private static final String DEFAULT_SWAPFILE_SUFFIX = "";
@@ -53,11 +54,11 @@ public class SwapFileRepository {
     private final int[] unusedPages = new int[MAX_UNUSED_PAGES];
     private int unusedPagesCount = 0;
 
-    public SwapFileRepository() {
+    public SwapFilePages() {
         initSwapFile(DEFAULT_SWAPFILE_PREFIX, DEFAULT_SWAPFILE_SUFFIX, null);
     }
 
-    public SwapFileRepository(int pageSize) {
+    public SwapFilePages(int pageSize) {
         this.pageSize = pageSize;
         initSwapFile(DEFAULT_SWAPFILE_PREFIX, DEFAULT_SWAPFILE_SUFFIX, null);
     }
@@ -67,7 +68,7 @@ public class SwapFileRepository {
             swapFile = File.createTempFile(prefix, suffix, directory);
             accessFile = new RandomAccessFile(swapFile, FileDataSource.EditationMode.READ_WRITE.getFileAccessMode());
         } catch (IOException ex) {
-            Logger.getLogger(SwapFileRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SwapFilePages.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
     }
@@ -80,7 +81,7 @@ public class SwapFileRepository {
         try {
             accessFile.close();
         } catch (IOException ex) {
-            Logger.getLogger(SwapFileRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SwapFilePages.class.getName()).log(Level.SEVERE, null, ex);
         }
         swapFile.delete();
     }
@@ -131,9 +132,9 @@ public class SwapFileRepository {
             accessFile.seek(targetPage * pageSize);
             accessFile.write(page, 0, pageSize);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(SwapFileRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SwapFilePages.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(SwapFileRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SwapFilePages.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -141,7 +142,7 @@ public class SwapFileRepository {
         try {
             accessFile.setLength(usedPages * pageSize);
         } catch (IOException ex) {
-            Logger.getLogger(SwapFileRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SwapFilePages.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -152,31 +153,51 @@ public class SwapFileRepository {
         return page;
     }
 
+    @Nonnull
+    public byte[] getPagePart(long pageIndex, int length) {
+        byte[] page = new byte[length];
+        getPage(pageIndex, page);
+        return page;
+    }
+
+    public long getUsedPages() {
+        return usedPages;
+    }
+
     public void getPage(long pageIndex, byte[] targetData) {
         getPage(pageIndex, targetData, 0);
     }
 
     public void getPage(long pageIndex, byte[] targetData, int offset) {
+        if (targetData.length == 0) {
+            throw new IllegalArgumentException("Reading empty data is not allowed");
+        }
+        if (targetData.length + offset > pageSize) {
+            throw new OutOfBoundsException("Cannot read data page over it's size");
+        }
         try {
             long pagePosition = pageIndex * pageSize;
             if (accessFile.length() <= pagePosition) {
-                Arrays.fill(targetData, offset, pageSize, (byte) 0);
+                Arrays.fill(targetData, offset, targetData.length - offset, (byte) 0);
             } else {
                 accessFile.seek(pagePosition);
-                accessFile.readFully(targetData, offset, pageSize);
+                accessFile.readFully(targetData, offset, targetData.length - offset);
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(SwapFileRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SwapFilePages.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(SwapFileRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SwapFilePages.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void setPage(long pageIndex, byte[] pageData) {
         setPage(pageIndex, pageData, 0);
     }
 
     public void setPage(long pageIndex, byte[] pageData, int offset) {
+        if (pageData.length == 0) {
+            throw new IllegalArgumentException("Cannot set empty data as page");
+        }
         try {
             long pagePosition = pageIndex * pageSize;
             if (pagePosition > accessFile.length()) {
@@ -184,11 +205,11 @@ public class SwapFileRepository {
             }
 
             accessFile.seek(pagePosition);
-            accessFile.write(pageData, offset, pageSize);
+            accessFile.write(pageData, offset, pageData.length);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(SwapFileRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SwapFilePages.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(SwapFileRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SwapFilePages.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

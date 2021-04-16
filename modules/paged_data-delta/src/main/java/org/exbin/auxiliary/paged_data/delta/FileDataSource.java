@@ -102,7 +102,7 @@ public class FileDataSource {
 
     private void checkClosed() {
         if (closed) {
-            throw new IllegalStateException("");
+            throw new IllegalStateException("File was already closed");
         }
     }
 
@@ -116,7 +116,7 @@ public class FileDataSource {
 
     public static interface CacheClearListener {
 
-        public void clearCache();
+        void clearCache();
     }
 
     @ParametersAreNonnullByDefault

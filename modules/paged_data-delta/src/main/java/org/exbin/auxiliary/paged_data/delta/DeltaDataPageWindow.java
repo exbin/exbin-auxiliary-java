@@ -108,11 +108,11 @@ public class DeltaDataPageWindow {
      */
     private static class DataPage {
 
+        long pageIndex = -1;
+        byte[] page;
+
         public DataPage() {
             page = new byte[PAGE_SIZE];
         }
-
-        long pageIndex = -1;
-        byte[] page;
     }
 }

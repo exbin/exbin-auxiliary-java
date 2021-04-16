@@ -33,7 +33,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Data are stored using paging. Last page might be shorter than page size, but
  * not empty.
  *
- * @version 0.1.3 2019/07/16
+ * @version 0.2.0 2021/04/16
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -44,9 +44,16 @@ public class PagedData implements EditableBinaryData {
 
     private int pageSize = DEFAULT_PAGE_SIZE;
     @Nonnull
-    private final List<byte[]> data = new ArrayList<>();
+    private final List<DataPage> data = new ArrayList<>();
+
+    @Nullable
+    private DataPageProvider dataPageProvider = null;
 
     public PagedData() {
+    }
+
+    public PagedData(DataPageProvider dataPageProvider) {
+        this.dataPageProvider = dataPageProvider;
     }
 
     public PagedData(int pageSize) {
@@ -60,7 +67,7 @@ public class PagedData implements EditableBinaryData {
 
     @Override
     public long getDataSize() {
-        return (data.size() > 1 ? (data.size() - 1) * pageSize : 0) + (data.size() > 0 ? data.get(data.size() - 1).length : 0);
+        return (data.size() > 1 ? (data.size() - 1) * pageSize : 0) + (data.size() > 0 ? data.get(data.size() - 1).getDataLength() : 0);
     }
 
     @Override
@@ -80,14 +87,14 @@ public class PagedData implements EditableBinaryData {
                 int nextPageSize = remaining + lastPageSize > pageSize ? pageSize : (int) remaining + lastPageSize;
                 byte[] newPage = new byte[nextPageSize];
                 System.arraycopy(page, 0, newPage, 0, lastPageSize);
-                setPage(lastPage, newPage);
+                setPage(lastPage, createNewPage(newPage));
                 remaining -= (nextPageSize - lastPageSize);
                 lastPage++;
             }
 
             while (remaining > 0) {
                 int nextPageSize = remaining > pageSize ? pageSize : (int) remaining;
-                data.add(new byte[nextPageSize]);
+                data.add(createNewPage(new byte[nextPageSize]));
                 remaining -= nextPageSize;
             }
         } else if (size < dataSize) {
@@ -98,7 +105,7 @@ public class PagedData implements EditableBinaryData {
                 byte[] page = getPage(lastPage);
                 byte[] newPage = new byte[lastPageSize];
                 System.arraycopy(page, 0, newPage, 0, lastPageSize);
-                setPage(lastPage, newPage);
+                setPage(lastPage, createNewPage(newPage));
                 lastPage++;
             }
 
@@ -394,7 +401,7 @@ public class PagedData implements EditableBinaryData {
     @Nonnull
     public byte[] getPage(int pageIndex) {
         try {
-            return data.get(pageIndex);
+            return data.get(pageIndex).getData();
         } catch (IndexOutOfBoundsException ex) {
             throw new OutOfBoundsException(ex);
         }
@@ -406,7 +413,7 @@ public class PagedData implements EditableBinaryData {
      * @param pageIndex page index
      * @param dataPage data page
      */
-    public void setPage(int pageIndex, byte[] dataPage) {
+    public void setPage(int pageIndex, DataPage dataPage) {
         try {
             data.set(pageIndex, dataPage);
         } catch (IndexOutOfBoundsException ex) {
@@ -538,7 +545,7 @@ public class PagedData implements EditableBinaryData {
             if (cnt + offset < pageSize) {
                 offset = offset + cnt;
             } else {
-                data.add(buffer);
+                data.add(createNewPage(buffer));
                 buffer = new byte[pageSize];
                 offset = 0;
             }
@@ -547,14 +554,14 @@ public class PagedData implements EditableBinaryData {
         if (offset > 0) {
             byte[] tail = new byte[offset];
             System.arraycopy(buffer, 0, tail, 0, offset);
-            data.add(tail);
+            data.add(createNewPage(tail));
         }
     }
 
     @Override
     public void saveToStream(OutputStream outputStream) throws IOException {
-        for (byte[] dataPage : data) {
-            outputStream.write(dataPage);
+        for (DataPage dataPage : data) {
+            outputStream.write(dataPage.getData());
         }
     }
 
@@ -568,6 +575,24 @@ public class PagedData implements EditableBinaryData {
     @Override
     public InputStream getDataInputStream() {
         return new PagedDataInputStream(this);
+    }
+
+    @Nonnull
+    private DataPage createNewPage(byte[] pageData) {
+        if (dataPageProvider != null) {
+            return dataPageProvider.createPage(pageData);
+        }
+
+        return new ByteArrayData(pageData);
+    }
+
+    @Nullable
+    public DataPageProvider getDataPageProvider() {
+        return dataPageProvider;
+    }
+
+    public void setDataPageProvider(@Nullable DataPageProvider dataPageProvider) {
+        this.dataPageProvider = dataPageProvider;
     }
 
     @Override
@@ -595,10 +620,8 @@ public class PagedData implements EditableBinaryData {
                 while (remain > 0) {
                     int length = remain > bufferSize ? bufferSize : remain;
                     other.copyToArray(offset, buffer, 0, length);
-                    for (int i = 0; i < length; i++) {
-                        if (data.get(pageIndex)[i] != buffer[i]) {
-                            return false;
-                        }
+                    if (!Arrays.equals(data.get(pageIndex).getData(), 0, length, buffer, 0, length)) {
+                        return false;
                     }
 
                     offset += length;
@@ -631,10 +654,8 @@ public class PagedData implements EditableBinaryData {
                 length = other.pageSize - otherPageOffset;
             }
 
-            for (int i = 0; i < length; i++) {
-                if (data.get(pageIndex)[pageOffset + i] != other.data.get(otherPageIndex)[otherPageOffset + i]) {
-                    return false;
-                }
+            if (!Arrays.equals(data.get(pageIndex).getData(), pageOffset, pageOffset + length, other.data.get(otherPageIndex).getData(), otherPageOffset, otherPageOffset + length)) {
+                return false;
             }
 
             offset += length;

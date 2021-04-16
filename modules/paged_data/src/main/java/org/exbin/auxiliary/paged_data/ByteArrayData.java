@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,11 +27,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Basic implementation of binary data interface using byte array.
  *
- * @version 0.1.3 2019/07/16
+ * @version 0.2.0 2021/04/16
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ByteArrayData implements BinaryData {
+public class ByteArrayData implements BinaryData, DataPage {
 
     @Nonnull
     protected byte[] data;
@@ -40,11 +41,7 @@ public class ByteArrayData implements BinaryData {
     }
 
     public ByteArrayData(@Nullable byte[] data) {
-        if (data != null) {
-            this.data = data;
-        } else {
-            this.data = new byte[0];
-        }
+        this.data = data != null ? data : new byte[0];
     }
 
     /**
@@ -53,6 +50,7 @@ public class ByteArrayData implements BinaryData {
      * @return byte array
      */
     @Nonnull
+    @Override
     public byte[] getData() {
         return data;
     }
@@ -62,12 +60,9 @@ public class ByteArrayData implements BinaryData {
      *
      * @param data byte array
      */
+    @Override
     public void setData(byte[] data) {
-        if (data == null) {
-            throw new NullPointerException();
-        }
-
-        this.data = data;
+        this.data = Objects.requireNonNull(data);
     }
 
     @Override
@@ -77,6 +72,16 @@ public class ByteArrayData implements BinaryData {
 
     @Override
     public long getDataSize() {
+        return data.length;
+    }
+
+    /**
+     * Returns internal data length.
+     *
+     * @return data length
+     */
+    @Override
+    public int getDataLength() {
         return data.length;
     }
 
@@ -144,29 +149,7 @@ public class ByteArrayData implements BinaryData {
         if (getClass() != obj.getClass()) {
             if (obj instanceof BinaryData) {
                 BinaryData other = (BinaryData) obj;
-                long dataSize = getDataSize();
-                if (other.getDataSize() != dataSize) {
-                    return false;
-                }
-
-                int bufferSize = dataSize > ByteArrayEditableData.BUFFER_SIZE ? ByteArrayEditableData.BUFFER_SIZE : (int) dataSize;
-                byte[] buffer = new byte[bufferSize];
-                int offset = 0;
-                int remain = (int) dataSize;
-                while (remain > 0) {
-                    int length = remain > bufferSize ? bufferSize : remain;
-                    other.copyToArray(offset, buffer, 0, length);
-                    for (int i = 0; i < length; i++) {
-                        if (data[offset + i] != buffer[i]) {
-                            return false;
-                        }
-                    }
-
-                    offset += length;
-                    remain -= length;
-                }
-
-                return true;
+                return compareTo(other);
             }
 
             return false;
@@ -174,6 +157,32 @@ public class ByteArrayData implements BinaryData {
 
         final ByteArrayData other = (ByteArrayData) obj;
         return Arrays.equals(this.data, other.data);
+    }
+
+    public boolean compareTo(BinaryData other) {
+        long dataSize = getDataSize();
+        if (other.getDataSize() != dataSize) {
+            return false;
+        }
+
+        int bufferSize = dataSize > ByteArrayEditableData.BUFFER_SIZE ? ByteArrayEditableData.BUFFER_SIZE : (int) dataSize;
+        byte[] buffer = new byte[bufferSize];
+        int offset = 0;
+        int remain = (int) dataSize;
+        while (remain > 0) {
+            int length = remain > bufferSize ? bufferSize : remain;
+            other.copyToArray(offset, buffer, 0, length);
+            for (int i = 0; i < length; i++) {
+                if (data[offset + i] != buffer[i]) {
+                    return false;
+                }
+            }
+
+            offset += length;
+            remain -= length;
+        }
+
+        return true;
     }
 
     @Override

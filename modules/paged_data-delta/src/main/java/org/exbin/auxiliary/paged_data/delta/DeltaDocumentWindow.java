@@ -25,7 +25,7 @@ import org.exbin.auxiliary.paged_data.delta.list.DefaultDoublyLinkedList;
 /**
  * Access window for delta document.
  *
- * @version 0.2.0 2018/04/27
+ * @version 0.2.0 2021/04/16
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -53,10 +53,14 @@ public class DeltaDocumentWindow {
     public byte getByte(long position) {
         focusSegment(position);
 
-        if (pointer.segment instanceof FileSegment) {
-            return ((FileSegment) pointer.segment).getByte(pointer.segment.getStartPosition() + (position - pointer.position));
+        DataSegment targetSegment = pointer.segment;
+        if (targetSegment == null) {
+            throw new NullPointerException("Missing segment for position" + position);
+        }
+        if (targetSegment instanceof FileSegment) {
+            return ((FileSegment) targetSegment).getByte(targetSegment.getStartPosition() + (position - pointer.position));
         } else {
-            return ((MemorySegment) pointer.segment).getByte(pointer.segment.getStartPosition() + (position - pointer.position));
+            return ((MemorySegment) targetSegment).getByte(targetSegment.getStartPosition() + (position - pointer.position));
         }
     }
 

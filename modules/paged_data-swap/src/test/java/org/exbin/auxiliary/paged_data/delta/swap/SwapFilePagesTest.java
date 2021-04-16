@@ -25,44 +25,44 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests for swap file repository.
+ * Tests for swap file pages handling.
  *
- * @version 0.2.0 2019/10/08
+ * @version 0.2.0 2021/04/16
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class SwapFileRepositoryTest {
+public class SwapFilePagesTest {
 
     public static final String SAMPLE_FILES_PATH = "/org/exbin/auxiliary/paged_data/delta/swap/resources/test/";
     public static final String SAMPLE_ALLBYTES = SAMPLE_FILES_PATH + "allbytes.dat";
     public static final int SAMPLE_ALLBYTES_SIZE = 256;
 
-    public SwapFileRepositoryTest() {
+    public SwapFilePagesTest() {
     }
 
     @Test
     public void testSwapFileRepository() {
-        SwapFileRepository swapFileRepository = new SwapFileRepository();
-        byte[] emptyData = new byte[swapFileRepository.getPageSize()];
+        SwapFilePages swapFilePages = new SwapFilePages();
+        byte[] emptyData = new byte[swapFilePages.getPageSize()];
 
-        long page1 = swapFileRepository.allocatePage();
-        byte[] page1Data = swapFileRepository.getPage(page1);
+        long page1 = swapFilePages.allocatePage();
+        byte[] page1Data = swapFilePages.getPage(page1);
         Assert.assertArrayEquals(emptyData, page1Data);
 
-        File sampleFile = new File(SwapFileRepositoryTest.class.getResource(SAMPLE_ALLBYTES).getFile());
+        File sampleFile = new File(SwapFilePagesTest.class.getResource(SAMPLE_ALLBYTES).getFile());
         byte[] sampleData;
         try {
             sampleData = Files.readAllBytes(sampleFile.toPath());
             System.arraycopy(sampleData, 0, page1Data, 0, SAMPLE_ALLBYTES_SIZE);
         } catch (IOException ex) {
-            Logger.getLogger(SwapFileRepositoryTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SwapFilePagesTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Unable to read sample file");
         }
 
-        swapFileRepository.setPage(page1, page1Data);
+        swapFilePages.setPage(page1, page1Data);
 
-        byte[] page1Modified = swapFileRepository.getPage(page1);
+        byte[] page1Modified = swapFilePages.getPage(page1);
         Assert.assertArrayEquals(page1Data, page1Modified);
-        swapFileRepository.close();
+        swapFilePages.close();
     }
 }

@@ -15,6 +15,7 @@
  */
 package org.exbin.auxiliary.paged_data.delta.list;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +29,7 @@ import org.exbin.auxiliary.paged_data.OutOfBoundsException;
 /**
  * Default implementation of doubly linked list of items.
  *
- * @version 0.2.0 2020/11/18
+ * @version 0.2.0 2021/04/16
  * @author ExBin Project (https://exbin.org)
  * @param <T> doubly linked list item
  */
@@ -89,46 +90,52 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
 
     @Nonnull
     @Override
-    public T set(int index, T element) {
-        T item = first;
+    public T set(int index, T item) {
+        T origItem = first;
         while (index > 0) {
-            item = nextTo(item);
+            origItem = nextTo(origItem);
             index--;
         }
 
-        if (item == null) {
+        if (origItem == null) {
             throw new OutOfBoundsException("No item for index " + index);
         }
 
-        T itemPrev = item.getPrev();
-        T itemNext = item.getNext();
-        item.setNext(null);
-        item.setPrev(null);
-        element.setPrev(itemPrev);
-        element.setNext(itemNext);
-        if (last == item) {
-            last = element;
+        T itemPrev = origItem.getPrev();
+        T itemNext = origItem.getNext();
+        origItem.setNext(null);
+        origItem.setPrev(null);
+        item.setPrev(itemPrev);
+        item.setNext(itemNext);
+        if (last == origItem) {
+            last = item;
         }
 
-        return item;
+        return origItem;
     }
 
     @Override
-    public boolean contains(Object o) {
-        T item = first;
-        while (item != null) {
-            if (item.equals(o)) {
+    public boolean contains(Object item) {
+        T checkedItem = first;
+        while (checkedItem != null) {
+            if (checkedItem.equals(item)) {
                 return true;
             }
-            item = nextTo(item);
+            checkedItem = nextTo(checkedItem);
         }
 
         return false;
     }
 
     @Override
-    public boolean containsAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean containsAll(Collection<?> items) {
+        for (Object item : items) {
+            if (!contains((T) item)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Nonnull
@@ -176,18 +183,17 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
     }
 
     @Override
-    public <T> T[] toArray(T[] template) {
-        throw new UnsupportedOperationException("Not supported yet.");
-//        int count = last == null ? 0 : indexOf(last);
-//        T[] result = template.length >= count ? template : Arrays.copyOf(template, count);
-//        int index = 0;
-//        T item = first;
-//        while (item != null) {
-//            result[index] = item;
-//            item = nextTo(item);
-//            index++;
-//        }
-//        return result;
+    public <X> X[] toArray(X[] template) {
+        int count = last == null ? 0 : indexOf(last);
+        X[] result = template.length >= count ? template : Arrays.copyOf(template, count);
+        int index = 0;
+        T item = first;
+        while (item != null) {
+            result[index] = (X) item;
+            item = nextTo(item);
+            index++;
+        }
+        return result;
     }
 
     @Override
@@ -209,79 +215,80 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
     }
 
     @Override
-    public void add(int index, T element) {
+    public void add(int index, T item) {
         if (index == 0 && size == 0) {
-            add(element);
+            add(item);
             return;
         }
 
-        if (size == 0) {
-            T item = first;
-            first = element;
-            element.setNext(item);
-            element.setPrev(null);
-            item.setPrev(element);
+        if (index > size) {
+            throw new OutOfBoundsException("Index " + index + " is greater than " + size);
         } else if (index == size) {
-            last.setNext(element);
-            element.setPrev(last);
-            element.setNext(null);
-            last = element;
+            last.setNext(item);
+            item.setPrev(last);
+            item.setNext(null);
+            last = item;
         } else if (index == 0) {
-            if (first == null) {
-                last = element;
-            } else {
-                first.setPrev(element);
-            }
-            element.setNext(first);
-            first = element;
+            first.setPrev(item);
+            item.setNext(first);
+            first = item;
         } else {
-            T item = Objects.requireNonNull(get(index));
-            T prevItem = Objects.requireNonNull(item.getPrev());
-            element.setPrev(prevItem);
-            element.setNext(item);
-            prevItem.setNext(element);
-            item.setPrev(element);
+            T indexItem = Objects.requireNonNull(get(index));
+            T prevItem = Objects.requireNonNull(indexItem.getPrev());
+            item.setPrev(prevItem);
+            item.setNext(indexItem);
+            prevItem.setNext(item);
+            indexItem.setPrev(item);
         }
         size++;
     }
 
-    public void addAfter(T positionItem, T element) {
-        T next = positionItem.getNext();
-        if (next == null) {
-            positionItem.setNext(element);
-            element.setPrev(positionItem);
-            element.setNext(null);
-            last = element;
+    /**
+     * Adds item after given listItem.
+     *
+     * ListItem must be part of the list otherwise list will become broken. Item
+     * should not be member of other list
+     *
+     * @param listItem item from the current list
+     * @param item newly addded item
+     */
+    public void addAfter(T listItem, T item) {
+        T listItemNext = listItem.getNext();
+        if (listItemNext == null) {
+            listItem.setNext(item);
+            item.setPrev(listItem);
+            item.setNext(null);
+            last = item;
         } else {
-            positionItem.setNext(element);
-            next.setPrev(element);
-            element.setPrev(positionItem);
-            element.setNext(next);
+            listItem.setNext(item);
+            listItemNext.setPrev(item);
+            item.setPrev(listItem);
+            item.setNext(listItemNext);
         }
         size++;
     }
 
-    public void addBefore(T positionItem, T element) {
-        T prev = positionItem.getPrev();
+    public void addBefore(T targetItem, T item) {
+        T prev = targetItem.getPrev();
         if (prev == null) {
-            positionItem.setPrev(element);
-            element.setNext(positionItem);
-            element.setPrev(null);
-            first = element;
+            targetItem.setPrev(item);
+            item.setNext(targetItem);
+            item.setPrev(null);
+            first = item;
         } else {
-            positionItem.setPrev(element);
-            prev.setNext(element);
-            element.setNext(positionItem);
-            element.setPrev(prev);
+            targetItem.setPrev(item);
+            prev.setNext(item);
+            item.setNext(targetItem);
+            item.setPrev(prev);
         }
         size++;
     }
 
     @Override
-    public boolean addAll(Collection<? extends T> c) {
+    public boolean addAll(Collection<? extends T> elementsToAdd) {
         boolean result = false;
-        for (T t : c) {
-            result |= add(t);
+        for (T element : elementsToAdd) {
+            result |= add(element);
         }
 
         return result;
@@ -298,11 +305,11 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
     }
 
     @Override
-    public int indexOf(Object o) {
+    public int indexOf(Object searchedItem) {
         T item = first;
         int index = 0;
         while (item != null) {
-            if (item.equals(o)) {
+            if (item.equals(searchedItem)) {
                 return index;
             }
             item = item.getNext();
@@ -338,12 +345,13 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
 
     private void removeItem(T item) {
         if (item == first) {
-            first = item.getNext();
-            if (first != null) {
-                first.setPrev(null);
+            T itemNext = item.getNext();
+            if (itemNext != null) {
+                itemNext.setPrev(null);
             } else {
                 last = null;
             }
+            first = itemNext;
         } else {
             T prev = Objects.requireNonNull(item.getPrev());
             T next = item.getNext();
@@ -374,8 +382,24 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean retainAll(Collection<?> retainList) {
+        boolean changed = false;
+        if (first == null) {
+            return false;
+        }
+
+        T item = first;
+        do {
+            if (!retainList.contains(item)) {
+                changed = true;
+                T nextItem = item.getNext();
+                removeItem(item);
+                item = nextItem;
+            } else {
+                item = item.getNext();
+            }
+        } while (item != null);
+        return changed;
     }
 
     @Override
@@ -386,8 +410,20 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
     }
 
     @Override
-    public int lastIndexOf(Object o) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public int lastIndexOf(Object searchedItem) {
+        if (size > 0) {
+            T item = last;
+            int index = size - 1;
+            while (item != null) {
+                if (item.equals(searchedItem)) {
+                    return index;
+                }
+                item = item.getPrev();
+                index--;
+            }
+        }
+
+        return -1;
     }
 
     @Override
