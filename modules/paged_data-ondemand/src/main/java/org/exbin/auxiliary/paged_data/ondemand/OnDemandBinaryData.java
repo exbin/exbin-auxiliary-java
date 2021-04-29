@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.paged_data;
+package org.exbin.auxiliary.paged_data.ondemand;
 
 import java.util.concurrent.Future;
 import javax.annotation.Nonnull;
@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Interface for binary data.
  *
- * @version 0.1.3 2019/10/08
+ * @version 0.2.0 2019/10/08    
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault

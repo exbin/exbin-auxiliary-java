@@ -22,9 +22,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for binary data.
+ * Interface for binary data - read-only sequence of bytes.
  *
- * @version 0.1.3 2019/01/05
+ * Provides methods to read whole or part of the data to array or stream.
+ *
+ * @version 0.2.0 2021/04/28
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -81,7 +83,7 @@ public interface BinaryData {
     void copyToArray(long startFrom, byte[] target, int offset, int length);
 
     /**
-     * Saves data to given stream.
+     * Saves/copies all data to given stream.
      *
      * @param outputStream output stream
      * @throws java.io.IOException if input/output error

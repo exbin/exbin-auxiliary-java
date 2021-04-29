@@ -19,8 +19,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Exception type for out of bounds issues with binary data manipulation
- * operations.
+ * Exception for out of bounds issues with binary data manipulation operations.
  *
  * @version 0.1.3 2019/01/05
  * @author ExBin Project (https://exbin.org)

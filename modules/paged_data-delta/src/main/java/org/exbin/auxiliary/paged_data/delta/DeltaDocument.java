@@ -30,7 +30,7 @@ import org.exbin.auxiliary.paged_data.delta.list.DefaultDoublyLinkedList;
 /**
  * Delta document defined as a sequence of segments.
  *
- * @version 0.2.0 2018/10/29
+ * @version 0.2.0 2021/04/29
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -227,12 +227,24 @@ public class DeltaDocument implements EditableBinaryData {
     }
 
     @Override
-    public void loadFromStream(InputStream in) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void loadFromStream(InputStream stream) throws IOException {
+        clear();
+        DeltaDocumentWindow documentWindow = new DeltaDocumentWindow(this);
+        byte[] buffer = new byte[BUFFER_SIZE];
+
+        long position = 0;
+        int red;
+        do {
+            red = stream.read(buffer);
+            if (red > 0) {
+                documentWindow.insert(position, buffer, 0, red);
+                position += red;
+            }
+        } while (red >= 0);
     }
 
     @Override
-    public void saveToStream(OutputStream out) throws IOException {
+    public void saveToStream(OutputStream stream) throws IOException {
         DeltaDocumentWindow documentWindow = new DeltaDocumentWindow(this);
         byte[] buffer = new byte[BUFFER_SIZE];
 
@@ -242,7 +254,7 @@ public class DeltaDocument implements EditableBinaryData {
             long remains = dataSize - position;
             int toProcess = remains < BUFFER_SIZE ? (int) remains : BUFFER_SIZE;
             documentWindow.copyToArray(position, buffer, 0, toProcess);
-            out.write(buffer, 0, toProcess);
+            stream.write(buffer, 0, toProcess);
             position += toProcess;
         }
     }

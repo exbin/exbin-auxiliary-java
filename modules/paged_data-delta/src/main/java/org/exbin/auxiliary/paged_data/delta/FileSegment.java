@@ -68,6 +68,6 @@ public class FileSegment extends DataSegment {
     @Nonnull
     @Override
     public DataSegment copy() {
-        return new FileSegment(null, startPosition, length);
+        return new FileSegment(source, startPosition, length);
     }
 }

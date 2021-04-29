@@ -4,3 +4,5 @@ include ":modules:simplyhtml"
 include ":modules:paged_data"
 include ":modules:paged_data-delta"
 include ":modules:paged_data-swap"
+include ":modules:paged_data-ondemand"
+

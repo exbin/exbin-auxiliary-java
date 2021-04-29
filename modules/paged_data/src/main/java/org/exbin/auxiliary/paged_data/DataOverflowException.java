@@ -19,10 +19,10 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Exception type for overflow situation where more data is inserted/added than
- * it is allowed to handle.
+ * Exception for overflow situation where more data is inserted/added than it is
+ * allowed to handle.
  *
- * @version 0.1.3 2019/01/05
+ * @version 0.2.0 2019/01/05
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault

@@ -81,5 +81,4 @@ public class SwapDataRepository {
         this.maximumMemoryUsage = maximumMemoryUsage;
         // TODO
     }
-
 }

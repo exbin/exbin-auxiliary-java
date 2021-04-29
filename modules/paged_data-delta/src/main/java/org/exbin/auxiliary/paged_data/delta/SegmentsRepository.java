@@ -862,6 +862,7 @@ public class SegmentsRepository {
      * Segments are suppose to be kept ordered by start position and length with
      * max position computed.
      */
+    @ParametersAreNonnullByDefault
     private class DataSegmentsMap {
 
         @Nonnull

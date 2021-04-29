@@ -27,6 +27,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface DataPageProvider {
 
+    /**
+     * Creates new instance of the data page.
+     *
+     * @param data 
+     * @return
+     */
     @Nonnull
     DataPage createPage(byte[] data);
 }

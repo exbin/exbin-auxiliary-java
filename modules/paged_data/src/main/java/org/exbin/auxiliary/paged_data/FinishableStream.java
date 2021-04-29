@@ -18,9 +18,10 @@ package org.exbin.auxiliary.paged_data;
 import java.io.IOException;
 
 /**
- * Interface for finishable stream.
+ * Interface for finishable stream - allows to skip/process data to identify
+ * size of remaining data.
  *
- * @version 0.1.3 2019/12/08
+ * @version 0.2.0 2021/04/28
  * @author ExBin Project (https://exbin.org)
  */
 public interface FinishableStream {

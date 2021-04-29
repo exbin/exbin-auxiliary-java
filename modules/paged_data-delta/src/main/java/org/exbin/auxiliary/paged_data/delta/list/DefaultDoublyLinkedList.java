@@ -182,6 +182,7 @@ public class DefaultDoublyLinkedList<T extends DoublyLinkedItem<T>> implements D
         return result;
     }
 
+    @Nonnull
     @Override
     public <X> X[] toArray(X[] template) {
         int count = last == null ? 0 : indexOf(last);

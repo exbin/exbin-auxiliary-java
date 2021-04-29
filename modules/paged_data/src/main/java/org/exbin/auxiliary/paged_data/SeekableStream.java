@@ -18,9 +18,9 @@ package org.exbin.auxiliary.paged_data;
 import java.io.IOException;
 
 /**
- * Interface for seekable stream.
+ * Interface for seekable stream - allows to change current position.
  *
- * @version 0.1.3 2017/05/26
+ * @version 0.2.0 2017/05/26
  * @author ExBin Project (https://exbin.org)
  */
 public interface SeekableStream {

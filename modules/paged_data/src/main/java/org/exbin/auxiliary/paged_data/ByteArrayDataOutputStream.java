@@ -21,9 +21,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Byte array data output stream.
+ * Output stream for byte array data.
  *
- * @version 0.1.3 2017/05/26
+ * @version 0.2.0 2017/05/26
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault

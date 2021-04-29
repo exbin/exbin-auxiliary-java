@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Paged data input stream.
+ * Input stream for paged data.
  *
  * @version 0.1.3 2017/05/26
  * @author ExBin Project (https://exbin.org)

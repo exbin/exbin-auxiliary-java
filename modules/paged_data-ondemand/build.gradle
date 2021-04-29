@@ -1,0 +1,34 @@
+group = 'org.exbin.auxiliary'
+ext.libraryName = 'On-demand Paged Binary Data Library'
+ext.libraryDescription = 'Library for paged binary data handling with support for on-demand reading'
+
+apply from: '../exbin-auxiliary-modules.gradle'
+
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
+    }
+}
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+repositories {
+    flatDir {
+        dirs "../../lib"
+    }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    implementation moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'paged_data')
+    testImplementation group : 'junit', name: 'junit', version: '4.10'
+    testCompileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+}

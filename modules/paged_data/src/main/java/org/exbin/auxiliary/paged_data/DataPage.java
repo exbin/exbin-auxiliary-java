@@ -15,17 +15,37 @@
  */
 package org.exbin.auxiliary.paged_data;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Single page data.
  *
- * @version 0.2.0 2021/04/16
+ * @version 0.2.0 2021/04/28
  * @author ExBin Project (https://exbin.org)
  */
+@ParametersAreNonnullByDefault
 public interface DataPage {
 
+    /**
+     * Reads data of the page.
+     *
+     * @return data
+     */
+    @Nonnull
     byte[] getData();
 
-    void setData(byte[] page);
-    
+    /**
+     * Sets data of the page
+     *
+     * @param data
+     */
+    void setData(byte[] data);
+
+    /**
+     * Returns length of the page.
+     *
+     * @return length of the page
+     */
     int getDataLength();
 }

@@ -22,9 +22,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for editable binary data.
+ * Interface for editable binary data - sequence of bytes.
  *
- * @version 0.1.3 2017/05/26
+ * Provides methods to read/write whole or part of the data to array or stream.
+ *
+ * @version 0.2.0 2021/04/28
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -102,7 +104,7 @@ public interface EditableBinaryData extends BinaryData {
     void insert(long startFrom, BinaryData insertedData, long insertedDataOffset, long insertedDataLength);
 
     /**
-     * Loads data from given stream expecting given size.
+     * Loads data from given stream expecting provided size.
      *
      * Preserves original data outside loaded range. Extends data if needed.
      *
@@ -115,7 +117,7 @@ public interface EditableBinaryData extends BinaryData {
     long insert(long startFrom, InputStream inputStream, long maximumDataSize) throws IOException;
 
     /**
-     * Replaces data in given area with given data.
+     * Replaces data in given area with provided data.
      *
      * If sourceData are the same instance, data are replaced as it would be
      * copied to buffer first and replaced then.
@@ -126,7 +128,7 @@ public interface EditableBinaryData extends BinaryData {
     void replace(long targetPosition, BinaryData replacingData);
 
     /**
-     * Replaces data in given area with given data.
+     * Replaces data in given area with provided data.
      *
      * If sourceData are the same instance, data are replaced as it would be
      * copied to buffer first and replaced then.
@@ -139,7 +141,7 @@ public interface EditableBinaryData extends BinaryData {
     void replace(long targetPosition, BinaryData replacingData, long startFrom, long length);
 
     /**
-     * Replaces data in given area with given data.
+     * Replaces data in given area with provided data.
      *
      * If sourceData are the same instance, data are replaced as it would be
      * copied to buffer first and replaced then.
@@ -150,7 +152,7 @@ public interface EditableBinaryData extends BinaryData {
     void replace(long targetPosition, byte[] replacingData);
 
     /**
-     * Replaces data in given area with given data.
+     * Replaces data in given area with provided data.
      *
      * If sourceData are the same instance, data are replaced as it would be
      * copied to buffer first and replaced then.
@@ -195,9 +197,7 @@ public interface EditableBinaryData extends BinaryData {
     void clear();
 
     /**
-     * Loads data from given stream.
-     *
-     * Always replaces all data.
+     * Replaces all data by data red from given stream.
      *
      * @param inputStream input stream
      * @throws java.io.IOException if input/output error
