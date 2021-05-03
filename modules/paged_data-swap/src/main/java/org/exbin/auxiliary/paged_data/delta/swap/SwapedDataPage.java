@@ -15,6 +15,7 @@
  */
 package org.exbin.auxiliary.paged_data.delta.swap;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.paged_data.DataPage;
 
@@ -46,6 +47,7 @@ public class SwapedDataPage implements DataPage {
         this.pageIndex = pageIndex;
     }
 
+    @Nonnull
     @Override
     public byte[] getData() {
         return repository.getSwapFilePages().getPagePart(pageIndex, length);

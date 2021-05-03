@@ -249,19 +249,19 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     }
 
     @Override
-    public void replace(long targetPosition, BinaryData sourceData, long startFrom, long length) {
-        if (targetPosition + length > getDataSize()) {
+    public void replace(long targetPosition, BinaryData replacingData, long startFrom, long replacingLength) {
+        if (targetPosition + replacingLength > getDataSize()) {
             throw new OutOfBoundsException("Data can be replaced only inside or at the end");
         }
 
-        if (sourceData instanceof ByteArrayData) {
-            replace(targetPosition, ((ByteArrayData) sourceData).data, (int) startFrom, (int) length);
+        if (replacingData instanceof ByteArrayData) {
+            replace(targetPosition, ((ByteArrayData) replacingData).data, (int) startFrom, (int) replacingLength);
         } else {
-            while (length > 0) {
-                setByte(targetPosition, sourceData.getByte(startFrom));
+            while (replacingLength > 0) {
+                setByte(targetPosition, replacingData.getByte(startFrom));
                 targetPosition++;
                 startFrom++;
-                length--;
+                replacingLength--;
             }
         }
     }
