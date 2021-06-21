@@ -65,7 +65,13 @@ public class DeltaDocument implements EditableBinaryData {
         pointerWindow.reset();
     }
 
-    // Temporary method for accessing data pages
+    /**
+     * Method for accessing data pages.
+     *
+     * Use only if you know what you are doing.
+     *
+     * @return segments
+     */
     @Nonnull
     public DefaultDoublyLinkedList<DataSegment> getSegments() {
         return segments;

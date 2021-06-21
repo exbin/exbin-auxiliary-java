@@ -55,7 +55,7 @@ public class DeltaDocumentWindow {
 
         DataSegment targetSegment = pointer.segment;
         if (targetSegment == null) {
-            throw new NullPointerException("Missing segment for position" + position);
+            throw new NullPointerException("Missing segment for position " + position);
         }
         if (targetSegment instanceof FileSegment) {
             return ((FileSegment) targetSegment).getByte(targetSegment.getStartPosition() + (position - pointer.position));
@@ -597,7 +597,7 @@ public class DeltaDocumentWindow {
             if (pointer.segment == null && position == dataSize) {
                 pointer.segment = segments.last();
                 if (pointer.segment == null) {
-                    throw new IllegalStateException("Unexpected null segment");
+                    throwNullSegmentException();
                 }
                 pointer.position -= pointer.segment.getLength();
             }
@@ -605,13 +605,13 @@ public class DeltaDocumentWindow {
             while (position < pointer.position) {
                 pointer.segment = segments.prevTo(pointer.segment);
                 if (pointer.segment == null) {
-                    throw new IllegalStateException("Unexpected null segment");
+                    throwNullSegmentException();
                 }
                 pointer.position -= pointer.segment.getLength();
             }
         } else {
             if (pointer.segment == null) {
-                throw new IllegalStateException("Unexpected null segment");
+                throwNullSegmentException();
             }
 
             while (position >= pointer.position + pointer.segment.getLength()) {
@@ -621,7 +621,7 @@ public class DeltaDocumentWindow {
                 pointer.position += pointer.segment.getLength();
                 pointer.segment = segments.nextTo(pointer.segment);
                 if (pointer.segment == null) {
-                    throw new IllegalStateException("Unexpected null segment");
+                    throwNullSegmentException();
                 }
             }
         }
@@ -698,6 +698,10 @@ public class DeltaDocumentWindow {
                 throw new IllegalStateException("Illegal pointer position " + pointer.position);
             }
         }
+    }
+
+    private static void throwNullSegmentException() {
+        throw new IllegalStateException("Unexpected null segment");
     }
 
     /**

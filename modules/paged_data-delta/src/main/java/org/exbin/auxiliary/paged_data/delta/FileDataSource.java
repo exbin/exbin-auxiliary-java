@@ -85,9 +85,9 @@ public class FileDataSource {
      * Clears cache windows.
      */
     public void clearCache() {
-        for (CacheClearListener listener : listeners) {
+        listeners.forEach(listener -> {
             listener.clearCache();
-        }
+        });
     }
 
     public void close() {
