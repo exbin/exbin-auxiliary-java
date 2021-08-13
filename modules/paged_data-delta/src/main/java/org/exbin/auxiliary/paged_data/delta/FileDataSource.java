@@ -45,14 +45,14 @@ public class FileDataSource {
 
     private final List<CacheClearListener> listeners = new ArrayList<>();
 
-    public FileDataSource(File sourceFile, EditationMode editationMode) throws FileNotFoundException, IOException {
+    public FileDataSource(File sourceFile, EditMode editMode) throws FileNotFoundException, IOException {
         file = sourceFile;
-        accessFile = new RandomAccessFile(sourceFile, editationMode.getFileAccessMode());
+        accessFile = new RandomAccessFile(sourceFile, editMode.getFileAccessMode());
         window = new DeltaDataPageWindow(this);
     }
 
     public FileDataSource(File sourceFile) throws FileNotFoundException, IOException {
-        this(sourceFile, EditationMode.READ_WRITE);
+        this(sourceFile, EditMode.READ_WRITE);
     }
 
     public long getFileLength() throws IOException {
@@ -120,14 +120,14 @@ public class FileDataSource {
     }
 
     @ParametersAreNonnullByDefault
-    public static enum EditationMode {
+    public static enum EditMode {
         READ_WRITE("rw"),
         READ_ONLY("r");
 
         @Nonnull
         private final String fileAccessMode;
 
-        private EditationMode(String fileAccessMode) {
+        private EditMode(String fileAccessMode) {
             this.fileAccessMode = fileAccessMode;
         }
 

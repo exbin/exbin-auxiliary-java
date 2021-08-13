@@ -66,7 +66,7 @@ public class SwapFilePages {
     private void initSwapFile(String prefix, String suffix, @Nullable File directory) {
         try {
             swapFile = File.createTempFile(prefix, suffix, directory);
-            accessFile = new RandomAccessFile(swapFile, FileDataSource.EditationMode.READ_WRITE.getFileAccessMode());
+            accessFile = new RandomAccessFile(swapFile, FileDataSource.EditMode.READ_WRITE.getFileAccessMode());
         } catch (IOException ex) {
             Logger.getLogger(SwapFilePages.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);

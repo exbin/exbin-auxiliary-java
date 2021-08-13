@@ -73,8 +73,8 @@ public class SegmentsRepository {
     }
 
     @Nonnull
-    public FileDataSource openFileSource(File sourceFile, FileDataSource.EditationMode editationMode) throws IOException {
-        FileDataSource fileSource = new FileDataSource(sourceFile, editationMode);
+    public FileDataSource openFileSource(File sourceFile, FileDataSource.EditMode editMode) throws IOException {
+        FileDataSource fileSource = new FileDataSource(sourceFile, editMode);
         fileSources.put(fileSource, new DataSegmentsMap());
         return fileSource;
     }
