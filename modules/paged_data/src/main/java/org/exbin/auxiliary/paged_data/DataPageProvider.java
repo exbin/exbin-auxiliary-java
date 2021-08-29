@@ -30,8 +30,8 @@ public interface DataPageProvider {
     /**
      * Creates new instance of the data page.
      *
-     * @param data 
-     * @return
+     * @param data data
+     * @return data page
      */
     @Nonnull
     DataPage createPage(byte[] data);

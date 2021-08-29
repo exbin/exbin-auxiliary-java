@@ -38,7 +38,7 @@ public interface DataPage {
     /**
      * Sets data of the page
      *
-     * @param data
+     * @param data data
      */
     void setData(byte[] data);
 
