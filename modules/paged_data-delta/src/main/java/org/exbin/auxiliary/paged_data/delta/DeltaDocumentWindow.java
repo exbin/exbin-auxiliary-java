@@ -25,7 +25,7 @@ import org.exbin.auxiliary.paged_data.delta.list.DefaultDoublyLinkedList;
 /**
  * Access window for delta document.
  *
- * @version 0.2.0 2021/04/16
+ * @version 0.2.1 2021/09/25
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -123,15 +123,15 @@ public class DeltaDocumentWindow {
         } else if (pointer.segment != null && pointer.position == startFrom && pointer.segment.getPrev() instanceof MemorySegment
                 && pointer.segment.getPrev().getStartPosition() + pointer.segment.getPrev().getLength() == ((MemorySegment) pointer.segment.getPrev()).getSource().getDataSize()) {
             MemorySegment prevSegment = (MemorySegment) pointer.segment.getPrev();
-            prevSegment.getSource().insertUninitialized(prevSegment.getSource().getDataSize(), 1);
-            repository.updateSegmentLength(prevSegment, prevSegment.getLength() + 1);
+            prevSegment.getSource().insertUninitialized(prevSegment.getSource().getDataSize(), length);
+            repository.updateSegmentLength(prevSegment, prevSegment.getLength() + length);
             pointer.position++;
             document.setDataLength(targetLength);
         } else if (pointer.segment == null && segments.last() instanceof MemorySegment
                 && segments.last().getStartPosition() + segments.last().getLength() == ((MemorySegment) segments.last()).getSource().getDataSize()) {
             MemorySegment prevSegment = (MemorySegment) segments.last();
-            prevSegment.getSource().insertUninitialized(prevSegment.getSource().getDataSize(), 1);
-            repository.updateSegmentLength(prevSegment, prevSegment.getLength() + 1);
+            prevSegment.getSource().insertUninitialized(prevSegment.getSource().getDataSize(), length);
+            repository.updateSegmentLength(prevSegment, prevSegment.getLength() + length);
             pointer.position++;
             document.setDataLength(targetLength);
         } else {
@@ -168,15 +168,15 @@ public class DeltaDocumentWindow {
         } else if (pointer.segment != null && pointer.position == startFrom && pointer.segment.getPrev() instanceof MemorySegment
                 && pointer.segment.getPrev().getStartPosition() + pointer.segment.getPrev().getLength() == ((MemorySegment) pointer.segment.getPrev()).getSource().getDataSize()) {
             MemorySegment prevSegment = (MemorySegment) pointer.segment.getPrev();
-            prevSegment.getSource().insert(prevSegment.getSource().getDataSize(), 1);
-            repository.updateSegmentLength(prevSegment, prevSegment.getLength() + 1);
+            prevSegment.getSource().insert(prevSegment.getSource().getDataSize(), length);
+            repository.updateSegmentLength(prevSegment, prevSegment.getLength() + length);
             pointer.position++;
             document.setDataLength(targetLength);
         } else if (pointer.segment == null && segments.last() instanceof MemorySegment
                 && segments.last().getStartPosition() + segments.last().getLength() == ((MemorySegment) segments.last()).getSource().getDataSize()) {
             MemorySegment prevSegment = (MemorySegment) segments.last();
-            prevSegment.getSource().insert(prevSegment.getSource().getDataSize(), 1);
-            repository.updateSegmentLength(prevSegment, prevSegment.getLength() + 1);
+            prevSegment.getSource().insert(prevSegment.getSource().getDataSize(), length);
+            repository.updateSegmentLength(prevSegment, prevSegment.getLength() + length);
             pointer.position++;
             document.setDataLength(targetLength);
         } else {
