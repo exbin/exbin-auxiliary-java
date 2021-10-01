@@ -15,6 +15,7 @@
  */
 package org.exbin.auxiliary.paged_data;
 
+import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nonnull;
 import static org.junit.Assert.*;
@@ -354,6 +355,25 @@ public class ByteArrayEditableDataTest {
         ByteArrayEditableData instanceC = new ByteArrayEditableData();
         try (InputStream streamC = testUtils.getSampleDataStream(TestUtils.SAMPLE_ALLBYTES)) {
             instanceC.loadFromStream(streamC);
+        }
+        assertEquals(256l, instanceC.getDataSize());
+        assertEquals(0x0, instanceC.getByte(0));
+        assertEquals(0x7f, instanceC.getByte(0x7f) & 0xff);
+        assertEquals(0xff, instanceC.getByte(0xff) & 0xff);
+    }
+
+    @Test
+    public void testLoadFromNonBlockingStream() throws Exception {
+        ByteArrayEditableData instanceC = new ByteArrayEditableData();
+        try (InputStream streamC = testUtils.getSampleDataStream(TestUtils.SAMPLE_ALLBYTES)) {
+            InputStream nonBlockingStream = new InputStream() {
+                @Override
+                public int read() throws IOException {
+                    return streamC.read();
+                }
+            };
+
+            instanceC.loadFromStream(nonBlockingStream);
         }
         assertEquals(256l, instanceC.getDataSize());
         assertEquals(0x0, instanceC.getByte(0));

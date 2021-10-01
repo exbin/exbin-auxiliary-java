@@ -155,16 +155,19 @@ public class DeltaDocument implements EditableBinaryData {
         // TODO optimization later
         long processed = 0;
         byte[] buffer = new byte[BUFFER_SIZE];
-        while (maxDataLength > 0 && inputStream.available() > 0) {
-            int toRead = maxDataLength > BUFFER_SIZE ? BUFFER_SIZE : (int) maxDataLength;
-            int read = inputStream.read(buffer, 0, toRead);
-            if (read == -1) {
-                break;
-            }
-            pointerWindow.insert(startFrom, buffer, 0, read);
-            maxDataLength -= read;
-            startFrom += read;
-            processed += read;
+        if (maxDataLength > 0) {
+            int read;
+            do {
+                int toRead = maxDataLength > BUFFER_SIZE ? BUFFER_SIZE : (int) maxDataLength;
+                read = inputStream.read(buffer, 0, toRead);
+                if (read == -1) {
+                    break;
+                }
+                pointerWindow.insert(startFrom, buffer, 0, read);
+                maxDataLength -= read;
+                startFrom += read;
+                processed += read;
+            } while (maxDataLength > 0 && read > 0);
         }
 
         return processed;

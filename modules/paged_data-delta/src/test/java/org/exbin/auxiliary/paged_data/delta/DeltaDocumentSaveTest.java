@@ -734,13 +734,15 @@ public class DeltaDocumentSaveTest {
             try (FileInputStream fileInput = new FileInputStream(sampleFile); FileOutputStream fileOutput = new FileOutputStream(tempFile)) {
                 // Copy file
                 byte[] buffer = new byte[4096];
-                while (fileInput.available() > 0) {
-                    int red = fileInput.read(buffer);
-                    if (red < 0) {
+                int read;
+                do {
+                    read = fileInput.read(buffer);
+                    if (read < 0) {
                         break;
                     }
-                    fileOutput.write(buffer, 0, red);
-                }
+                    fileOutput.write(buffer, 0, read);
+
+                } while (read > 0);
             }
 
             FileDataSource fileSource = segmentsRepository.openFileSource(tempFile);

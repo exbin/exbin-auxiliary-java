@@ -76,12 +76,13 @@ public class TestUtils {
         byte[] buffer = new byte[1024];
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (InputStream stream = getSampleDataStream(dataPath)) {
-            while (stream.available() > 0) {
-                int read = stream.read(buffer);
+            int read;
+            do {
+                read = stream.read(buffer);
                 if (read > 0) {
                     outputStream.write(buffer, 0, read);
                 }
-            }
+            } while (read > 0);
             stream.close();
             outputStream.close();
             return outputStream.toByteArray();

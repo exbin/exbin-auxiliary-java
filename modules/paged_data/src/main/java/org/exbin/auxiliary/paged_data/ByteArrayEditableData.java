@@ -205,18 +205,19 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
 
         try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[BUFFER_SIZE];
-            while (inputStream.available() > 0 && dataSize > 0) {
-                int toRead = buffer.length;
-                if (toRead > dataSize) {
-                    toRead = (int) dataSize;
-                }
-                int red = inputStream.read(buffer, 0, toRead);
-                if (red > 0) {
-                    output.write(buffer, 0, red);
-                    dataSize -= red;
-                } else {
-                    break;
-                }
+            if (dataSize > 0) {
+                int read;
+                do {
+                    int toRead = buffer.length;
+                    if (toRead > dataSize) {
+                        toRead = (int) dataSize;
+                    }
+                    read = inputStream.read(buffer, 0, toRead);
+                    if (read > 0) {
+                        output.write(buffer, 0, read);
+                        dataSize -= read;
+                    }
+                } while (read > 0 && dataSize > 0);
             }
             byte[] newData = output.toByteArray();
             if (startFrom + newData.length > getDataSize()) {
@@ -324,12 +325,13 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     public void loadFromStream(InputStream inputStream) throws IOException {
         try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[BUFFER_SIZE];
-            while (inputStream.available() > 0) {
-                int read = inputStream.read(buffer);
+            int read;
+            do {
+                read = inputStream.read(buffer);
                 if (read > 0) {
                     output.write(buffer, 0, read);
                 }
-            }
+            } while (read > 0);
             data = output.toByteArray();
         }
     }

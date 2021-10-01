@@ -42,19 +42,23 @@ public class TestUtils {
         try {
             byte[] dataBlob = new byte[2];
             int position = 0;
-            while (expectedStream.available() > 0) {
-                int readStat = expectedStream.read(dataBlob, 0, 1);
-                if (readStat < 0) {
-                    Assert.fail("Unable to read expected stream on position " + position);
-                }
+            int readStat;
+            do {
+                readStat = expectedStream.read(dataBlob, 0, 1);
                 int readStat2 = stream.read(dataBlob, 1, 1);
+                if (readStat < 0) {
+                    if (readStat2 > 0) {
+                        Assert.fail("Unable to read expected stream on position " + position);
+                    }
+                    break;
+                }
                 if (readStat2 < 0) {
                     Assert.fail("Unable to read compared stream on position " + position);
                 }
 
                 Assert.assertEquals("Issue on position " + position, dataBlob[0], dataBlob[1]);
                 position++;
-            }
+            } while (readStat > 0);
 
             Assert.assertTrue(stream.available() == 0);
         } catch (IOException ex) {
