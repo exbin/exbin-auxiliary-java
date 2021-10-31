@@ -33,7 +33,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Data are stored using paging. Last page might be shorter than page size, but
  * not empty.
  *
- * @version 0.2.0 2021/04/16
+ * @version 0.2.1 2021/10/31
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
@@ -620,8 +620,18 @@ public class PagedData implements EditableBinaryData {
                 while (remain > 0) {
                     int length = remain > bufferSize ? bufferSize : remain;
                     other.copyToArray(offset, buffer, 0, length);
-                    if (!Arrays.equals(data.get(pageIndex).getData(), 0, length, buffer, 0, length)) {
-                        return false;
+
+                    // In Java 9+
+                    // if (!Arrays.equals(data.get(pageIndex).getData(), 0, length, buffer, 0, length)) {
+                    //    return false;
+                    // }
+                    {
+                        byte[] pageData = data.get(pageIndex).getData();
+                        for (int i = 0; i < length; i++) {
+                            if (pageData[i] != buffer[i]) {
+                                return false;
+                            }
+                        }
                     }
 
                     offset += length;
@@ -654,8 +664,22 @@ public class PagedData implements EditableBinaryData {
                 length = other.pageSize - otherPageOffset;
             }
 
-            if (!Arrays.equals(data.get(pageIndex).getData(), pageOffset, pageOffset + length, other.data.get(otherPageIndex).getData(), otherPageOffset, otherPageOffset + length)) {
-                return false;
+            // In Java 9+
+            // if (!Arrays.equals(data.get(pageIndex).getData(), pageOffset, pageOffset + length, other.data.get(otherPageIndex).getData(), otherPageOffset, otherPageOffset + length)) {
+            //     return false;
+            // }
+            {
+                byte[] pageData = data.get(pageIndex).getData();
+                byte[] otherPageData = other.data.get(otherPageIndex).getData();
+                int pageTestPos = pageOffset;
+                int otherPageTestPos = otherPageOffset;
+                for (int i = 0; i < length; i++) {
+                    if (pageData[pageTestPos] != otherPageData[otherPageTestPos]) {
+                        return false;
+                    }
+                    pageTestPos++;
+                    otherPageTestPos++;
+                }
             }
 
             offset += length;

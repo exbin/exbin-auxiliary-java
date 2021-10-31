@@ -1,18 +1,14 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
 group = 'org.exbin.auxiliary'
 ext.libraryName = 'Simply HTML'
 ext.libraryDescription = 'Library for richtext/HTML editor support'
 
 apply from: '../exbin-auxiliary-modules.gradle'
-
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-    dependencies {
-        classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
-    }
-}
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'com.lightdev.app.shtm.App'
