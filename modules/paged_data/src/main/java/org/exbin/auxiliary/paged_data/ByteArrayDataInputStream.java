@@ -62,11 +62,11 @@ public class ByteArrayDataInputStream extends InputStream implements SeekableStr
         }
 
         byte[] byteArray = data.getData();
-        if (off + len > byteArray.length) {
-            len = byteArray.length - off;
-            if (len <= 0) {
+        if (position > byteArray.length - len) {
+            if (position >= byteArray.length) {
                 return -1;
             }
+            len = (int) (byteArray.length - position);
         }
 
         System.arraycopy(byteArray, (int) position, output, off, len);
