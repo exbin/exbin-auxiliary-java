@@ -66,7 +66,7 @@ public class PagedData implements EditableBinaryData {
 
     @Override
     public long getDataSize() {
-        return (data.size() > 1 ? (data.size() - 1) * pageSize : 0) + (data.size() > 0 ? data.get(data.size() - 1).getDataLength() : 0);
+        return (data.size() > 1 ? (data.size() - 1) * pageSize : 0) + (!data.isEmpty() ? data.get(data.size() - 1).getDataLength() : 0);
     }
 
     @Override

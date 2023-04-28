@@ -39,6 +39,10 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     public static final int BUFFER_SIZE = 1024;
     public static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 5;
 
+    private static final String WRONG_INSERTION_POSITION_ERROR = "Data can be inserted only inside or at the end";
+    private static final String WRONG_REPLACE_POSITION_ERROR = "Data can be replaced only inside or at the end";
+    private static final String ARRAY_OVERFLOW_ERROR = "Maximum array size overflow";
+
     public ByteArrayEditableData() {
         this(null);
     }
@@ -76,10 +80,10 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insertUninitialized(long startFrom, long length) {
         if (startFrom > data.length) {
-            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException(WRONG_INSERTION_POSITION_ERROR);
         }
         if (length > MAX_ARRAY_LENGTH - data.length) {
-            throw new DataOverflowException("Maximum array size overflow");
+            throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
 
         if (length > 0) {
@@ -93,10 +97,10 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, long length) {
         if (startFrom > data.length) {
-            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException(WRONG_INSERTION_POSITION_ERROR);
         }
         if (length > MAX_ARRAY_LENGTH - data.length) {
-            throw new DataOverflowException("Maximum array size overflow");
+            throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
 
         if (length > 0) {
@@ -110,10 +114,10 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, byte[] insertedData) {
         if (startFrom > data.length) {
-            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException(WRONG_INSERTION_POSITION_ERROR);
         }
         if (insertedData.length > MAX_ARRAY_LENGTH - data.length) {
-            throw new DataOverflowException("Maximum array size overflow");
+            throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
 
         int length = insertedData.length;
@@ -133,10 +137,10 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, byte[] insertedData, int insertedDataOffset, int length) {
         if (startFrom > data.length) {
-            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException(WRONG_INSERTION_POSITION_ERROR);
         }
         if (length > MAX_ARRAY_LENGTH - data.length) {
-            throw new DataOverflowException("Maximum array size overflow");
+            throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
 
         if (length > 0) {
@@ -155,10 +159,10 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, BinaryData insertedData) {
         if (startFrom > data.length) {
-            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException(WRONG_INSERTION_POSITION_ERROR);
         }
         if (insertedData.getDataSize() > MAX_ARRAY_LENGTH - data.length) {
-            throw new DataOverflowException("Maximum array size overflow");
+            throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
 
         if (insertedData instanceof ByteArrayData) {
@@ -171,10 +175,10 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void insert(long startFrom, BinaryData insertedData, long insertedDataOffset, long insertedDataLength) {
         if (startFrom > data.length) {
-            throw new OutOfBoundsException("Data can be inserted only inside or at the end");
+            throw new OutOfBoundsException(WRONG_INSERTION_POSITION_ERROR);
         }
         if (insertedDataLength > MAX_ARRAY_LENGTH - data.length) {
-            throw new DataOverflowException("Maximum array size overflow");
+            throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
 
         if (insertedData instanceof ByteArrayData) {
@@ -199,7 +203,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public long insert(long startFrom, InputStream inputStream, long dataSize) throws IOException {
         if (dataSize > MAX_ARRAY_LENGTH - data.length) {
-            throw new DataOverflowException("Maximum array size overflow");
+            throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
 
         try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
@@ -251,7 +255,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void replace(long targetPosition, BinaryData replacingData, long startFrom, long replacingLength) {
         if (targetPosition + replacingLength > getDataSize()) {
-            throw new OutOfBoundsException("Data can be replaced only inside or at the end");
+            throw new OutOfBoundsException(WRONG_REPLACE_POSITION_ERROR);
         }
 
         if (replacingData instanceof ByteArrayData) {
@@ -274,7 +278,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
     @Override
     public void replace(long targetPosition, byte[] replacingData, int replacingDataOffset, int length) {
         if (targetPosition + length > getDataSize()) {
-            throw new OutOfBoundsException("Data can be replaced only inside or at the end");
+            throw new OutOfBoundsException(WRONG_REPLACE_POSITION_ERROR);
         }
 
         try {
