@@ -31,6 +31,7 @@ public class PagedDataInputStream extends InputStream implements SeekableStream,
     @Nonnull
     private final PagedData data;
     private long position = 0;
+    private long mark = 0;
 
     public PagedDataInputStream(PagedData data) {
         this.data = data;
@@ -43,16 +44,6 @@ public class PagedDataInputStream extends InputStream implements SeekableStream,
         } catch (ArrayIndexOutOfBoundsException ex) {
             return -1;
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        finish();
-    }
-
-    @Override
-    public int available() throws IOException {
-        return (int) (data.getDataSize() - position);
     }
 
     @Override
@@ -90,6 +81,16 @@ public class PagedDataInputStream extends InputStream implements SeekableStream,
     }
 
     @Override
+    public void close() throws IOException {
+        finish();
+    }
+
+    @Override
+    public int available() throws IOException {
+        return (int) (data.getDataSize() - position);
+    }
+
+    @Override
     public void seek(long position) throws IOException {
         this.position = position;
     }
@@ -108,5 +109,33 @@ public class PagedDataInputStream extends InputStream implements SeekableStream,
     @Override
     public long getStreamSize() {
         return data.getDataSize();
+    }
+
+    @Override
+    public boolean markSupported() {
+        return true;
+    }
+
+    @Override
+    public synchronized void reset() throws IOException {
+        position = mark;
+    }
+
+    @Override
+    public synchronized void mark(int readlimit) {
+        mark = position;
+    }
+
+    @Override
+    public long skip(long n) throws IOException {
+        long dataSize = data.getDataSize();
+        if (position + n < dataSize) {
+            position += n;
+            return n;
+        }
+
+        long skipped = dataSize - position;
+        position = dataSize;
+        return skipped;
     }
 }

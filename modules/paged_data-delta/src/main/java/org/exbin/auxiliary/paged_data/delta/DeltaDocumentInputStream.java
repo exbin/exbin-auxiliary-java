@@ -33,6 +33,7 @@ public class DeltaDocumentInputStream extends InputStream implements SeekableStr
     @Nonnull
     private final DeltaDocumentWindow data;
     private long position = 0;
+    private long mark = 0;
 
     public DeltaDocumentInputStream(DeltaDocument document) {
         this.data = new DeltaDocumentWindow(document);
@@ -51,17 +52,6 @@ public class DeltaDocumentInputStream extends InputStream implements SeekableStr
         } catch (ArrayIndexOutOfBoundsException ex) {
             return -1;
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        finish();
-    }
-
-    @Override
-    public int available() throws IOException {
-        long available = data.getDataSize() - position;
-        return (available > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int) available;
     }
 
     @Override
@@ -85,6 +75,17 @@ public class DeltaDocumentInputStream extends InputStream implements SeekableStr
     }
 
     @Override
+    public void close() throws IOException {
+        finish();
+    }
+
+    @Override
+    public int available() throws IOException {
+        long available = data.getDataSize() - position;
+        return (available > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int) available;
+    }
+
+    @Override
     public void seek(long position) throws IOException {
         this.position = position;
     }
@@ -103,5 +104,33 @@ public class DeltaDocumentInputStream extends InputStream implements SeekableStr
     @Override
     public long getStreamSize() {
         return data.getDataSize();
+    }
+
+    @Override
+    public boolean markSupported() {
+        return true;
+    }
+
+    @Override
+    public synchronized void reset() throws IOException {
+        position = mark;
+    }
+
+    @Override
+    public synchronized void mark(int readlimit) {
+        mark = position;
+    }
+
+    @Override
+    public long skip(long n) throws IOException {
+        long dataSize = data.getDataSize();
+        if (position + n < dataSize) {
+            position += n;
+            return n;
+        }
+
+        long skipped = dataSize - position;
+        position = dataSize;
+        return skipped;
     }
 }

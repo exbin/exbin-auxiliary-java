@@ -31,6 +31,7 @@ public class ByteArrayDataInputStream extends InputStream implements SeekableStr
     @Nonnull
     private final ByteArrayData data;
     private long position = 0;
+    private long mark = 0;
 
     public ByteArrayDataInputStream(ByteArrayData data) {
         this.data = data;
@@ -43,16 +44,6 @@ public class ByteArrayDataInputStream extends InputStream implements SeekableStr
         } catch (ArrayIndexOutOfBoundsException ex) {
             return -1;
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        finish();
-    }
-
-    @Override
-    public int available() throws IOException {
-        return (int) (data.getDataSize() - position);
     }
 
     @Override
@@ -75,6 +66,16 @@ public class ByteArrayDataInputStream extends InputStream implements SeekableStr
     }
 
     @Override
+    public void close() throws IOException {
+        finish();
+    }
+
+    @Override
+    public int available() throws IOException {
+        return (int) (data.getDataSize() - position);
+    }
+
+    @Override
     public void seek(long position) throws IOException {
         this.position = position;
     }
@@ -93,5 +94,33 @@ public class ByteArrayDataInputStream extends InputStream implements SeekableStr
     @Override
     public long getStreamSize() {
         return data.getDataSize();
+    }
+
+    @Override
+    public boolean markSupported() {
+        return true;
+    }
+
+    @Override
+    public synchronized void reset() throws IOException {
+        position = mark;
+    }
+
+    @Override
+    public synchronized void mark(int readlimit) {
+        mark = position;
+    }
+
+    @Override
+    public long skip(long n) throws IOException {
+        long dataSize = data.getDataSize();
+        if (position + n < dataSize) {
+            position += n;
+            return n;
+        }
+
+        long skipped = dataSize - position;
+        position = dataSize;
+        return skipped;
     }
 }
