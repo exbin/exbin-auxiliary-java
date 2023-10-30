@@ -355,10 +355,11 @@ public class DeltaDocumentWindow {
             pointer.segment = first;
             document.setDataLength(targetLength);
             tryMergeArea(startFrom, insertedData.getDataSize());
-        } else if (pointer.segment instanceof MemorySegment) {
+        } /*else if (pointer.segment instanceof MemorySegment) {
+            // TODO can't do that directly, also it breaks
             repository.insertMemoryData((MemorySegment) pointer.segment, startFrom - pointer.position, insertedData, insertedDataOffset, insertedDataLength);
             document.setDataLength(targetLength);
-        } else {
+        } */ else {
             if (pointer.position < startFrom) {
                 splitSegment(startFrom);
                 focusSegment(startFrom);
@@ -508,25 +509,27 @@ public class DeltaDocumentWindow {
      * @param position split position
      */
     public void splitSegment(long position) {
-        if (position < pointer.position || (pointer.segment != null && position > pointer.position + pointer.segment.getLength())) {
+        long pointerPosition = pointer.position;
+        DataSegment pointerSegment = pointer.segment;
+        if (position < pointerPosition || (pointerSegment != null && position > pointerPosition + pointerSegment.getLength())) {
             throw new IllegalStateException("Split position is out of current segment");
         }
 
-        if (pointer.position == position || pointer.segment == null || pointer.position + pointer.segment.getLength() == position) {
+        if (pointerPosition == position || pointerSegment == null || pointerPosition + pointerSegment.getLength() == position) {
             // No action needed
             return;
         }
 
         DefaultDoublyLinkedList<DataSegment> segments = document.getSegments();
         SegmentsRepository repository = document.getRepository();
-        long firstPartSize = position - pointer.position;
-        if (pointer.segment instanceof MemorySegment) {
-            MemorySegment memorySegment = (MemorySegment) pointer.segment;
+        long firstPartSize = position - pointerPosition;
+        if (pointerSegment instanceof MemorySegment) {
+            MemorySegment memorySegment = (MemorySegment) pointerSegment;
             MemorySegment newSegment = repository.createMemorySegment(memorySegment.getSource(), memorySegment.getStartPosition() + firstPartSize, memorySegment.getLength() - firstPartSize);
             repository.updateSegmentLength(memorySegment, firstPartSize);
-            segments.addAfter(pointer.segment, newSegment);
+            segments.addAfter(pointerSegment, newSegment);
         } else {
-            FileSegment fileSegment = (FileSegment) pointer.segment;
+            FileSegment fileSegment = (FileSegment) pointerSegment;
             FileSegment newSegment = repository.createFileSegment(fileSegment.getSource(), fileSegment.getStartPosition() + firstPartSize, fileSegment.getLength() - firstPartSize);
             repository.updateSegmentLength(fileSegment, firstPartSize);
             segments.addAfter(fileSegment, newSegment);
