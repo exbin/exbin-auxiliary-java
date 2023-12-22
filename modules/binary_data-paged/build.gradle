@@ -1,0 +1,31 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group = 'org.exbin.auxiliary'
+ext.libraryName = 'Paged binary data Library'
+ext.libraryDescription = 'Library for paged binary data handling'
+
+apply from: '../exbin-auxiliary-modules.gradle'
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+repositories {
+    flatDir {
+        dirs "../../lib"
+    }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'binary_data')
+    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    testImplementation group : 'junit', name: 'junit', version: '4.13.2'
+    testImplementation project(path: moduleDepPath('ExbinAuxiliaryJava', 'binary_data'), configuration: 'tests')
+    testCompileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+}

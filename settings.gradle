@@ -1,9 +1,10 @@
 rootProject.name = 'exbin-auxiliary-java'
 
-include ":modules:paged_data"
-include ":modules:paged_data-delta"
-include ":modules:paged_data-swap"
-include ":modules:paged_data-ondemand"
+include ":modules:binary_data"
+include ":modules:binary_data-paged"
+include ":modules:binary_data-delta"
+include ":modules:binary_data-swap"
+include ":modules:binary_data-ondemand"
 
 gradle.allprojects {
   ext {

@@ -1,6 +1,0 @@
-rootProject.name = 'paged_data'
-
-if (rootProject.path == ':') {
-}
-
-apply from: '../exbin-auxiliary-modules-settings.gradle'

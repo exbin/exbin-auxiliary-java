@@ -1,7 +1,0 @@
-rootProject.name = 'paged_data-ondemand'
-
-if (rootProject.path == ':') {
-    include ':modules:paged_data'
-}
-
-apply from: '../exbin-auxiliary-modules-settings.gradle'

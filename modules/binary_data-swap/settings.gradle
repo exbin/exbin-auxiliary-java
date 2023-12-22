@@ -1,0 +1,9 @@
+rootProject.name = 'binary_data-swap'
+
+if (rootProject.path == ':') {
+    include ':modules:binary_data'
+    include ':modules:binary_data-paged'
+    include ':modules:binary_data-delta'
+}
+
+apply from: '../exbin-auxiliary-modules-settings.gradle'
