@@ -13,31 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data;
+package org.exbin.auxiliary.binary_data.ondemand;
 
-import java.io.IOException;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for finish-able stream - allows to skip/process data to identify
- * size of remaining data.
+ * Interface to provide data loading observer.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface FinishableStream {
+@ParametersAreNonnullByDefault
+public interface DataLoadingObserverProvider {
 
-    /**
-     * Reads remaining data and returns size of all data processed by this
-     * stream.
-     *
-     * @return size of data in bytes
-     * @throws IOException if input/output error occurs
-     */
-    long finish() throws IOException;
-
-    /**
-     * Returns size of data processed so far.
-     *
-     * @return size of data in bytes
-     */
-    long getProcessedSize();
+    @Nonnull
+    DataLoadingObserver getDataLoadedObserver();
 }

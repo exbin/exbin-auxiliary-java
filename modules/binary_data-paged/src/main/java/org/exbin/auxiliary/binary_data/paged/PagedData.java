@@ -33,7 +33,7 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 
 /**
  * Encapsulation class for binary data blob.
- *
+ * <p>
  * Data are stored using paging. Last page might be shorter than page size, but
  * not empty.
  *
@@ -179,7 +179,7 @@ public class PagedData implements EditableBinaryData {
                     targetOffset = targetPage.length;
                 }
 
-                int copySize = sourceOffset > targetOffset ? targetOffset : sourceOffset;
+                int copySize = Math.min(sourceOffset, targetOffset);
                 if (copySize > copyLength) {
                     copySize = (int) copyLength;
                 }
@@ -294,10 +294,10 @@ public class PagedData implements EditableBinaryData {
     @Override
     public void fillData(long startFrom, long length, byte fill) {
         if (length < 0) {
-            throw new IllegalArgumentException("Length of filled block must be nonnegative");
+            throw new IllegalArgumentException("Length of filled block must be non-negative");
         }
         if (startFrom < 0) {
-            throw new IllegalArgumentException("Position of filler block must be nonnegative");
+            throw new IllegalArgumentException("Position of filler block must be non-negative");
         }
         if (startFrom + length > getDataSize()) {
             throw new OutOfBoundsException("Filled block must be inside existing data");
@@ -357,10 +357,10 @@ public class PagedData implements EditableBinaryData {
     @Override
     public void remove(long startFrom, long length) {
         if (length < 0) {
-            throw new IllegalArgumentException("Length of removed block must be nonnegative");
+            throw new IllegalArgumentException("Length of removed block must be non-negative");
         }
         if (startFrom < 0) {
-            throw new IllegalArgumentException("Position of removed block must be nonnegative");
+            throw new IllegalArgumentException("Position of removed block must be non-negative");
         }
         if (startFrom + length > getDataSize()) {
             throw new OutOfBoundsException("Removed block must be inside existing data");
@@ -378,7 +378,7 @@ public class PagedData implements EditableBinaryData {
     }
 
     /**
-     * returns number of pages currently used.
+     * Returns number of pages currently used.
      *
      * @return count of pages
      */

@@ -16,8 +16,8 @@
 package org.exbin.auxiliary.binary_data.delta.swap;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import junit.framework.Assert;
 import org.exbin.auxiliary.binary_data.delta.DeltaDocument;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -42,6 +42,6 @@ public class SwapDataRepositoryTest {
         DeltaDocument testDocument = swapDataRepository.getSegmentsRepository().createDocument();
         testDocument.insert(0, 8096);
         long usedPages = swapDataRepository.getSwapFilePages().getUsedPages();
-        Assert.assertNotSame(usedPages, 0l);
+        Assert.assertNotSame(0L, usedPages);
     }
 }

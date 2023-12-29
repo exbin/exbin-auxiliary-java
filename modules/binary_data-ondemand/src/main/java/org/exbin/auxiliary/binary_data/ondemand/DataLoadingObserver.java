@@ -13,31 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data;
+package org.exbin.auxiliary.binary_data.ondemand;
 
-import java.io.IOException;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
- * Interface for finish-able stream - allows to skip/process data to identify
- * size of remaining data.
+ * Interface for data loaded event.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface FinishableStream {
+@ParametersAreNonnullByDefault
+public interface DataLoadingObserver {
 
     /**
-     * Reads remaining data and returns size of all data processed by this
-     * stream.
+     * Event can optionally include information about what range of data was
+     * loaded via related loading operation.
      *
-     * @return size of data in bytes
-     * @throws IOException if input/output error occurs
+     * @param dataRange data range
      */
-    long finish() throws IOException;
-
-    /**
-     * Returns size of data processed so far.
-     *
-     * @return size of data in bytes
-     */
-    long getProcessedSize();
+    void dataLoaded(@Nullable DataRange dataRange);
 }

@@ -64,7 +64,6 @@ public class EmptyBinaryData implements BinaryData {
         throw new OutOfBoundsException();
     }
 
-    @Nonnull
     @Override
     public void copyToArray(long startFrom, byte[] target, int offset, int length) {
         if (startFrom == 0 && length == 0) {
@@ -74,7 +73,6 @@ public class EmptyBinaryData implements BinaryData {
         throw new OutOfBoundsException();
     }
 
-    @Nonnull
     @Override
     public void saveToStream(OutputStream outputStream) throws IOException {
     }
@@ -90,7 +88,6 @@ public class EmptyBinaryData implements BinaryData {
         };
     }
 
-    @Nonnull
     @Override
     public void dispose() {
     }

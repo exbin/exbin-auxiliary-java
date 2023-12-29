@@ -27,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Basic implementation of editable binary data interface using byte array.
- *
+ * <p>
  * This implementation is highly inefficient with resources and is not
  * recommended for frequently changed data as each change creates copy of data.
  *

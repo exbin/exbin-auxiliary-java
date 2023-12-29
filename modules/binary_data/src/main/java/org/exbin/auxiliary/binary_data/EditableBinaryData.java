@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for editable binary data - sequence of bytes.
- *
+ * <p>
  * Provides methods to read/write whole or part of the data to array or stream.
  *
  * @author ExBin Project (https://exbin.org)
@@ -33,7 +33,7 @@ public interface EditableBinaryData extends BinaryData {
 
     /**
      * Sets data size.
-     *
+     * <p>
      * If size is bigger than current size, it will fill it with zeros,
      * otherwise it will shrink current data.
      *
@@ -104,7 +104,7 @@ public interface EditableBinaryData extends BinaryData {
 
     /**
      * Loads data from given stream expecting provided size.
-     *
+     * <p>
      * Preserves original data outside loaded range. Extends data if needed.
      *
      * @param startFrom start position to insert data
@@ -117,7 +117,7 @@ public interface EditableBinaryData extends BinaryData {
 
     /**
      * Replaces data in given area with provided data.
-     *
+     * <p>
      * If sourceData are the same instance, data are replaced as it would be
      * copied to buffer first and replaced then.
      *
@@ -128,7 +128,7 @@ public interface EditableBinaryData extends BinaryData {
 
     /**
      * Replaces data in given area with provided data.
-     *
+     * <p>
      * If sourceData are the same instance, data are replaced as it would be
      * copied to buffer first and replaced then.
      *
@@ -141,7 +141,7 @@ public interface EditableBinaryData extends BinaryData {
 
     /**
      * Replaces data in given area with provided data.
-     *
+     * <p>
      * If sourceData are the same instance, data are replaced as it would be
      * copied to buffer first and replaced then.
      *
@@ -152,7 +152,7 @@ public interface EditableBinaryData extends BinaryData {
 
     /**
      * Replaces data in given area with provided data.
-     *
+     * <p>
      * If sourceData are the same instance, data are replaced as it would be
      * copied to buffer first and replaced then.
      *
@@ -190,7 +190,7 @@ public interface EditableBinaryData extends BinaryData {
 
     /**
      * Removes all existing data.
-     *
+     * <p>
      * Simply releases all references to data pages.
      */
     void clear();
@@ -205,7 +205,7 @@ public interface EditableBinaryData extends BinaryData {
 
     /**
      * Provides handler for output stream generation.
-     *
+     * <p>
      * Received data are appended to existing data.
      *
      * @return new instance of output stream

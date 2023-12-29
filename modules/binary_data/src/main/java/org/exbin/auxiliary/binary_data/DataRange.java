@@ -15,29 +15,29 @@
  */
 package org.exbin.auxiliary.binary_data;
 
-import java.io.IOException;
+import javax.annotation.concurrent.Immutable;
 
 /**
- * Interface for finish-able stream - allows to skip/process data to identify
- * size of remaining data.
+ * Simple representation of data range.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface FinishableStream {
+@Immutable
+public class DataRange {
 
-    /**
-     * Reads remaining data and returns size of all data processed by this
-     * stream.
-     *
-     * @return size of data in bytes
-     * @throws IOException if input/output error occurs
-     */
-    long finish() throws IOException;
+    private final long startPosition;
+    private final long endPosition;
 
-    /**
-     * Returns size of data processed so far.
-     *
-     * @return size of data in bytes
-     */
-    long getProcessedSize();
+    public DataRange(long startPosition, long endPosition) {
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+    }
+
+    public long getStartPosition() {
+        return startPosition;
+    }
+
+    public long getEndPosition() {
+        return endPosition;
+    }
 }

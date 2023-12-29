@@ -40,7 +40,7 @@ public class SwapDataRepository {
     private final SegmentsRepository segmentsRepository;
 
     public SwapDataRepository() {
-        dataPageProvider = (byte[] data) -> SwapDataRepository.this.createPage(data);
+        dataPageProvider = SwapDataRepository.this::createPage;
         segmentsRepository = new SegmentsRepository(dataPageProvider);
     }
 
