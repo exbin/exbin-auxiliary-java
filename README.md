@@ -1,7 +1,7 @@
 ExBin Project - Auxiliary Libraries
 ===================================
 
-Libraries and utility tools for ExBin Project in Java.
+Libraries and utility tools for ExBin Project written in Java.
 
 Homepage: https://exbin.org  
 

@@ -1,0 +1,17 @@
+0.2.1 (2023-12-30)
+- Renamed back to binary_data + split as regular and paged variant
+- Added data not present support
+- Added empty data class
+
+0.2.0 (2021-08-29)
+- Renamed to paged_data
+- Fixed some issues
+
+0.1.2 (2017-01-07)
+- Fixed data size bug
+
+0.1.1 (2016-12-08)
+- Added insert data method
+
+0.1.0 (2016-07-20)
+- Released
