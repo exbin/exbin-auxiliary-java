@@ -28,8 +28,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
+import org.exbin.auxiliary.binary_data.delta.file.FileDataSource;
 import org.exbin.auxiliary.binary_data.paged.PagedData;
-import org.exbin.auxiliary.binary_data.delta.FileDataSource;
 
 /**
  * Repository for swap file.

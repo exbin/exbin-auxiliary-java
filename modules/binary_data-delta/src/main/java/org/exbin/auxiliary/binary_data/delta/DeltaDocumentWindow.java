@@ -56,8 +56,8 @@ public class DeltaDocumentWindow {
         if (targetSegment == null) {
             throw new NullPointerException("Missing segment for position " + position);
         }
-        if (targetSegment instanceof FileSegment) {
-            return ((FileSegment) targetSegment).getByte(targetSegment.getStartPosition() + (position - pointer.position));
+        if (targetSegment instanceof SourceSegment) {
+            return ((SourceSegment) targetSegment).getByte(targetSegment.getStartPosition() + (position - pointer.position));
         } else {
             return ((MemorySegment) targetSegment).getByte(targetSegment.getStartPosition() + (position - pointer.position));
         }
@@ -68,7 +68,7 @@ public class DeltaDocumentWindow {
         SegmentsRepository repository = document.getRepository();
         focusSegment(position);
 
-        if (pointer.segment instanceof FileSegment) {
+        if (pointer.segment instanceof SourceSegment) {
             if (pointer.position != position) {
                 splitSegment(position);
                 focusSegment(position);
@@ -83,7 +83,7 @@ public class DeltaDocumentWindow {
                 segments.addBefore(pointer.segment, segment);
             }
             pointer.position++;
-            FileSegment documentSegment = ((FileSegment) pointer.segment);
+            SourceSegment documentSegment = ((SourceSegment) pointer.segment);
             if (documentSegment.getLength() == 1) {
                 segments.remove(documentSegment);
                 repository.dropSegment(documentSegment);
@@ -466,33 +466,35 @@ public class DeltaDocumentWindow {
         copy.setDataLength(length);
         focusSegment(startFrom);
 
-        DefaultDoublyLinkedList<DataSegment> segments = document.getSegments();
-        DataSegment segment = pointer.segment;
-        if (segment == null) {
-            throw new NullPointerException("Segment on given position not found");
-        }
-        long offset = startFrom - pointer.position;
-        while (length > 0) {
-            long segmentLength = segment.getLength();
-            long copyLength = segmentLength - offset;
-            if (copyLength > length) {
-                copyLength = length;
+        if (length > 0) {
+            DefaultDoublyLinkedList<DataSegment> segments = document.getSegments();
+            DataSegment segment = pointer.segment;
+            if (segment == null) {
+                throw new NullPointerException("Segment on given position not found");
             }
+            long offset = startFrom - pointer.position;
+            while (length > 0) {
+                long segmentLength = segment.getLength();
+                long copyLength = segmentLength - offset;
+                if (copyLength > length) {
+                    copyLength = length;
+                }
 
-            if (offset == 0 && copyLength == segmentLength) {
-                copy.getSegments().add(repository.copySegment(segment));
-            } else if (segment instanceof MemorySegment) {
-                MemorySegment memorySegment = (MemorySegment) segment;
-                copy.getSegments().add(repository.createMemorySegment(memorySegment.getSource(), memorySegment.getStartPosition() + offset, copyLength));
-            } else {
-                FileSegment fileSegment = (FileSegment) segment;
-                copy.getSegments().add(repository.createFileSegment(fileSegment.getSource(), fileSegment.getStartPosition() + offset, copyLength));
-            }
-            length -= copyLength;
-            offset = 0;
-            segment = segments.nextTo(segment);
-            if (length > 0 && segment == null) {
-                throw new NullPointerException("Unexpected end of segments sequence");
+                if (offset == 0 && copyLength == segmentLength) {
+                    copy.getSegments().add(repository.copySegment(segment));
+                } else if (segment instanceof MemorySegment) {
+                    MemorySegment memorySegment = (MemorySegment) segment;
+                    copy.getSegments().add(repository.createMemorySegment(memorySegment.getSource(), memorySegment.getStartPosition() + offset, copyLength));
+                } else {
+                    SourceSegment fileSegment = (SourceSegment) segment;
+                    copy.getSegments().add(repository.createSourceSegment(fileSegment.getSource(), fileSegment.getStartPosition() + offset, copyLength));
+                }
+                length -= copyLength;
+                offset = 0;
+                segment = segments.nextTo(segment);
+                if (length > 0 && segment == null) {
+                    throw new NullPointerException("Unexpected end of segments sequence");
+                }
             }
         }
 
@@ -529,8 +531,8 @@ public class DeltaDocumentWindow {
             repository.updateSegmentLength(memorySegment, firstPartSize);
             segments.addAfter(pointerSegment, newSegment);
         } else {
-            FileSegment fileSegment = (FileSegment) pointerSegment;
-            FileSegment newSegment = repository.createFileSegment(fileSegment.getSource(), fileSegment.getStartPosition() + firstPartSize, fileSegment.getLength() - firstPartSize);
+            SourceSegment fileSegment = (SourceSegment) pointerSegment;
+            SourceSegment newSegment = repository.createSourceSegment(fileSegment.getSource(), fileSegment.getStartPosition() + firstPartSize, fileSegment.getLength() - firstPartSize);
             repository.updateSegmentLength(fileSegment, firstPartSize);
             segments.addAfter(fileSegment, newSegment);
         }
@@ -655,8 +657,8 @@ public class DeltaDocumentWindow {
             return false;
         }
 
-        if (segment instanceof FileSegment && nextSegment instanceof FileSegment) {
-            if (((FileSegment) segment).getStartPosition() + segment.getLength() == ((FileSegment) nextSegment).getStartPosition()) {
+        if (segment instanceof SourceSegment && nextSegment instanceof SourceSegment) {
+            if (((SourceSegment) segment).getStartPosition() + segment.getLength() == ((SourceSegment) nextSegment).getStartPosition()) {
                 repository.updateSegmentLength(segment, segment.getLength() + nextSegment.getLength());
                 repository.dropSegment(nextSegment);
                 segments.remove(nextSegment);

@@ -15,30 +15,31 @@
  */
 package org.exbin.auxiliary.binary_data.delta;
 
+import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Data segment pointing to file.
+ * Data segment pointing to source data.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FileSegment extends DataSegment {
+public class SourceSegment extends DataSegment {
 
     @Nonnull
-    private final FileDataSource source;
+    private final DataSource source;
     private long startPosition;
     private long length;
 
-    public FileSegment(FileDataSource source, long startPosition, long length) {
+    public SourceSegment(DataSource source, long startPosition, long length) {
         this.source = source;
         this.startPosition = startPosition;
         this.length = length;
     }
 
     @Nonnull
-    public FileDataSource getSource() {
+    public DataSource getSource() {
         return source;
     }
 
@@ -61,12 +62,16 @@ public class FileSegment extends DataSegment {
     }
 
     public byte getByte(long position) {
-        return source.getByte(position);
+        try {
+            return source.getByte(position);
+        } catch (IOException ex) {
+            throw new RuntimeException("Error while processing data source", ex);
+        }
     }
 
     @Nonnull
     @Override
     public DataSegment copy() {
-        return new FileSegment(source, startPosition, length);
+        return new SourceSegment(source, startPosition, length);
     }
 }

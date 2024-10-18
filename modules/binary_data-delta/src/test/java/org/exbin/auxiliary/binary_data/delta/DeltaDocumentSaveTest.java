@@ -15,6 +15,7 @@
  */
 package org.exbin.auxiliary.binary_data.delta;
 
+import org.exbin.auxiliary.binary_data.delta.file.FileDataSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -744,8 +745,9 @@ public class DeltaDocumentSaveTest {
                 } while (read > 0);
             }
 
-            FileDataSource fileSource = segmentsRepository.openFileSource(tempFile);
-            return segmentsRepository.createDocument(fileSource);
+            FileDataSource dataSource = new FileDataSource(tempFile);
+            segmentsRepository.addDataSource(dataSource);
+            return segmentsRepository.createDocument(dataSource);
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail();
@@ -755,9 +757,13 @@ public class DeltaDocumentSaveTest {
 
     public static void closeTempDeltaDocument(DeltaDocument document) {
         document.dispose();
-        FileDataSource fileSource = Objects.requireNonNull(document.getFileSource());
-        fileSource.close();
-        File tempFile = fileSource.getFile();
+        DataSource dataSource = Objects.requireNonNull(document.getDataSource());
+        try {
+            dataSource.close();
+        } catch (IOException ex) {
+            Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        File tempFile = ((FileDataSource) dataSource).getFile();
         tempFile.delete();
     }
 }

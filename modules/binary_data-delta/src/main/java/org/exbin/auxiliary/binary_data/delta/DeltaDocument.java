@@ -36,7 +36,7 @@ import org.exbin.auxiliary.binary_data.delta.list.DefaultDoublyLinkedList;
 public class DeltaDocument implements EditableBinaryData {
 
     private final SegmentsRepository repository;
-    private FileDataSource fileSource;
+    private DataSource dataSource;
     private final DefaultDoublyLinkedList<DataSegment> segments = new DefaultDoublyLinkedList<>();
 
     private long dataLength = 0;
@@ -45,12 +45,12 @@ public class DeltaDocument implements EditableBinaryData {
 
     private static final int BUFFER_SIZE = 4096;
 
-    public DeltaDocument(SegmentsRepository repository, FileDataSource fileSource) throws IOException {
+    public DeltaDocument(SegmentsRepository repository, DataSource dataSource) throws IOException {
         this.repository = repository;
-        this.fileSource = fileSource;
-        dataLength = fileSource.getFileLength();
+        this.dataSource = dataSource;
+        dataLength = dataSource.getDataLength();
         if (dataLength > 0) {
-            DataSegment fullFileSegment = repository.createFileSegment(fileSource, 0, dataLength);
+            DataSegment fullFileSegment = repository.createSourceSegment(dataSource, 0, dataLength);
             segments.add(fullFileSegment);
         }
         pointerWindow = new DeltaDocumentWindow(this);
@@ -342,12 +342,12 @@ public class DeltaDocument implements EditableBinaryData {
     }
 
     @Nullable
-    public FileDataSource getFileSource() {
-        return fileSource;
+    public DataSource getDataSource() {
+        return dataSource;
     }
 
-    public void setFileSource(FileDataSource fileSource) {
-        this.fileSource = fileSource;
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Nonnull

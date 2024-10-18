@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data.delta;
+package org.exbin.auxiliary.binary_data.delta.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,10 +21,9 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.auxiliary.binary_data.delta.DataSource;
 
 /**
  * Data source for access to file resource locking it for exclusive access.
@@ -32,7 +31,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class FileDataSource {
+public class FileDataSource implements DataSource {
 
     @Nonnull
     private final File file;
@@ -54,12 +53,14 @@ public class FileDataSource {
         this(sourceFile, EditMode.READ_WRITE);
     }
 
-    public long getFileLength() throws IOException {
+    @Override
+    public long getDataLength() throws IOException {
         checkClosed();
         return accessFile.length();
     }
 
-    public void setFileLength(long length) throws IOException {
+    @Override
+    public void setDataLength(long length) throws IOException {
         checkClosed();
         accessFile.setLength(length);
     }
@@ -75,27 +76,45 @@ public class FileDataSource {
         return accessFile;
     }
 
-    public byte getByte(long position) {
+    @Override
+    public byte getByte(long position) throws IOException {
         checkClosed();
         return window.getByte(position);
+    }
+
+    @Override
+    public void setByte(long position, byte value) throws IOException {
+        checkClosed();
+        accessFile.seek(position);
+        accessFile.writeByte(value);
+    }
+
+    @Override
+    public int read(long position, byte[] buffer, int offset, int length) throws IOException {
+        accessFile.seek(position);
+        return accessFile.read(buffer, offset, length);
+    }
+
+    @Override
+    public void write(long position, byte[] buffer, int offset, int length) throws IOException {
+        accessFile.seek(position);
+        accessFile.write(buffer, offset, length);
     }
 
     /**
      * Clears cache windows.
      */
+    @Override
     public void clearCache() {
         listeners.forEach(listener -> {
             listener.clearCache();
         });
     }
 
-    public void close() {
+    @Override
+    public void close() throws IOException {
         checkClosed();
-        try {
-            accessFile.close();
-        } catch (IOException ex) {
-            Logger.getLogger(FileDataSource.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        accessFile.close();
         closed = true;
     }
 

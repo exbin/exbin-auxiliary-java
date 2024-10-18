@@ -15,6 +15,7 @@
  */
 package org.exbin.auxiliary.binary_data.delta;
 
+import org.exbin.auxiliary.binary_data.delta.file.FileDataSource;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -50,8 +51,8 @@ public class DeltaDocumentTest {
         Assert.assertEquals(1, segments.size());
 
         DataSegment segment0 = segments.first();
-        Assert.assertTrue(segment0 instanceof FileSegment);
-        Assert.assertEquals(0, ((FileSegment) segment0).getStartPosition());
+        Assert.assertTrue(segment0 instanceof SourceSegment);
+        Assert.assertEquals(0, ((SourceSegment) segment0).getStartPosition());
         Assert.assertEquals(SAMPLE_ALLBYTES_SIZE, segment0.getLength());
 
         document.validate();
@@ -70,8 +71,8 @@ public class DeltaDocumentTest {
         Assert.assertEquals(3, segments.size());
 
         DataSegment segment0 = segments.first();
-        Assert.assertTrue(segment0 instanceof FileSegment);
-        Assert.assertEquals(0, ((FileSegment) segment0).getStartPosition());
+        Assert.assertTrue(segment0 instanceof SourceSegment);
+        Assert.assertEquals(0, ((SourceSegment) segment0).getStartPosition());
         Assert.assertEquals(10, segment0.getLength());
 
         DataSegment segment1 = segments.get(1);
@@ -80,8 +81,8 @@ public class DeltaDocumentTest {
         Assert.assertEquals(1, segment1.getLength());
 
         DataSegment segment2 = segments.get(2);
-        Assert.assertTrue(segment2 instanceof FileSegment);
-        Assert.assertEquals(11, ((FileSegment) segment2).getStartPosition());
+        Assert.assertTrue(segment2 instanceof SourceSegment);
+        Assert.assertEquals(11, ((SourceSegment) segment2).getStartPosition());
         Assert.assertEquals(SAMPLE_ALLBYTES_SIZE - 11, segment2.getLength());
 
         document.validatePointerPosition();
@@ -101,8 +102,8 @@ public class DeltaDocumentTest {
         Assert.assertEquals(3, segments.size());
 
         DataSegment segment0 = segments.first();
-        Assert.assertTrue(segment0 instanceof FileSegment);
-        Assert.assertEquals(0, ((FileSegment) segment0).getStartPosition());
+        Assert.assertTrue(segment0 instanceof SourceSegment);
+        Assert.assertEquals(0, ((SourceSegment) segment0).getStartPosition());
         Assert.assertEquals(10, segment0.getLength());
 
         DataSegment segment1 = segments.get(1);
@@ -111,8 +112,8 @@ public class DeltaDocumentTest {
         Assert.assertEquals(1, segment1.getLength());
 
         DataSegment segment2 = segments.get(2);
-        Assert.assertTrue(segment2 instanceof FileSegment);
-        Assert.assertEquals(10, ((FileSegment) segment2).getStartPosition());
+        Assert.assertTrue(segment2 instanceof SourceSegment);
+        Assert.assertEquals(10, ((SourceSegment) segment2).getStartPosition());
         Assert.assertEquals(SAMPLE_ALLBYTES_SIZE - 10, segment2.getLength());
 
         document.validatePointerPosition();
@@ -124,8 +125,9 @@ public class DeltaDocumentTest {
     public static DeltaDocument openDeltaDocument() {
         SegmentsRepository segmentsRepository = new SegmentsRepository();
         try {
-            FileDataSource fileSource = segmentsRepository.openFileSource(new File(DeltaDocumentTest.class.getResource(SAMPLE_ALLBYTES).getFile()));
-            return segmentsRepository.createDocument(fileSource);
+            FileDataSource dataSource = new FileDataSource(new File(DeltaDocumentTest.class.getResource(SAMPLE_ALLBYTES).getFile()));
+            segmentsRepository.addDataSource(dataSource);
+            return segmentsRepository.createDocument(dataSource);
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail();
