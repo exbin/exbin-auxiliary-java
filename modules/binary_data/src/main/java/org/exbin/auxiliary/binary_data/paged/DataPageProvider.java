@@ -13,24 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data.ondemand;
+package org.exbin.auxiliary.binary_data.paged;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.auxiliary.binary_data.BinaryData;
 
 /**
- * Interface to provide data loading observer.
+ * Data page provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DataLoadingObserverProvider {
+public interface DataPageProvider {
 
     /**
-     * Returns data loading observer.
+     * Creates new instance of the empty data page.
      *
-     * @return data loading observer
+     * @return data page
      */
     @Nonnull
-    DataLoadingObserver getDataLoadedObserver();
+    BinaryData createPage();
+
+    /**
+     * Creates new instance of the data page.
+     *
+     * @param sourceData data used as source
+     * @return data page
+     */
+    @Nonnull
+    BinaryData createPage(BinaryData sourceData);
+
+    /**
+     * Creates new instance of the data page.
+     *
+     * @param sourceData data used as source
+     * @return data page
+     */
+    @Nonnull
+    BinaryData createPage(byte[] sourceData);
 }

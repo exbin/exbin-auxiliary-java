@@ -2,7 +2,7 @@ rootProject.name = 'binary_data-delta'
 
 if (rootProject.path == ':') {
     include ':modules:binary_data'
-    include ':modules:binary_data-paged'
+    include ':modules:binary_data-array'
 }
 
 apply from: '../exbin-auxiliary-modules-settings.gradle'

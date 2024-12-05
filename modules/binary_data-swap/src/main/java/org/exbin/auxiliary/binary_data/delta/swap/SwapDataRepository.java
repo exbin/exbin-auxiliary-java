@@ -17,8 +17,8 @@ package org.exbin.auxiliary.binary_data.delta.swap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.auxiliary.binary_data.paged.ByteArrayDataPage;
-import org.exbin.auxiliary.binary_data.paged.DataPage;
+import org.exbin.auxiliary.binary_data.BinaryData;
+import org.exbin.auxiliary.binary_data.ByteArrayData;
 import org.exbin.auxiliary.binary_data.paged.DataPageProvider;
 import org.exbin.auxiliary.binary_data.delta.SegmentsRepository;
 
@@ -40,7 +40,7 @@ public class SwapDataRepository {
     private final SegmentsRepository segmentsRepository;
 
     public SwapDataRepository() {
-        dataPageProvider = SwapDataRepository.this::createPage;
+        dataPageProvider = new SwapDataPageProvider();
         segmentsRepository = new SegmentsRepository(dataPageProvider);
     }
 
@@ -59,19 +59,6 @@ public class SwapDataRepository {
         return segmentsRepository;
     }
 
-    @Nonnull
-    private DataPage createPage(byte[] data) {
-        if ((maximumMemoryUsage == -1) || (maximumMemoryUsage > data.length)) {
-            DataPage dataPage = new ByteArrayDataPage(data);
-            maximumMemoryUsage -= data.length;
-            return dataPage;
-        }
-
-        long allocatedPage = swapFilePages.allocatePage();
-        swapFilePages.setPage(allocatedPage, data);
-        return new SwapedDataPage(this, allocatedPage, data.length);
-    }
-
     public long getMaximumMemoryUsage() {
         return maximumMemoryUsage;
     }
@@ -79,5 +66,32 @@ public class SwapDataRepository {
     public void setMaximumMemoryUsage(long maximumMemoryUsage) {
         this.maximumMemoryUsage = maximumMemoryUsage;
         // TODO
+    }
+
+    @ParametersAreNonnullByDefault
+    private class SwapDataPageProvider implements DataPageProvider {
+
+        @Override
+        public BinaryData createPage() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public BinaryData createPage(BinaryData sourceData) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public BinaryData createPage(byte[] sourceData) {
+            if ((maximumMemoryUsage == -1) || (maximumMemoryUsage > sourceData.length)) {
+                BinaryData dataPage = new ByteArrayData(sourceData);
+                maximumMemoryUsage -= sourceData.length;
+                return dataPage;
+            }
+
+            long allocatedPage = swapFilePages.allocatePage();
+            swapFilePages.setPage(allocatedPage, sourceData);
+            return new SwapedDataPage(SwapDataRepository.this, allocatedPage, sourceData.length);
+        }
     }
 }

@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 import org.exbin.auxiliary.binary_data.delta.file.FileDataSource;
-import org.exbin.auxiliary.binary_data.paged.PagedData;
+import org.exbin.auxiliary.binary_data.paged.ByteArrayPagedData;
 
 /**
  * Repository for swap file.
@@ -43,7 +43,7 @@ public class SwapFilePages {
     private static final String DEFAULT_SWAPFILE_SUFFIX = "";
     private static final int MAX_UNUSED_PAGES = 20;
 
-    private int pageSize = PagedData.DEFAULT_PAGE_SIZE;
+    private int pageSize = ByteArrayPagedData.DEFAULT_PAGE_SIZE;
 
     private File swapFile = null;
     private RandomAccessFile accessFile;

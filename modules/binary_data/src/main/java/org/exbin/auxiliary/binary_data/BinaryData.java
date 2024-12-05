@@ -22,8 +22,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for binary data - read-only sequence of bytes.
- *
+ * Interface for binary data - readable sequence of bytes.
+ * <p>
  * Provides methods to read whole or part of the data to array or stream.
  *
  * @author ExBin Project (https://exbin.org)

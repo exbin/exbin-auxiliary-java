@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface for binary data.
+ * Interface for binary data with support for on demand retrieval.
  *
  * @author ExBin Project (https://exbin.org)
  */

@@ -13,24 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data.ondemand;
+package org.exbin.auxiliary.binary_data.paged;
 
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Interface to provide data loading observer.
+ * Paged data with support for customizable page provider.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public interface DataLoadingObserverProvider {
+public interface CustomizablePagedData extends PagedData {
 
     /**
-     * Returns data loading observer.
+     * Returns data page provider.
      *
-     * @return data loading observer
+     * @return data page provider
      */
     @Nonnull
-    DataLoadingObserver getDataLoadedObserver();
+    Optional<DataPageProvider> getDataPageProvider();
+
+    /**
+     *
+     * @param dataPageProvider
+     */
+    void setDataPageProvider(@Nullable DataPageProvider dataPageProvider);
 }

@@ -1,7 +1,8 @@
 rootProject.name = 'exbin-auxiliary-java'
 
 include ":modules:binary_data"
-include ":modules:binary_data-paged"
+include ":modules:binary_data-array"
+include ":modules:binary_data-buffer"
 include ":modules:binary_data-delta"
 include ":modules:binary_data-swap"
 include ":modules:binary_data-ondemand"

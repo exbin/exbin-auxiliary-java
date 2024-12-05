@@ -1,9 +1,7 @@
-rootProject.name = 'binary_data-swap'
+rootProject.name = 'binary_data-array'
 
 if (rootProject.path == ':') {
     include ':modules:binary_data'
-    include ':modules:binary_data-array'
-    include ':modules:binary_data-delta'
 }
 
 apply from: '../exbin-auxiliary-modules-settings.gradle'
