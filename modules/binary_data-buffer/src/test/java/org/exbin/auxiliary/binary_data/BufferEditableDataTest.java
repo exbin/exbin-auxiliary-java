@@ -22,32 +22,32 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * Tests for ByteArrayEditableData class.
+ * Tests for BufferEditableData class.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public class ByteArrayEditableDataTest {
+public class BufferEditableDataTest {
 
     @Nonnull
     private final TestUtils testUtils = new TestUtils();
 
-    public ByteArrayEditableDataTest() {
+    public BufferEditableDataTest() {
     }
 
     @Test
     public void testSetDataSize() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.setDataSize(10);
         assertEquals(10l, instanceA.getDataSize());
 
-        ByteArrayEditableData instanceA1 = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA1 = new BufferEditableData(testUtils.getSampleDataA());
         instanceA1.setDataSize(4);
         assertEquals(4l, instanceA1.getDataSize());
     }
 
     @Test
     public void testSetByte() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.setByte(0, (byte) 50);
         instanceA.setByte(1, (byte) 51);
         assertEquals(50, instanceA.getByte(0));
@@ -62,14 +62,14 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testInsertUninitialized() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.insertUninitialized(1, 2);
         assertEquals(7l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
         assertEquals((byte) 0x34, instanceA.getByte(3));
         assertEquals((byte) 0x56, instanceA.getByte(4));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB.insertUninitialized(20, 1);
             fail();
@@ -79,7 +79,7 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testInsertLength() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.insert(1, 2);
         assertEquals(7l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -88,7 +88,7 @@ public class ByteArrayEditableDataTest {
         assertEquals((byte) 0x34, instanceA.getByte(3));
         assertEquals((byte) 0x56, instanceA.getByte(4));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB.insert(20, 1);
             fail();
@@ -98,7 +98,7 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testInsert_byteArray() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.insert(1, new byte[]{1, 2});
         assertEquals(7l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -107,7 +107,7 @@ public class ByteArrayEditableDataTest {
         assertEquals((byte) 0x34, instanceA.getByte(3));
         assertEquals((byte) 0x56, instanceA.getByte(4));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB.insert(20, new byte[]{1});
             fail();
@@ -117,8 +117,8 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testInsert_BinaryData() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
-        instanceA.insert(1, new ByteArrayData(new byte[]{1, 2}));
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
+        instanceA.insert(1, new BufferData(new byte[]{1, 2}));
         assertEquals(7l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
         assertEquals((byte) 0x1, instanceA.getByte(1));
@@ -126,9 +126,9 @@ public class ByteArrayEditableDataTest {
         assertEquals((byte) 0x34, instanceA.getByte(3));
         assertEquals((byte) 0x56, instanceA.getByte(4));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
-            instanceB.insert(20, new ByteArrayData(new byte[]{1}));
+            instanceB.insert(20, new BufferData(new byte[]{1}));
             fail();
         } catch (OutOfBoundsException ex) {
         }
@@ -136,7 +136,7 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testInsert() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.insert(1, new byte[]{5, 7, 1, 2, 10}, 2, 2);
         assertEquals(7l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -145,14 +145,14 @@ public class ByteArrayEditableDataTest {
         assertEquals((byte) 0x34, instanceA.getByte(3));
         assertEquals((byte) 0x56, instanceA.getByte(4));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB.insert(20, new byte[]{5, 7, 1, 2, 10}, 2, 1);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB2 = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.insert(0, new byte[]{5, 7, 1, 2, 10}, 10, 1);
             fail();
@@ -162,7 +162,7 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testFillData() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.fillData(1, 2);
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -171,14 +171,14 @@ public class ByteArrayEditableDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB.fillData(20, 1);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB2 = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.fillData(0, 20);
             fail();
@@ -188,7 +188,7 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testFillData_byte() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.fillData(1, 2, (byte) 0x55);
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -197,14 +197,14 @@ public class ByteArrayEditableDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB.fillData(20, 1, (byte) 55);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB2 = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.fillData(0, 20, (byte) 55);
             fail();
@@ -214,8 +214,8 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testReplace_BinaryData() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
-        instanceA.replace(1, new ByteArrayData(new byte[]{1, 2}));
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
+        instanceA.replace(1, new BufferData(new byte[]{1, 2}));
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
         assertEquals((byte) 0x1, instanceA.getByte(1));
@@ -223,9 +223,9 @@ public class ByteArrayEditableDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
-            instanceB.replace(20, new ByteArrayData(new byte[]{1}));
+            instanceB.replace(20, new BufferData(new byte[]{1}));
             fail();
         } catch (OutOfBoundsException ex) {
         }
@@ -233,8 +233,8 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testReplace_BinaryData_offset() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
-        instanceA.replace(1, new ByteArrayData(new byte[]{5, 7, 1, 2, 10}), 2, 2);
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
+        instanceA.replace(1, new BufferData(new byte[]{5, 7, 1, 2, 10}), 2, 2);
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
         assertEquals((byte) 0x1, instanceA.getByte(1));
@@ -242,16 +242,16 @@ public class ByteArrayEditableDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
-            instanceB.replace(20, new ByteArrayData(new byte[]{5, 7, 1, 2, 10}), 2, 2);
+            instanceB.replace(20, new BufferData(new byte[]{5, 7, 1, 2, 10}), 2, 2);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB2 = new BufferEditableData(testUtils.getSampleDataB());
         try {
-            instanceB2.replace(0, new ByteArrayData(new byte[]{5, 7, 1, 2, 10}), 10, 2);
+            instanceB2.replace(0, new BufferData(new byte[]{5, 7, 1, 2, 10}), 10, 2);
             fail();
         } catch (OutOfBoundsException ex) {
         }
@@ -259,7 +259,7 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testReplace_ByteArray() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.replace(1, new byte[]{1, 2});
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -268,7 +268,7 @@ public class ByteArrayEditableDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB.replace(20, new byte[]{1});
             fail();
@@ -278,7 +278,7 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testReplace_ByteArray_offset() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.replace(1, new byte[]{5, 7, 1, 2, 10}, 2, 2);
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -287,14 +287,14 @@ public class ByteArrayEditableDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB.replace(20, new byte[]{5, 7, 1, 2, 10}, 2, 2);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB2 = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.replace(0, new byte[]{5, 7, 1, 2, 10}, 10, 2);
             fail();
@@ -304,21 +304,21 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testRemove() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.remove(1, 2);
         assertEquals(3l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
         assertEquals((byte) 0x78, instanceA.getByte(1));
         assertEquals((byte) 0x9a, instanceA.getByte(2));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB.remove(20, 1);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB2 = new BufferEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.remove(5, 100);
             fail();
@@ -328,14 +328,14 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testClear() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
         instanceA.clear();
         assertEquals(0l, instanceA.getDataSize());
     }
 
     @Test
     public void testLoadFromStream() throws Exception {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData();
+        BufferEditableData instanceA = new BufferEditableData();
         try (InputStream streamA = testUtils.getSampleDataStream(TestUtils.SAMPLE_5BYTES)) {
             instanceA.loadFromStream(streamA);
         }
@@ -343,7 +343,7 @@ public class ByteArrayEditableDataTest {
         assertEquals(0x12, instanceA.getByte(0));
         assertEquals(0x9a, instanceA.getByte(4) & 0xff);
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData();
+        BufferEditableData instanceB = new BufferEditableData();
         try (InputStream streamB = testUtils.getSampleDataStream(TestUtils.SAMPLE_10BYTES)) {
             instanceB.loadFromStream(streamB);
         }
@@ -351,7 +351,7 @@ public class ByteArrayEditableDataTest {
         assertEquals(0x41, instanceB.getByte(0));
         assertEquals(0x4a, instanceB.getByte(9));
 
-        ByteArrayEditableData instanceC = new ByteArrayEditableData();
+        BufferEditableData instanceC = new BufferEditableData();
         try (InputStream streamC = testUtils.getSampleDataStream(TestUtils.SAMPLE_ALLBYTES)) {
             instanceC.loadFromStream(streamC);
         }
@@ -363,7 +363,7 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testLoadFromNonBlockingStream() throws Exception {
-        ByteArrayEditableData instanceC = new ByteArrayEditableData();
+        BufferEditableData instanceC = new BufferEditableData();
         try (InputStream streamC = testUtils.getSampleDataStream(TestUtils.SAMPLE_ALLBYTES)) {
             InputStream nonBlockingStream = new InputStream() {
                 @Override
@@ -382,7 +382,7 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testLoadFromStream_offset() throws Exception {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData();
+        BufferEditableData instanceA = new BufferEditableData();
         try (InputStream streamA = testUtils.getSampleDataStream(TestUtils.SAMPLE_ALLBYTES)) {
             instanceA.insert(100, streamA, 100);
         }
@@ -394,13 +394,13 @@ public class ByteArrayEditableDataTest {
 
     @Test
     public void testEquals() {
-        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA = new BufferEditableData(testUtils.getSampleDataA());
 
-        ByteArrayEditableData instanceA1 = new ByteArrayEditableData(testUtils.getSampleDataA());
+        BufferEditableData instanceA1 = new BufferEditableData(testUtils.getSampleDataA());
 
         assertTrue(instanceA.equals(instanceA1));
 
-        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
+        BufferEditableData instanceB = new BufferEditableData(testUtils.getSampleDataB());
 
         assertFalse(instanceA.equals(instanceB));
     }

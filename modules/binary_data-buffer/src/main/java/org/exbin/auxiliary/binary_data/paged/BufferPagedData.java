@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.BinaryData;
-import org.exbin.auxiliary.binary_data.ByteArrayData;
+import org.exbin.auxiliary.binary_data.BufferData;
 import org.exbin.auxiliary.binary_data.DataOverflowException;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 
@@ -40,26 +40,26 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ByteArrayPagedData implements PagedData {
+public class BufferPagedData implements PagedData {
 
     public static final int DEFAULT_PAGE_SIZE = 4096;
     public static final long MAX_DATA_SIZE = Long.MAX_VALUE;
 
     private int pageSize = DEFAULT_PAGE_SIZE;
     @Nonnull
-    private final List<ByteArrayData> data = new ArrayList<>();
+    private final List<BufferData> data = new ArrayList<>();
 
     @Nullable
     private DataPageProvider dataPageProvider = null;
 
-    public ByteArrayPagedData() {
+    public BufferPagedData() {
     }
 
-    public ByteArrayPagedData(DataPageProvider dataPageProvider) {
+    public BufferPagedData(DataPageProvider dataPageProvider) {
         this.dataPageProvider = dataPageProvider;
     }
 
-    public ByteArrayPagedData(int pageSize) {
+    public BufferPagedData(int pageSize) {
         this.pageSize = pageSize;
     }
 
@@ -318,16 +318,16 @@ public class ByteArrayPagedData implements PagedData {
 
     @Nonnull
     @Override
-    public ByteArrayPagedData copy() {
-        ByteArrayPagedData targetData = new ByteArrayPagedData();
+    public BufferPagedData copy() {
+        BufferPagedData targetData = new BufferPagedData();
         targetData.insert(0, this);
         return targetData;
     }
 
     @Nonnull
     @Override
-    public ByteArrayPagedData copy(long startFrom, long length) {
-        ByteArrayPagedData targetData = new ByteArrayPagedData();
+    public BufferPagedData copy(long startFrom, long length) {
+        BufferPagedData targetData = new BufferPagedData();
         targetData.insertUninitialized(0, length);
         targetData.replace(0, this, startFrom, length);
         return targetData;
@@ -405,7 +405,7 @@ public class ByteArrayPagedData implements PagedData {
      */
     @Nonnull
     @Override
-    public ByteArrayData getPage(int pageIndex) {
+    public BufferData getPage(int pageIndex) {
         try {
             return data.get(pageIndex);
         } catch (IndexOutOfBoundsException ex) {
@@ -414,7 +414,8 @@ public class ByteArrayPagedData implements PagedData {
     }
     
     private byte[] getPageData(int pageIndex) {
-        return getPage(pageIndex).getData();
+        throw new UnsupportedOperationException("Not supported yet.");
+//        return getPage(pageIndex).getData();
     }
 
     /**
@@ -425,11 +426,11 @@ public class ByteArrayPagedData implements PagedData {
      */
     @Override
     public void setPage(int pageIndex, BinaryData dataPage) {
-        if (!(dataPage instanceof ByteArrayData)) {
+        if (!(dataPage instanceof BufferData)) {
             throw new UnsupportedOperationException("Unsupported data page type");
         }
         try {
-            data.set(pageIndex, (ByteArrayData) dataPage);
+            data.set(pageIndex, (BufferData) dataPage);
         } catch (IndexOutOfBoundsException ex) {
             throw new OutOfBoundsException(ex);
         }
@@ -446,18 +447,18 @@ public class ByteArrayPagedData implements PagedData {
             throw new OutOfBoundsException("Data can be replaced only inside or at the end");
         }
 
-        if (replacingData instanceof ByteArrayPagedData) {
+        if (replacingData instanceof BufferPagedData) {
             if (replacingData != this || (startFrom > targetPosition) || (startFrom + length < targetPosition)) {
                 while (length > 0) {
                     byte[] page = getPageData((int) (targetPosition / pageSize));
                     int offset = (int) (targetPosition % pageSize);
 
-                    byte[] sourcePage = ((ByteArrayPagedData) replacingData).getPageData((int) (startFrom / ((ByteArrayPagedData) replacingData).getPageSize()));
-                    int sourceOffset = (int) (startFrom % ((ByteArrayPagedData) replacingData).getPageSize());
+                    byte[] sourcePage = ((BufferPagedData) replacingData).getPageData((int) (startFrom / ((BufferPagedData) replacingData).getPageSize()));
+                    int sourceOffset = (int) (startFrom % ((BufferPagedData) replacingData).getPageSize());
 
                     int copySize = pageSize - offset;
-                    if (copySize > ((ByteArrayPagedData) replacingData).getPageSize() - sourceOffset) {
-                        copySize = ((ByteArrayPagedData) replacingData).getPageSize() - sourceOffset;
+                    if (copySize > ((BufferPagedData) replacingData).getPageSize() - sourceOffset) {
+                        copySize = ((BufferPagedData) replacingData).getPageSize() - sourceOffset;
                     }
                     if (copySize > length) {
                         copySize = (int) length;
@@ -479,8 +480,8 @@ public class ByteArrayPagedData implements PagedData {
                     byte[] page = getPageData((int) (targetPosition / pageSize));
                     int upTo = (int) (targetPosition % pageSize) + 1;
 
-                    byte[] sourcePage = ((ByteArrayPagedData) replacingData).getPageData((int) (startFrom / ((ByteArrayPagedData) replacingData).getPageSize()));
-                    int sourceUpTo = (int) (startFrom % ((ByteArrayPagedData) replacingData).getPageSize()) + 1;
+                    byte[] sourcePage = ((BufferPagedData) replacingData).getPageData((int) (startFrom / ((BufferPagedData) replacingData).getPageSize()));
+                    int sourceUpTo = (int) (startFrom % ((BufferPagedData) replacingData).getPageSize()) + 1;
 
                     int copySize = upTo;
                     if (copySize > sourceUpTo) {
@@ -574,30 +575,32 @@ public class ByteArrayPagedData implements PagedData {
 
     @Override
     public void saveToStream(OutputStream outputStream) throws IOException {
-        for (ByteArrayData dataPage : data) {
-            outputStream.write(dataPage.getData());
+        for (BufferData dataPage : data) {
+            dataPage.saveToStream(outputStream);
         }
     }
 
     @Nonnull
     @Override
     public OutputStream getDataOutputStream() {
-        return new ByteArrayPagedDataOutputStream(this);
+        throw new UnsupportedOperationException("Not supported yet.");
+//        return new PagedDataOutputStream(this);
     }
 
     @Nonnull
     @Override
     public InputStream getDataInputStream() {
-        return new ByteArrayPagedDataInputStream(this);
+        throw new UnsupportedOperationException("Not supported yet.");
+//        return new PagedDataInputStream(this);
     }
 
     @Nonnull
-    private ByteArrayData createNewPage(byte[] pageData) {
+    private BufferData createNewPage(byte[] pageData) {
         if (dataPageProvider != null) {
-            return (ByteArrayData) dataPageProvider.createPage(pageData);
+            return (BufferData) dataPageProvider.createPage(pageData);
         }
 
-        return new ByteArrayData(pageData);
+        return new BufferData(pageData);
     }
 
     @Nullable
@@ -640,9 +643,9 @@ public class ByteArrayPagedData implements PagedData {
                     //    return false;
                     // }
                     {
-                        byte[] pageData = data.get(pageIndex).getData();
+                        BufferData pageData = data.get(pageIndex);
                         for (int i = 0; i < length; i++) {
-                            if (pageData[i] != buffer[i]) {
+                            if (pageData.getByte(i) != buffer[i]) {
                                 return false;
                             }
                         }
@@ -659,7 +662,7 @@ public class ByteArrayPagedData implements PagedData {
             return false;
         }
 
-        final ByteArrayPagedData other = (ByteArrayPagedData) obj;
+        final BufferPagedData other = (BufferPagedData) obj;
         long dataSize = getDataSize();
         if (other.getDataSize() != dataSize) {
             return false;
@@ -683,12 +686,12 @@ public class ByteArrayPagedData implements PagedData {
             //     return false;
             // }
             {
-                byte[] pageData = data.get(pageIndex).getData();
-                byte[] otherPageData = other.data.get(otherPageIndex).getData();
+                BufferData pageData = data.get(pageIndex);
+                BufferData otherPageData = other.data.get(otherPageIndex);
                 int pageTestPos = pageOffset;
                 int otherPageTestPos = otherPageOffset;
                 for (int i = 0; i < length; i++) {
-                    if (pageData[pageTestPos] != otherPageData[otherPageTestPos]) {
+                    if (pageData.getByte(pageTestPos) != otherPageData.getByte(otherPageTestPos)) {
                         return false;
                     }
                     pageTestPos++;

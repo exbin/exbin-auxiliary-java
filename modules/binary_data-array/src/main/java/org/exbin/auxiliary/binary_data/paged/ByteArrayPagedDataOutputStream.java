@@ -28,13 +28,13 @@ import org.exbin.auxiliary.binary_data.SeekableStream;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class PagedDataOutputStream extends OutputStream implements SeekableStream, FinishableStream {
+public class ByteArrayPagedDataOutputStream extends OutputStream implements SeekableStream, FinishableStream {
 
     @Nonnull
     private final ByteArrayPagedData data;
     private long position = 0;
 
-    public PagedDataOutputStream(ByteArrayPagedData data) {
+    public ByteArrayPagedDataOutputStream(ByteArrayPagedData data) {
         this.data = data;
     }
 

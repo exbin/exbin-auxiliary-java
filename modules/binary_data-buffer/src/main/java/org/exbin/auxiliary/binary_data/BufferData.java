@@ -24,22 +24,43 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * TODO: Basic implementation of binary data interface using byte array.
+ * Implementation of binary data interface using byte buffer.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BufferData implements BinaryData {
 
+    private static final int BUFFER_SIZE = 4096;
+
     @Nonnull
     protected ByteBuffer data;
 
     public BufferData() {
-        this(null);
+        this((ByteBuffer) null);
     }
 
+    /**
+     * Creates instance directly wrapping provided byte buffer.
+     *
+     * @param data byte buffer
+     */
     public BufferData(@Nullable ByteBuffer data) {
-        this.data = data != null ? data : ByteBuffer.allocate(0);
+        this.data = data != null ? data : ByteBuffer.allocateDirect(0);
+    }
+
+    /**
+     * Creates instance setting value to provided byte array.
+     *
+     * @param data byte array
+     */
+    public BufferData(@Nullable byte[] data) {
+        if (data == null) {
+            this.data = ByteBuffer.allocateDirect(0);
+        } else {
+            this.data = ByteBuffer.allocateDirect(data.length);
+            this.data.put(data);
+        }
     }
 
     /**
@@ -73,36 +94,52 @@ public class BufferData implements BinaryData {
 
     @Nonnull
     @Override
-    public BinaryData copy() {
-        return new BufferData(data.duplicate());
+    public BufferData copy() {
+        ByteBuffer copy = ByteBuffer.allocateDirect(data.capacity());
+        data.rewind();
+        copy.put(data);
+        return new BufferData(copy);
     }
 
     @Nonnull
     @Override
-    public BinaryData copy(long startFrom, long length) {
-        throw new UnsupportedOperationException("Not supported yet.");
-/*        if (startFrom + length > data.length) {
+    public BufferData copy(long startFrom, long length) {
+        if (length > Integer.MAX_VALUE) {
+            throw new OutOfBoundsException("Buffer data is limited by integer length");
+        }
+        if (startFrom + length > data.capacity()) {
             throw new OutOfBoundsException("Attemt to copy outside of data");
         }
 
-        byte[] copy = Arrays.copyOfRange(data, (int) startFrom, (int) (startFrom + length));
-        return new BufferData(copy); */
+        ByteBuffer copy = ByteBuffer.allocateDirect((int) length);
+        data.position((int) startFrom);
+        data.limit((int) (startFrom + length));
+        copy.put(data);
+        data.limit(data.capacity());
+        return new BufferData(copy);
     }
 
     @Override
     public void copyToArray(long startFrom, byte[] target, int offset, int length) {
-        throw new UnsupportedOperationException("Not supported yet.");
-/*        try {
-            System.arraycopy(data, (int) startFrom, target, offset, length);
+        try {
+            data.get((int) startFrom, target, offset, length);
         } catch (IndexOutOfBoundsException ex) {
             throw new OutOfBoundsException(ex);
-        } */
+        }
     }
 
     @Override
     public void saveToStream(OutputStream outputStream) throws IOException {
-        // outputStream.write(data);
-        throw new UnsupportedOperationException("Not supported yet.");
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int remaining = data.capacity();
+        int position = 0;
+        while (remaining > 0) {
+            int length = remaining > BUFFER_SIZE ? BUFFER_SIZE : remaining;
+            data.get(position, buffer, 0, length);
+            outputStream.write(buffer, 0, length);
+            position += length;
+            remaining -= length;
+        }
     }
 
     @Nonnull
@@ -113,8 +150,7 @@ public class BufferData implements BinaryData {
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException("Not supported yet.");
-        // return Arrays.hashCode(data);
+        return data.hashCode();
     }
 
     @Override
@@ -136,8 +172,9 @@ public class BufferData implements BinaryData {
         }
 
         final BufferData other = (BufferData) obj;
-        // return Arrays.equals(this.data, other.data);
-        throw new UnsupportedOperationException("Not supported yet.");
+        other.data.rewind();
+        data.rewind();
+        return other.data.compareTo(data) == 0;
     }
 
     public boolean compareTo(BinaryData other) {
@@ -146,8 +183,7 @@ public class BufferData implements BinaryData {
             return false;
         }
 
-        throw new UnsupportedOperationException("Not supported yet.");
-/*        int bufferSize = dataSize > BufferEditableData.BUFFER_SIZE ? BufferEditableData.BUFFER_SIZE : (int) dataSize;
+        int bufferSize = dataSize > BUFFER_SIZE ? BUFFER_SIZE : (int) dataSize;
         byte[] buffer = new byte[bufferSize];
         int offset = 0;
         int remain = (int) dataSize;
@@ -155,7 +191,7 @@ public class BufferData implements BinaryData {
             int length = remain > bufferSize ? bufferSize : remain;
             other.copyToArray(offset, buffer, 0, length);
             for (int i = 0; i < length; i++) {
-                if (data[offset + i] != buffer[i]) {
+                if (data.get(offset + i) != buffer[i]) {
                     return false;
                 }
             }
@@ -164,7 +200,7 @@ public class BufferData implements BinaryData {
             remain -= length;
         }
 
-        return true; */
+        return true;
     }
 
     @Override

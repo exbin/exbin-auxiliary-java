@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Basic implementation of binary data interface using byte array.
+ * Implementation of binary data interface using byte array.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -38,6 +38,11 @@ public class ByteArrayData implements BinaryData {
         this(null);
     }
 
+    /**
+     * Creates instance directly wrapping provided byte array.
+     *
+     * @param data byte array
+     */
     public ByteArrayData(@Nullable byte[] data) {
         this.data = data != null ? data : new byte[0];
     }
@@ -81,6 +86,9 @@ public class ByteArrayData implements BinaryData {
     @Nonnull
     @Override
     public BinaryData copy(long startFrom, long length) {
+        if (length > Integer.MAX_VALUE) {
+            throw new OutOfBoundsException("Array data is limited by integer length");
+        }
         if (startFrom + length > data.length) {
             throw new OutOfBoundsException("Attemt to copy outside of data");
         }
