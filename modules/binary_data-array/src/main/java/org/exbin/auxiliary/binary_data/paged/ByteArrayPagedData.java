@@ -130,8 +130,7 @@ public class ByteArrayPagedData implements PagedData {
 
     @Override
     public void setByte(long position, byte value) {
-        byte[] page;
-        page = getPageData((int) (position / pageSize));
+        byte[] page = getPageData((int) (position / pageSize));
         try {
             page[(int) (position % pageSize)] = value;
         } catch (ArrayIndexOutOfBoundsException ex) {

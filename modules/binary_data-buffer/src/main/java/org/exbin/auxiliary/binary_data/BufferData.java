@@ -32,6 +32,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class BufferData implements BinaryData {
 
     private static final int BUFFER_SIZE = 4096;
+    private BufferAllocationType bufferAllocationType = BufferAllocationType.DIRECT;
 
     @Nonnull
     protected ByteBuffer data;
@@ -46,7 +47,7 @@ public class BufferData implements BinaryData {
      * @param data byte buffer
      */
     public BufferData(@Nullable ByteBuffer data) {
-        this.data = data != null ? data : ByteBuffer.allocateDirect(0);
+        this.data = data != null ? data : BufferData.this.allocateBuffer(0);
     }
 
     /**
@@ -56,11 +57,20 @@ public class BufferData implements BinaryData {
      */
     public BufferData(@Nullable byte[] data) {
         if (data == null) {
-            this.data = ByteBuffer.allocateDirect(0);
+            this.data = BufferData.this.allocateBuffer(0);
         } else {
-            this.data = ByteBuffer.allocateDirect(data.length);
+            this.data = BufferData.this.allocateBuffer(data.length);
             this.data.put(data);
         }
+    }
+
+    /**
+     * Creates instance with specified size.
+     *
+     * @param dataSize data size
+     */
+    public BufferData(int dataSize) {
+        this.data = BufferData.this.allocateBuffer(dataSize);
     }
 
     /**
@@ -95,7 +105,7 @@ public class BufferData implements BinaryData {
     @Nonnull
     @Override
     public BufferData copy() {
-        ByteBuffer copy = ByteBuffer.allocateDirect(data.capacity());
+        ByteBuffer copy = allocateBuffer(data.capacity());
         data.rewind();
         copy.put(data);
         return new BufferData(copy);
@@ -111,7 +121,7 @@ public class BufferData implements BinaryData {
             throw new OutOfBoundsException("Attemt to copy outside of data");
         }
 
-        ByteBuffer copy = ByteBuffer.allocateDirect((int) length);
+        ByteBuffer copy = allocateBuffer((int) length);
         data.position((int) startFrom);
         data.limit((int) (startFrom + length));
         copy.put(data);
@@ -205,5 +215,26 @@ public class BufferData implements BinaryData {
 
     @Override
     public void dispose() {
+    }
+
+    @Nonnull
+    public BufferAllocationType getBufferAllocationType() {
+        return bufferAllocationType;
+    }
+
+    public void setBufferAllocationType(BufferAllocationType bufferAllocationType) {
+        this.bufferAllocationType = bufferAllocationType;
+    }
+
+    @Nonnull
+    protected ByteBuffer allocateBuffer(int capacity) {
+        switch (bufferAllocationType) {
+            case HEAP:
+                return ByteBuffer.allocate(capacity);
+            case DIRECT:
+                return ByteBuffer.allocateDirect(capacity);
+            default:
+                throw new IllegalStateException();
+        }
     }
 }

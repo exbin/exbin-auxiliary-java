@@ -41,7 +41,15 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
     private static final String ARRAY_OVERFLOW_ERROR = "Maximum array size overflow";
 
     public BufferEditableData() {
-        this(null);
+        this((ByteBuffer) null);
+    }
+
+    public BufferEditableData(int dataSize) {
+        super(dataSize);
+    }
+
+    public BufferEditableData(@Nullable ByteBuffer data) {
+        super(data);
     }
 
     public BufferEditableData(@Nullable byte[] data) {
@@ -54,16 +62,21 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
             throw new InvalidParameterException("Size cannot be negative");
         }
 
-        throw new UnsupportedOperationException("Not supported yet.");
-/*        if (data.capacity() != size) {
-            if (size < data.capacity()) {
-                data = Arrays.copyOfRange(data, 0, (int) size);
+        int oldSize = data.capacity();
+        if (oldSize != size) {
+            ByteBuffer newData = allocateBuffer((int) size);
+            if (size < oldSize) {
+                if (size > 0) {
+                    newData.put(0, data, 0, (int) size);
+                }
+                data = newData;
             } else {
-                byte[] newData = new byte[(int) size];
-                System.arraycopy(data, 0, newData, 0, data.capacity());
+                if (oldSize > 0) {
+                    newData.put(0, data, 0, (int) oldSize);
+                }
                 data = newData;
             }
-        } */
+        }
     }
 
     @Override
@@ -84,13 +97,12 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
             throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
 
-        throw new UnsupportedOperationException("Not supported yet.");
-/*        if (length > 0) {
-            byte[] newData = new byte[(int) (data.capacity() + length)];
-            System.arraycopy(data, 0, newData, 0, (int) startFrom);
-            System.arraycopy(data, (int) (startFrom), newData, (int) (startFrom + length), (int) (data.capacity() - startFrom));
+        if (length > 0) {
+            ByteBuffer newData = allocateBuffer((int) (data.capacity() + length));
+            newData.put(0, data, 0, (int) startFrom);
+            newData.put((int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
             data = newData;
-        } */
+        }
     }
 
     @Override
@@ -102,13 +114,12 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
             throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
 
-        throw new UnsupportedOperationException("Not supported yet.");
-/*        if (length > 0) {
-            byte[] newData = new byte[(int) (data.capacity() + length)];
-            System.arraycopy(data, 0, newData, 0, (int) startFrom);
-            System.arraycopy(data, (int) (startFrom), newData, (int) (startFrom + length), (int) (data.capacity() - startFrom));
+        if (length > 0) {
+            ByteBuffer newData = allocateBuffer((int) (data.capacity() + length));
+            newData.put(0, data, 0, (int) startFrom);
+            newData.put((int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
             data = newData;
-        } */
+        }
     }
 
     @Override
@@ -119,21 +130,19 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         if (insertedData.length > MAX_ARRAY_LENGTH - data.capacity()) {
             throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
-        
-        throw new UnsupportedOperationException("Not supported yet.");
 
-/*        int length = insertedData.length;
+        int length = insertedData.length;
         if (length > 0) {
-            byte[] newData = new byte[data.capacity() + length];
-            System.arraycopy(data, 0, newData, 0, (int) startFrom);
+            ByteBuffer newData = allocateBuffer((int) (data.capacity() + length));
+            newData.put(0, data, 0, (int) startFrom);
             try {
-                System.arraycopy(insertedData, 0, newData, (int) startFrom, length);
-            } catch (ArrayIndexOutOfBoundsException ex) {
+                newData.put((int) startFrom, insertedData, 0, length);
+                newData.put((int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
+            } catch (IndexOutOfBoundsException ex) {
                 throw new OutOfBoundsException(ex);
             }
-            System.arraycopy(data, (int) (startFrom), newData, (int) (startFrom + length), (int) (data.capacity() - startFrom));
             data = newData;
-        } */
+        }
     }
 
     @Override
@@ -144,20 +153,18 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         if (length > MAX_ARRAY_LENGTH - data.capacity()) {
             throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
-        
-        throw new UnsupportedOperationException("Not supported yet.");
 
-/*        if (length > 0) {
-            byte[] newData = new byte[data.capacity() + length];
-            System.arraycopy(data, 0, newData, 0, (int) startFrom);
+        if (length > 0) {
+            ByteBuffer newData = allocateBuffer((int) (data.capacity() + length));
+            newData.put(0, data, 0, (int) startFrom);
             try {
-                System.arraycopy(insertedData, insertedDataOffset, newData, (int) startFrom, length);
-            } catch (ArrayIndexOutOfBoundsException ex) {
+                newData.put((int) startFrom, insertedData, insertedDataOffset, length);
+                newData.put((int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
+            } catch (IndexOutOfBoundsException ex) {
                 throw new OutOfBoundsException(ex);
             }
-            System.arraycopy(data, (int) (startFrom), newData, (int) (startFrom + length), (int) (data.capacity() - startFrom));
             data = newData;
-        } */
+        }
     }
 
     @Override
@@ -168,14 +175,8 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         if (insertedData.getDataSize() > MAX_ARRAY_LENGTH - data.capacity()) {
             throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
-        
-        throw new UnsupportedOperationException("Not supported yet.");
 
-/*        if (insertedData instanceof BufferData) {
-            insert(startFrom, ((BufferData) insertedData).data);
-        } else {
-            insert(startFrom, insertedData, 0, insertedData.getDataSize());
-        } */
+        insert(startFrom, insertedData, 0, insertedData.getDataSize());
     }
 
     @Override
@@ -186,26 +187,17 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         if (insertedDataLength > MAX_ARRAY_LENGTH - data.capacity()) {
             throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
         }
-        
-        throw new UnsupportedOperationException("Not supported yet.");
 
-/*        if (insertedData instanceof BufferData) {
-            if (insertedDataOffset > Integer.MAX_VALUE || insertedDataLength > Integer.MAX_VALUE) {
-                throw new OutOfBoundsException("Out of range");
+        long length = insertedDataLength;
+        if (length > 0) {
+            ByteBuffer newData = allocateBuffer((int) (data.capacity() + length));
+            newData.put(0, data, 0, (int) startFrom);
+            for (int i = 0; i < length; i++) {
+                newData.put((int) startFrom + i, insertedData.getByte(insertedDataOffset + i));
             }
-            insert(startFrom, ((BufferData) insertedData).data, (int) insertedDataOffset, (int) insertedDataLength);
-        } else {
-            long length = insertedDataLength;
-            if (length > 0) {
-                byte[] newData = new byte[(int) (data.capacity() + length)];
-                System.arraycopy(data, 0, newData, 0, (int) startFrom);
-                for (int i = 0; i < length; i++) {
-                    newData[(int) (startFrom + i)] = insertedData.getByte(insertedDataOffset + i);
-                }
-                System.arraycopy(data, (int) (startFrom), newData, (int) (startFrom + length), (int) (data.capacity() - startFrom));
-                data = newData;
-            }
-        } */
+            newData.put((int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
+            data = newData;
+        }
     }
 
     @Override
@@ -246,14 +238,15 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
 
     @Override
     public void fillData(long startFrom, long length, byte fill) {
-        throw new UnsupportedOperationException("Not supported yet.");
-/*        if (length > 0) {
+        if (length > 0) {
             try {
-                Arrays.fill(data, (int) startFrom, (int) (startFrom + length), fill);
-            } catch (ArrayIndexOutOfBoundsException ex) {
+                for (int i = (int) startFrom; i < startFrom + length; i++) {
+                    data.put(i, fill);
+                }
+            } catch (IndexOutOfBoundsException ex) {
                 throw new OutOfBoundsException(ex);
             }
-        } */
+        }
     }
 
     @Override
@@ -266,19 +259,13 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         if (targetPosition + replacingLength > getDataSize()) {
             throw new OutOfBoundsException(WRONG_REPLACE_POSITION_ERROR);
         }
-        
-        throw new UnsupportedOperationException("Not supported yet.");
 
-/*        if (replacingData instanceof BufferData) {
-            replace(targetPosition, ((BufferData) replacingData).data, (int) startFrom, (int) replacingLength);
-        } else {
-            while (replacingLength > 0) {
-                setByte(targetPosition, replacingData.getByte(startFrom));
-                targetPosition++;
-                startFrom++;
-                replacingLength--;
-            }
-        } */
+        while (replacingLength > 0) {
+            setByte(targetPosition, replacingData.getByte(startFrom));
+            targetPosition++;
+            startFrom++;
+            replacingLength--;
+        }
     }
 
     @Override
@@ -293,8 +280,8 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         }
 
         try {
-            System.arraycopy(replacingData, replacingDataOffset, data, (int) targetPosition, length);
-        } catch (ArrayIndexOutOfBoundsException ex) {
+            data.put((int) targetPosition, replacingData, replacingDataOffset, length);
+        } catch (IndexOutOfBoundsException ex) {
             throw new OutOfBoundsException(ex);
         }
     }
@@ -304,22 +291,21 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         if (startFrom + length > data.capacity()) {
             throw new OutOfBoundsException("Cannot remove from " + startFrom + " with length " + length);
         }
-        
-        throw new UnsupportedOperationException("Not supported yet.");
-/*        if (length > 0) {
-            byte[] newData = new byte[(int) (data.capacity() - length)];
-            System.arraycopy(data, 0, newData, 0, (int) startFrom);
-            System.arraycopy(data, (int) (startFrom + length), newData, (int) startFrom, (int) (data.capacity() - startFrom - length));
+
+        if (length > 0) {
+            ByteBuffer newData = allocateBuffer((int) (data.capacity() - length));
+            newData.put(0, data, 0, (int) startFrom);
+            newData.put((int) startFrom, data, (int) (startFrom + length), (int) (data.capacity() - startFrom - length));
             data = newData;
-        } */
+        }
     }
 
     @Nonnull
     @Override
     public BufferEditableData copy() {
-        throw new UnsupportedOperationException("Not supported yet.");
-/*        byte[] copy = Arrays.copyOf(data, data.capacity());
-        return new BufferEditableData(copy); */
+        ByteBuffer copy = allocateBuffer(data.capacity());
+        copy.put(0, data, 0, data.capacity());
+        return new BufferEditableData(copy);
     }
 
     @Nonnull
@@ -328,22 +314,20 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         if (startFrom + length > data.capacity()) {
             throw new OutOfBoundsException("Attemt to copy outside of data");
         }
-        
-        throw new UnsupportedOperationException("Not supported yet.");
 
-/*        byte[] copy = Arrays.copyOfRange(data, (int) startFrom, (int) (startFrom + length));
-        return new BufferEditableData(copy); */
+        ByteBuffer copy = allocateBuffer((int) length);
+        copy.put(0, data, (int) startFrom, (int) length);
+        return new BufferEditableData(copy);
     }
 
     @Override
     public void clear() {
-        data = ByteBuffer.allocateDirect(0);
+        data = allocateBuffer(0);
     }
 
     @Override
     public void loadFromStream(InputStream inputStream) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-/*        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[BUFFER_SIZE];
             int read;
             do {
@@ -352,8 +336,10 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
                     output.write(buffer, 0, read);
                 }
             } while (read > 0);
-            data = output.toByteArray();
-        } */
+            byte[] byteArray = output.toByteArray();
+            data = allocateBuffer(byteArray.length);
+            data.put(byteArray);
+        }
     }
 
     @Nonnull
