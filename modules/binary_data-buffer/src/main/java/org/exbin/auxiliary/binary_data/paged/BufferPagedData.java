@@ -346,7 +346,7 @@ public class BufferPagedData implements PagedData {
             }
 
             try {
-                page.getData().put(pageOffset, target, offset, copySize);
+                page.getData().get(pageOffset, target, offset, copySize);
             } catch (IndexOutOfBoundsException ex) {
                 throw new OutOfBoundsException(ex);
             }
@@ -369,8 +369,9 @@ public class BufferPagedData implements PagedData {
         }
 
         if (length > 0) {
-            replace(startFrom, this, startFrom + length, getDataSize() - startFrom - length);
-            setDataSize(getDataSize() - length);
+            long dataSize = getDataSize();
+            replace(startFrom, this, startFrom + length, dataSize - startFrom - length);
+            setDataSize(dataSize - length);
         }
     }
 
@@ -462,7 +463,7 @@ public class BufferPagedData implements PagedData {
                     }
 
                     try {
-                        page.getData().put(sourceOffset, sourcePage.getData(), offset, copySize);
+                        page.getData().put(offset, sourcePage.getData(), sourceOffset, copySize);
                     } catch (IndexOutOfBoundsException ex) {
                         throw new OutOfBoundsException(ex);
                     }
@@ -490,7 +491,7 @@ public class BufferPagedData implements PagedData {
                     int offset = upTo - copySize;
                     int sourceOffset = sourceUpTo - copySize;
 
-                    page.getData().put(sourceOffset, sourcePage.getData(), offset, copySize);
+                    page.getData().put(offset, sourcePage.getData(), sourceOffset, copySize);
                     length -= copySize;
                     targetPosition -= copySize;
                     startFrom -= copySize;
@@ -538,7 +539,7 @@ public class BufferPagedData implements PagedData {
             }
 
             try {
-                page.getData().put(replacingDataOffset, replacingData, offset, copySize);
+                page.getData().put(offset, replacingData, replacingDataOffset, copySize);
             } catch (IndexOutOfBoundsException ex) {
                 throw new OutOfBoundsException(ex);
             }

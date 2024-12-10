@@ -93,5 +93,10 @@ public class SwapDataRepository {
             swapFilePages.setPage(allocatedPage, sourceData);
             return new SwapedDataPage(SwapDataRepository.this, allocatedPage, sourceData.length);
         }
+
+        @Override
+        public BinaryData createPage(int dataSize) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     }
 }
