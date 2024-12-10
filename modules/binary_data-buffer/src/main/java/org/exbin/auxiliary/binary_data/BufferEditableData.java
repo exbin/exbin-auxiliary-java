@@ -67,12 +67,16 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
             ByteBuffer newData = allocateBuffer((int) size);
             if (size < oldSize) {
                 if (size > 0) {
-                    newData.put(0, data, 0, (int) size);
+                    data.rewind();
+                    data.limit((int) size);
+                    newData.put(data);
+                    data.limit(oldSize);
                 }
                 data = newData;
             } else {
                 if (oldSize > 0) {
-                    newData.put(0, data, 0, (int) oldSize);
+                    data.rewind();
+                    newData.put(data);
                 }
                 data = newData;
             }
@@ -99,8 +103,8 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
 
         if (length > 0) {
             ByteBuffer newData = allocateBuffer((int) (data.capacity() + length));
-            newData.put(0, data, 0, (int) startFrom);
-            newData.put((int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
+            BufferEditableData.put(newData, 0, data, 0, (int) startFrom);
+            BufferEditableData.put(newData, (int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
             data = newData;
         }
     }
@@ -116,8 +120,8 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
 
         if (length > 0) {
             ByteBuffer newData = allocateBuffer((int) (data.capacity() + length));
-            newData.put(0, data, 0, (int) startFrom);
-            newData.put((int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
+            BufferEditableData.put(newData, 0, data, 0, (int) startFrom);
+            BufferEditableData.put(newData, (int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
             data = newData;
         }
     }
@@ -134,10 +138,11 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         int length = insertedData.length;
         if (length > 0) {
             ByteBuffer newData = allocateBuffer((int) (data.capacity() + length));
-            newData.put(0, data, 0, (int) startFrom);
+            BufferEditableData.put(newData, 0, data, 0, (int) startFrom);
             try {
-                newData.put((int) startFrom, insertedData, 0, length);
-                newData.put((int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
+                newData.position((int) startFrom);
+                newData.put(insertedData);
+                BufferEditableData.put(newData, (int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
             } catch (IndexOutOfBoundsException ex) {
                 throw new OutOfBoundsException(ex);
             }
@@ -156,10 +161,11 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
 
         if (length > 0) {
             ByteBuffer newData = allocateBuffer((int) (data.capacity() + length));
-            newData.put(0, data, 0, (int) startFrom);
+            BufferEditableData.put(newData, 0, data, 0, (int) startFrom);
             try {
-                newData.put((int) startFrom, insertedData, insertedDataOffset, length);
-                newData.put((int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
+                newData.position((int) startFrom);
+                newData.put(insertedData, insertedDataOffset, length);
+                BufferEditableData.put(newData, (int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
             } catch (IndexOutOfBoundsException ex) {
                 throw new OutOfBoundsException(ex);
             }
@@ -191,11 +197,12 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         long length = insertedDataLength;
         if (length > 0) {
             ByteBuffer newData = allocateBuffer((int) (data.capacity() + length));
-            newData.put(0, data, 0, (int) startFrom);
+            BufferEditableData.put(newData, 0, data, 0, (int) startFrom);
             for (int i = 0; i < length; i++) {
-                newData.put((int) startFrom + i, insertedData.getByte(insertedDataOffset + i));
+                newData.position((int) startFrom + i);
+                newData.put(insertedData.getByte(insertedDataOffset + i));
             }
-            newData.put((int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
+            BufferEditableData.put(newData, (int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
             data = newData;
         }
     }
@@ -280,7 +287,8 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         }
 
         try {
-            data.put((int) targetPosition, replacingData, replacingDataOffset, length);
+            data.position((int) targetPosition);
+            data.put(replacingData, replacingDataOffset, length);
         } catch (IndexOutOfBoundsException ex) {
             throw new OutOfBoundsException(ex);
         }
@@ -294,8 +302,8 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
 
         if (length > 0) {
             ByteBuffer newData = allocateBuffer((int) (data.capacity() - length));
-            newData.put(0, data, 0, (int) startFrom);
-            newData.put((int) startFrom, data, (int) (startFrom + length), (int) (data.capacity() - startFrom - length));
+            BufferEditableData.put(newData, 0, data, 0, (int) startFrom);
+            BufferEditableData.put(newData, (int) startFrom, data, (int) (startFrom + length), (int) (data.capacity() - startFrom - length));
             data = newData;
         }
     }
@@ -304,7 +312,7 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
     @Override
     public BufferEditableData copy() {
         ByteBuffer copy = allocateBuffer(data.capacity());
-        copy.put(0, data, 0, data.capacity());
+        copy.put(data);
         return new BufferEditableData(copy);
     }
 
@@ -316,7 +324,7 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
         }
 
         ByteBuffer copy = allocateBuffer((int) length);
-        copy.put(0, data, (int) startFrom, (int) length);
+        BufferEditableData.put(copy, 0, data, (int) startFrom, (int) length);
         return new BufferEditableData(copy);
     }
 
@@ -346,5 +354,38 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
     @Override
     public OutputStream getDataOutputStream() {
         return new BinaryDataOutputStream(this);
+    }
+
+    public static void put(ByteBuffer target, int position, ByteBuffer source, int offset, int length) throws IndexOutOfBoundsException {
+        if (target == source) {
+            byte[] buffer = new byte[BUFFER_SIZE];
+            if (position < offset) {
+                while (length > 0) {
+                    int block = length > BUFFER_SIZE ? BUFFER_SIZE : length;
+                    source.position(offset);
+                    source.get(buffer, 0, block);
+                    target.position(position);
+                    target.put(buffer, 0, block);
+                    offset += block;
+                    position += block;
+                    length -= block;
+                }
+            } else if (position > offset) {
+                while (length > 0) {
+                    int block = length > BUFFER_SIZE ? BUFFER_SIZE : length;
+                    source.position(offset + length - block);
+                    source.get(buffer, 0, block);
+                    target.position(position + length - block);
+                    target.put(buffer, 0, block);
+                    length -= block;
+                }
+            }
+        } else {
+            source.position(offset);
+            source.limit(offset + length);
+            target.position(position);
+            target.put(source);
+            source.limit(source.capacity());
+        }
     }
 }

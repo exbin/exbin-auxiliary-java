@@ -18,6 +18,7 @@ package org.exbin.auxiliary.binary_data;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -132,8 +133,9 @@ public class BufferData implements BinaryData {
     @Override
     public void copyToArray(long startFrom, byte[] target, int offset, int length) {
         try {
-            data.get((int) startFrom, target, offset, length);
-        } catch (IndexOutOfBoundsException ex) {
+            data.position((int) startFrom);
+            data.get(target, offset, length);
+        } catch (IndexOutOfBoundsException | BufferUnderflowException | IllegalArgumentException ex) {
             throw new OutOfBoundsException(ex);
         }
     }
@@ -145,7 +147,8 @@ public class BufferData implements BinaryData {
         int position = 0;
         while (remaining > 0) {
             int length = remaining > BUFFER_SIZE ? BUFFER_SIZE : remaining;
-            data.get(position, buffer, 0, length);
+            data.position(position);
+            data.get(buffer, 0, length);
             outputStream.write(buffer, 0, length);
             position += length;
             remaining -= length;

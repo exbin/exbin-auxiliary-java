@@ -30,6 +30,7 @@ import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.BinaryDataInputStream;
 import org.exbin.auxiliary.binary_data.BinaryDataOutputStream;
 import org.exbin.auxiliary.binary_data.BufferData;
+import org.exbin.auxiliary.binary_data.BufferEditableData;
 import org.exbin.auxiliary.binary_data.DataOverflowException;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 
@@ -88,7 +89,8 @@ public class BufferPagedData implements PagedData {
                 BufferData page = getPage(lastPage);
                 int nextPageSize = remaining + lastPageSize > pageSize ? pageSize : (int) remaining + lastPageSize;
                 BufferData newPage = createNewPage(nextPageSize);
-                newPage.getData().put(0, page.getData(), 0, (int) page.getDataSize());
+                page.getData().rewind();
+                newPage.getData().put(page.getData());
                 setPage(lastPage, newPage);
                 remaining -= (nextPageSize - lastPageSize);
                 lastPage++;
@@ -106,7 +108,7 @@ public class BufferPagedData implements PagedData {
             if (lastPageSize > 0) {
                 BufferData page = getPage(lastPage);
                 BufferData newPage = createNewPage(lastPageSize);
-                newPage.getData().put(0, page.getData(), 0, lastPageSize);
+                BufferPagedData.put(newPage.getData(), 0, page.getData(), 0, lastPageSize);
                 setPage(lastPage, newPage);
                 lastPage++;
             }
@@ -182,7 +184,7 @@ public class BufferPagedData implements PagedData {
                     copySize = (int) copyLength;
                 }
 
-                targetPage.getData().put(targetOffset - copySize, sourcePage.getData(), sourceOffset - copySize, copySize);
+                BufferPagedData.put(targetPage.getData(), targetOffset - copySize, sourcePage.getData(), sourceOffset - copySize, copySize);
                 copyLength -= copySize;
                 sourceEnd -= copySize;
                 targetEnd -= copySize;
@@ -231,7 +233,8 @@ public class BufferPagedData implements PagedData {
             }
 
             try {
-                targetPage.getData().put(targetOffset, insertedData, insertedDataOffset, blockLength);
+                targetPage.getData().position(targetOffset);
+                targetPage.getData().put(insertedData, insertedDataOffset, blockLength);
             } catch (IndexOutOfBoundsException ex) {
                 throw new OutOfBoundsException(ex);
             }
@@ -346,7 +349,8 @@ public class BufferPagedData implements PagedData {
             }
 
             try {
-                page.getData().get(pageOffset, target, offset, copySize);
+                page.getData().position(pageOffset);
+                page.getData().get(target, offset, copySize);
             } catch (IndexOutOfBoundsException ex) {
                 throw new OutOfBoundsException(ex);
             }
@@ -463,7 +467,7 @@ public class BufferPagedData implements PagedData {
                     }
 
                     try {
-                        page.getData().put(offset, sourcePage.getData(), sourceOffset, copySize);
+                        BufferPagedData.put(page.getData(), offset, sourcePage.getData(), sourceOffset, copySize);
                     } catch (IndexOutOfBoundsException ex) {
                         throw new OutOfBoundsException(ex);
                     }
@@ -491,7 +495,7 @@ public class BufferPagedData implements PagedData {
                     int offset = upTo - copySize;
                     int sourceOffset = sourceUpTo - copySize;
 
-                    page.getData().put(offset, sourcePage.getData(), sourceOffset, copySize);
+                    BufferPagedData.put(page.getData(), offset, sourcePage.getData(), sourceOffset, copySize);
                     length -= copySize;
                     targetPosition -= copySize;
                     startFrom -= copySize;
@@ -509,7 +513,8 @@ public class BufferPagedData implements PagedData {
 
                 byte[] buffer = new byte[copySize];
                 replacingData.copyToArray(startFrom, buffer, 0, copySize);
-                page.getData().put(offset, buffer);
+                page.getData().position(offset);
+                page.getData().put(buffer);
 
                 length -= copySize;
                 targetPosition += copySize;
@@ -539,7 +544,8 @@ public class BufferPagedData implements PagedData {
             }
 
             try {
-                page.getData().put(offset, replacingData, replacingDataOffset, copySize);
+                page.getData().position(offset);
+                page.getData().put(replacingData, replacingDataOffset, copySize);
             } catch (IndexOutOfBoundsException ex) {
                 throw new OutOfBoundsException(ex);
             }
@@ -709,5 +715,9 @@ public class BufferPagedData implements PagedData {
 
     @Override
     public void dispose() {
+    }
+
+    private static void put(ByteBuffer target, int position, ByteBuffer source, int offset, int length) throws IndexOutOfBoundsException {
+        BufferEditableData.put(target, position, source, offset, length);
     }
 }
