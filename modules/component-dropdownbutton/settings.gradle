@@ -1,0 +1,6 @@
+rootProject.name = 'component-dropdownbutton'
+
+if (rootProject.path == ':') {
+}
+
+apply from: '../exbin-auxiliary-modules-settings.gradle'

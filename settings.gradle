@@ -6,6 +6,7 @@ include ":modules:binary_data-buffer"
 include ":modules:binary_data-delta"
 include ":modules:binary_data-swap"
 include ":modules:binary_data-ondemand"
+include ":modules:component-dropdownbutton"
 
 gradle.allprojects {
   ext {
