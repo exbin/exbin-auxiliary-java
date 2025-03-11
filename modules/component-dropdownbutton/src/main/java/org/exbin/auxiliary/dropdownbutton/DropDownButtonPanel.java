@@ -24,6 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 /**
@@ -96,20 +97,20 @@ public class DropDownButtonPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        menuButton = new BasicArrowButton(SwingConstants.SOUTH);
         actionLabel = new javax.swing.JLabel();
+        menuButton = new BasicArrowButton(SwingConstants.SOUTH);
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setFocusable(false);
         setOpaque(false);
 
+        actionLabel.setFocusable(false);
+        actionLabel.setVerifyInputWhenFocusTarget(false);
+
         menuButton.setBorderPainted(false);
         menuButton.setFocusable(false);
         menuButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
         menuButton.setMaximumSize(new java.awt.Dimension(15, 100));
-
-        actionLabel.setFocusable(false);
-        actionLabel.setVerifyInputWhenFocusTarget(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -122,8 +123,8 @@ public class DropDownButtonPanel extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menuButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(actionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(menuButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -133,7 +134,15 @@ public class DropDownButtonPanel extends javax.swing.JPanel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+        java.awt.EventQueue.invokeLater(() -> {
+            javax.swing.JFrame frame = new javax.swing.JFrame();
+            DropDownButtonPanel panel = new DropDownButtonPanel();
+            panel.getActionButton().setText("TEST");
+            frame.setContentPane(panel);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setVisible(true);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
