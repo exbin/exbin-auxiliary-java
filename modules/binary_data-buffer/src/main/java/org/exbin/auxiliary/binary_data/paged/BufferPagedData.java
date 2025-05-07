@@ -348,12 +348,8 @@ public class BufferPagedData implements PagedData {
                 copySize = length;
             }
 
-            try {
-                page.getData().position(pageOffset);
-                page.getData().get(target, offset, copySize);
-            } catch (IndexOutOfBoundsException ex) {
-                throw new OutOfBoundsException(ex);
-            }
+            page.copyToArray(pageOffset, target, offset, copySize);
+
             length -= copySize;
             offset += copySize;
             startFrom += copySize;
