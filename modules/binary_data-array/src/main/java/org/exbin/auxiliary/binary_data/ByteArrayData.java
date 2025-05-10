@@ -90,7 +90,7 @@ public class ByteArrayData implements BinaryData {
             throw new OutOfBoundsException("Array data is limited by integer length");
         }
         if (startFrom + length > data.length) {
-            throw new OutOfBoundsException("Attemt to copy outside of data");
+            throw new OutOfBoundsException("Attempt to copy outside of data");
         }
 
         byte[] copy = Arrays.copyOfRange(data, (int) startFrom, (int) (startFrom + length));

@@ -66,7 +66,7 @@ public class DropDownButtonPanel extends javax.swing.JPanel {
 
             private void passMouseEventToParent(MouseEvent me) {
                 Component parent = DropDownButtonPanel.this.getParent();
-                //dispatch it to the parent component
+                // Dispatch it to the parent component
                 parent.dispatchEvent(SwingUtilities.convertMouseEvent(actionLabel, me, parent));
             }
         });

@@ -18,7 +18,8 @@ package org.exbin.auxiliary.binary_data.delta.swap;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.BinaryData;
-import org.exbin.auxiliary.binary_data.ByteArrayData;
+import org.exbin.auxiliary.binary_data.ByteArrayEditableData;
+import org.exbin.auxiliary.binary_data.EditableBinaryData;
 import org.exbin.auxiliary.binary_data.paged.DataPageProvider;
 import org.exbin.auxiliary.binary_data.delta.SegmentsRepository;
 
@@ -71,31 +72,35 @@ public class SwapDataRepository {
     @ParametersAreNonnullByDefault
     private class SwapDataPageProvider implements DataPageProvider {
 
+        @Nonnull
         @Override
-        public BinaryData createPage() {
+        public EditableBinaryData createPage() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Nonnull
         @Override
-        public BinaryData createPage(BinaryData sourceData) {
+        public EditableBinaryData createPage(BinaryData sourceData) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Nonnull
         @Override
-        public BinaryData createPage(byte[] sourceData) {
+        public EditableBinaryData createPage(byte[] sourceData) {
             if ((maximumMemoryUsage == -1) || (maximumMemoryUsage > sourceData.length)) {
-                BinaryData dataPage = new ByteArrayData(sourceData);
+                EditableBinaryData dataPage = new ByteArrayEditableData(sourceData);
                 maximumMemoryUsage -= sourceData.length;
                 return dataPage;
             }
 
             long allocatedPage = swapFilePages.allocatePage();
             swapFilePages.setPage(allocatedPage, sourceData);
-            return new SwapedDataPage(SwapDataRepository.this, allocatedPage, sourceData.length);
+            return new SwappedDataPage(SwapDataRepository.this, allocatedPage, sourceData.length);
         }
 
+        @Nonnull
         @Override
-        public BinaryData createPage(int dataSize) {
+        public EditableBinaryData createPage(int dataSize) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }

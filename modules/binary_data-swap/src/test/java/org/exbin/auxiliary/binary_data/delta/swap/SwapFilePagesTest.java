@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.ParametersAreNonnullByDefault;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,7 +28,6 @@ import org.junit.Test;
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public class SwapFilePagesTest {
 
     public static final String SAMPLE_FILES_PATH = "/org/exbin/auxiliary/binary_data/delta/swap/resources/test/";

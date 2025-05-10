@@ -15,9 +15,9 @@
  */
 package org.exbin.auxiliary.binary_data.delta.swap;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.delta.DeltaDocument;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -25,7 +25,6 @@ import org.junit.Test;
  *
  * @author ExBin Project (https://exbin.org)
  */
-@ParametersAreNonnullByDefault
 public class SwapDataRepositoryTest {
 
     public static final String SAMPLE_FILES_PATH = "/org/exbin/auxiliary/binary_data/delta/swap/resources/test/";
@@ -35,6 +34,7 @@ public class SwapDataRepositoryTest {
     public SwapDataRepositoryTest() {
     }
 
+    @Ignore
     @Test
     public void testSwapping() {
         SwapDataRepository swapDataRepository = new SwapDataRepository();

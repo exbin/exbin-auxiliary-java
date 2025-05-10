@@ -40,7 +40,7 @@ public class BinaryDataInputStream extends InputStream implements SeekableStream
     @Override
     public int read() throws IOException {
         try {
-            return data.getByte(position++);
+            return data.getByte(position++) & 0xFF;
         } catch (ArrayIndexOutOfBoundsException ex) {
             return -1;
         }

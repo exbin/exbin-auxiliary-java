@@ -323,7 +323,7 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
     @Override
     public BufferEditableData copy(long startFrom, long length) {
         if (startFrom + length > data.capacity()) {
-            throw new OutOfBoundsException("Attemt to copy outside of data");
+            throw new OutOfBoundsException("Attempt to copy outside of data");
         }
 
         ByteBuffer copy = allocateBuffer((int) length);

@@ -40,7 +40,17 @@ public interface DataLoadingProgressObserver extends DataLoadingObserver {
      */
     long loadedProgressSize();
 
+    /**
+     * Adds change listener.
+     *
+     * @param changeListener change listener
+     */
     void addChangeListener(ChangeListener changeListener);
 
+    /**
+     * Removes change listener.
+     *
+     * @param changeListener change listener
+     */
     void removeChangeListener(ChangeListener changeListener);
 }

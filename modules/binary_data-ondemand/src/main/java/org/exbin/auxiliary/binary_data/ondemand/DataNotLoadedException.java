@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
- * Exception for data reading or writting when range of data is not loaded.
+ * Exception for data reading or writing when range of data is not loaded.
  * <p>
  * Exception can optionally provide information about range of data which are
  * not loaded, but it doesn't have to be full segment.

@@ -24,6 +24,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
  */
 @ParametersAreNonnullByDefault
 public enum BufferAllocationType {
+    /**
+     * Use ByteBuffer.allocate method.
+     */
     HEAP,
+    /**
+     * Use ByteBuffer.directAllocate method.
+     */
     DIRECT
 }

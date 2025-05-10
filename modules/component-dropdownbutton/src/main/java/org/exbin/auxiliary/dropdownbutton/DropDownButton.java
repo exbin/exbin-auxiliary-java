@@ -109,7 +109,7 @@ public class DropDownButton extends JButton {
             popupMenu.updateUI();
         }
     }
-    
+
     protected void setRolloverBorder() {
         JButton menuButton = buttonPanel.getMenuButton();
         menuButton.setBorderPainted(true);

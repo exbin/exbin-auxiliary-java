@@ -124,7 +124,7 @@ public class BufferData implements BinaryData {
             throw new OutOfBoundsException("Buffer data is limited by integer length");
         }
         if (startFrom + length > data.capacity()) {
-            throw new OutOfBoundsException("Attemt to copy outside of data");
+            throw new OutOfBoundsException("Attempt to copy outside of data");
         }
 
         ByteBuffer copy = allocateBuffer((int) length);

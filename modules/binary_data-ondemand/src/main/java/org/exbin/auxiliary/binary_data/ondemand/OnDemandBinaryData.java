@@ -15,6 +15,8 @@
  */
 package org.exbin.auxiliary.binary_data.ondemand;
 
+import org.exbin.auxiliary.binary_data.BinaryData;
+
 import java.util.concurrent.Future;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -45,5 +47,5 @@ public interface OnDemandBinaryData {
      * @return retrieval future object
      */
     @Nonnull
-    Future retrieveData(long startFrom, long length);
+    Future<BinaryData> retrieveData(long startFrom, long length);
 }
