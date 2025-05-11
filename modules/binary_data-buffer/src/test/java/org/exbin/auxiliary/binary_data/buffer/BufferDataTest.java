@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data;
+package org.exbin.auxiliary.binary_data.buffer;
 
 import java.io.ByteArrayOutputStream;
 import javax.annotation.Nonnull;
@@ -24,59 +24,59 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * Tests for ByteArrayData class.
+ * Tests for BufferData class.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public class ByteArrayDataTest {
+public class BufferDataTest {
 
     @Nonnull
     private final TestUtils testUtils = new TestUtils();
 
-    public ByteArrayDataTest() {
+    public BufferDataTest() {
     }
 
     @Test
     public void testGetDataSize() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        BufferData instanceA = new BufferData(testUtils.getSampleDataA());
         assertEquals(5l, instanceA.getDataSize());
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        BufferData instanceB = new BufferData(testUtils.getSampleDataB());
         assertEquals(10l, instanceB.getDataSize());
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        BufferData instanceC = new BufferData(testUtils.getSampleDataC());
         assertEquals(256l, instanceC.getDataSize());
     }
 
     @Test
     public void testIsEmpty() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        BufferData instanceA = new BufferData(testUtils.getSampleDataA());
         assertEquals(false, instanceA.isEmpty());
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        BufferData instanceB = new BufferData(testUtils.getSampleDataB());
         assertEquals(false, instanceB.isEmpty());
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        BufferData instanceC = new BufferData(testUtils.getSampleDataC());
         assertEquals(false, instanceC.isEmpty());
 
-        ByteArrayData instanceD = new ByteArrayData();
+        BufferData instanceD = new BufferData();
         assertEquals(true, instanceD.isEmpty());
 
-        ByteArrayData instanceE = new ByteArrayData(new byte[0]);
+        BufferData instanceE = new BufferData(new byte[0]);
         assertEquals(true, instanceE.isEmpty());
     }
 
     @Test
     public void testGetByte() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        BufferData instanceA = new BufferData(testUtils.getSampleDataA());
         assertEquals(0x12, instanceA.getByte(0));
         assertEquals(0x9a, instanceA.getByte(4) & 0xff);
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        BufferData instanceB = new BufferData(testUtils.getSampleDataB());
         assertEquals(0x41, instanceB.getByte(0));
         assertEquals(0x4a, instanceB.getByte(9));
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        BufferData instanceC = new BufferData(testUtils.getSampleDataC());
         assertEquals(0x0, instanceC.getByte(0));
         assertEquals(0x7f, instanceC.getByte(0x7f) & 0xff);
         assertEquals(0xff, instanceC.getByte(0xff) & 0xff);
@@ -84,32 +84,32 @@ public class ByteArrayDataTest {
 
     @Test
     public void testCopy_0args() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        BufferData instanceA = new BufferData(testUtils.getSampleDataA());
         BinaryData copyA = instanceA.copy();
         assertEquals(5l, copyA.getDataSize());
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        BufferData instanceB = new BufferData(testUtils.getSampleDataB());
         BinaryData copyB = instanceB.copy();
         assertEquals(10l, copyB.getDataSize());
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        BufferData instanceC = new BufferData(testUtils.getSampleDataC());
         BinaryData copyC = instanceC.copy();
         assertEquals(256l, copyC.getDataSize());
     }
 
     @Test
     public void testCopy() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        BufferData instanceA = new BufferData(testUtils.getSampleDataA());
         BinaryData copyA = instanceA.copy(1, 2);
         assertEquals(2l, copyA.getDataSize());
         assertEquals(0x34, copyA.getByte(0));
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        BufferData instanceB = new BufferData(testUtils.getSampleDataB());
         BinaryData copyB = instanceB.copy(2, 6);
         assertEquals(6l, copyB.getDataSize());
         assertEquals(0x43, copyB.getByte(0));
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        BufferData instanceC = new BufferData(testUtils.getSampleDataC());
         BinaryData copyC = instanceC.copy(100, 100);
         assertEquals(100l, copyC.getDataSize());
         assertEquals((byte) 100, copyC.getByte(0));
@@ -123,18 +123,18 @@ public class ByteArrayDataTest {
 
     @Test
     public void testCopyToArray() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        BufferData instanceA = new BufferData(testUtils.getSampleDataA());
         byte[] copyA = new byte[2];
         instanceA.copyToArray(1, copyA, 0, 2);
         assertEquals(0x34, copyA[0]);
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        BufferData instanceB = new BufferData(testUtils.getSampleDataB());
         byte[] copyB = new byte[8];
         instanceB.copyToArray(2, copyB, 2, 6);
         assertEquals((byte) 0, copyB[0]);
         assertEquals(0x43, copyB[2]);
 
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        BufferData instanceC = new BufferData(testUtils.getSampleDataC());
         byte[] copyC = new byte[100];
         instanceC.copyToArray(100, copyC, 0, 100);
         assertEquals((byte) 100, copyC[0]);
@@ -157,19 +157,19 @@ public class ByteArrayDataTest {
     @Test
     public void testSaveToStream() throws Exception {
         ByteArrayOutputStream outputA = new ByteArrayOutputStream();
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        BufferData instanceA = new BufferData(testUtils.getSampleDataA());
         instanceA.saveToStream(outputA);
         outputA.close();
         assertArrayEquals(testUtils.getSampleDataA(), outputA.toByteArray());
 
         ByteArrayOutputStream outputB = new ByteArrayOutputStream();
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        BufferData instanceB = new BufferData(testUtils.getSampleDataB());
         instanceB.saveToStream(outputB);
         outputB.close();
         assertArrayEquals(testUtils.getSampleDataB(), outputB.toByteArray());
 
         ByteArrayOutputStream outputC = new ByteArrayOutputStream();
-        ByteArrayData instanceC = new ByteArrayData(testUtils.getSampleDataC());
+        BufferData instanceC = new BufferData(testUtils.getSampleDataC());
         instanceC.saveToStream(outputC);
         outputC.close();
         assertArrayEquals(testUtils.getSampleDataC(), outputC.toByteArray());
@@ -177,13 +177,13 @@ public class ByteArrayDataTest {
 
     @Test
     public void testEquals() {
-        ByteArrayData instanceA = new ByteArrayData(testUtils.getSampleDataA());
+        BufferData instanceA = new BufferData(testUtils.getSampleDataA());
 
-        ByteArrayData instanceA1 = new ByteArrayData(testUtils.getSampleDataA());
+        BufferData instanceA1 = new BufferData(testUtils.getSampleDataA());
 
         assertTrue(instanceA.equals(instanceA1));
 
-        ByteArrayData instanceB = new ByteArrayData(testUtils.getSampleDataB());
+        BufferData instanceB = new BufferData(testUtils.getSampleDataB());
 
         assertFalse(instanceA.equals(instanceB));
     }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data;
+package org.exbin.auxiliary.binary_data.buffer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +23,9 @@ import java.nio.ByteBuffer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.auxiliary.binary_data.BinaryData;
+import org.exbin.auxiliary.binary_data.BinaryDataInputStream;
+import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 
 /**
  * Implementation of binary data interface using byte buffer.

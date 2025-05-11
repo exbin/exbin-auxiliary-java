@@ -13,214 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data.paged;
+package org.exbin.auxiliary.binary_data.array;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nonnull;
-import org.exbin.auxiliary.binary_data.BinaryData;
-import org.exbin.auxiliary.binary_data.ByteArrayData;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 import org.exbin.auxiliary.binary_data.TestUtils;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * Tests for PagedData class.
+ * Tests for ByteArrayEditableData class.
  *
  * @author ExBin Project (https://exbin.org)
  */
-public class ByteArrayPagedDataTest {
+public class ByteArrayEditableDataTest {
 
     @Nonnull
     private final TestUtils testUtils = new TestUtils();
 
-    public ByteArrayPagedDataTest() {
-    }
-
-    @Test
-    public void testGetDataSize() {
-        PagedData instanceA = new ByteArrayPagedData();
-        instanceA.insert(0, testUtils.getSampleDataA());
-        assertEquals(5l, instanceA.getDataSize());
-
-        PagedData instanceA1 = new ByteArrayPagedData(8);
-        instanceA1.insert(0, testUtils.getSampleDataA());
-        assertEquals(5l, instanceA1.getDataSize());
-
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
-        assertEquals(10l, instanceB.getDataSize());
-
-        PagedData instanceC = new ByteArrayPagedData(8);
-        instanceC.insert(0, testUtils.getSampleDataC());
-        assertEquals(256l, instanceC.getDataSize());
-    }
-
-    @Test
-    public void testIsEmpty() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
-        assertEquals(false, instanceA.isEmpty());
-
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
-        assertEquals(false, instanceB.isEmpty());
-
-        PagedData instanceC = new ByteArrayPagedData(8);
-        instanceC.insert(0, testUtils.getSampleDataC());
-        assertEquals(false, instanceC.isEmpty());
-
-        PagedData instanceD = new ByteArrayPagedData(8);
-        assertEquals(true, instanceD.isEmpty());
-
-        PagedData instanceE = new ByteArrayPagedData(8);
-        instanceE.insert(0, new byte[0]);
-        assertEquals(true, instanceE.isEmpty());
-    }
-
-    @Test
-    public void testGetByte() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
-        assertEquals(0x12, instanceA.getByte(0));
-        assertEquals(0x9a, instanceA.getByte(4) & 0xff);
-
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
-        assertEquals(0x41, instanceB.getByte(0));
-        assertEquals(0x4a, instanceB.getByte(9));
-
-        PagedData instanceC = new ByteArrayPagedData(8);
-        instanceC.insert(0, testUtils.getSampleDataC());
-        assertEquals(0x0, instanceC.getByte(0));
-        assertEquals(0x7f, instanceC.getByte(0x7f) & 0xff);
-        assertEquals(0xff, instanceC.getByte(0xff) & 0xff);
-    }
-
-    @Test
-    public void testCopy() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
-        BinaryData copyA = instanceA.copy();
-        assertEquals(5l, copyA.getDataSize());
-
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
-        BinaryData copyB = instanceB.copy();
-        assertEquals(10l, copyB.getDataSize());
-
-        PagedData instanceC = new ByteArrayPagedData(8);
-        instanceC.insert(0, testUtils.getSampleDataC());
-        BinaryData copyC = instanceC.copy();
-        assertEquals(256l, copyC.getDataSize());
-    }
-
-    @Test
-    public void testCopy_StartLength() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
-        BinaryData copyA = instanceA.copy(1, 2);
-        assertEquals(2l, copyA.getDataSize());
-        assertEquals(0x34, copyA.getByte(0));
-
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
-        BinaryData copyB = instanceB.copy(2, 6);
-        assertEquals(6l, copyB.getDataSize());
-        assertEquals(0x43, copyB.getByte(0));
-
-        PagedData instanceC = new ByteArrayPagedData(8);
-        instanceC.insert(0, testUtils.getSampleDataC());
-        BinaryData copyC = instanceC.copy(100, 100);
-        assertEquals(100l, copyC.getDataSize());
-        assertEquals((byte) 100, copyC.getByte(0));
-
-        try {
-            instanceC.copy(100, 200);
-            fail();
-        } catch (OutOfBoundsException ex) {
-        }
-    }
-
-    @Test
-    public void testCopyToArray() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
-        byte[] copyA = new byte[2];
-        instanceA.copyToArray(1, copyA, 0, 2);
-        assertEquals(0x34, copyA[0]);
-
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
-        byte[] copyB = new byte[8];
-        instanceB.copyToArray(2, copyB, 2, 6);
-        assertEquals((byte) 0, copyB[0]);
-        assertEquals(0x43, copyB[2]);
-
-        PagedData instanceC = new ByteArrayPagedData(8);
-        instanceC.insert(0, testUtils.getSampleDataC());
-        byte[] copyC = new byte[100];
-        instanceC.copyToArray(100, copyC, 0, 100);
-        assertEquals((byte) 100, copyC[0]);
-        assertEquals((byte) 199, copyC[99]);
-
-        byte[] copyC2 = new byte[100];
-        try {
-            instanceC.copyToArray(100, copyC2, 50, 100);
-            fail();
-        } catch (OutOfBoundsException ex) {
-        }
-
-        try {
-            instanceC.copyToArray(200, copyC2, 0, 100);
-            fail();
-        } catch (OutOfBoundsException ex) {
-        }
-    }
-
-    @Test
-    public void testSaveToStream() throws Exception {
-        ByteArrayOutputStream outputA = new ByteArrayOutputStream();
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
-        instanceA.saveToStream(outputA);
-        outputA.close();
-        assertArrayEquals(testUtils.getSampleDataA(), outputA.toByteArray());
-
-        ByteArrayOutputStream outputB = new ByteArrayOutputStream();
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
-        instanceB.saveToStream(outputB);
-        outputB.close();
-        assertArrayEquals(testUtils.getSampleDataB(), outputB.toByteArray());
-
-        ByteArrayOutputStream outputC = new ByteArrayOutputStream();
-        PagedData instanceC = new ByteArrayPagedData(8);
-        instanceC.insert(0, testUtils.getSampleDataC());
-        instanceC.saveToStream(outputC);
-        outputC.close();
-        assertArrayEquals(testUtils.getSampleDataC(), outputC.toByteArray());
+    public ByteArrayEditableDataTest() {
     }
 
     @Test
     public void testSetDataSize() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.setDataSize(10);
         assertEquals(10l, instanceA.getDataSize());
 
-        PagedData instanceA1 = new ByteArrayPagedData(8);
-        instanceA1.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA1 = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA1.setDataSize(4);
         assertEquals(4l, instanceA1.getDataSize());
     }
 
     @Test
     public void testSetByte() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.setByte(0, (byte) 50);
         instanceA.setByte(1, (byte) 51);
         assertEquals(50, instanceA.getByte(0));
@@ -235,16 +64,14 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testInsertUninitialized() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.insertUninitialized(1, 2);
         assertEquals(7l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
         assertEquals((byte) 0x34, instanceA.getByte(3));
         assertEquals((byte) 0x56, instanceA.getByte(4));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.insertUninitialized(20, 1);
             fail();
@@ -254,8 +81,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testInsertLength() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.insert(1, 2);
         assertEquals(7l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -264,8 +90,7 @@ public class ByteArrayPagedDataTest {
         assertEquals((byte) 0x34, instanceA.getByte(3));
         assertEquals((byte) 0x56, instanceA.getByte(4));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.insert(20, 1);
             fail();
@@ -275,8 +100,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testInsert_byteArray() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.insert(1, new byte[]{1, 2});
         assertEquals(7l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -285,8 +109,7 @@ public class ByteArrayPagedDataTest {
         assertEquals((byte) 0x34, instanceA.getByte(3));
         assertEquals((byte) 0x56, instanceA.getByte(4));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.insert(20, new byte[]{1});
             fail();
@@ -296,8 +119,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testInsert_BinaryData() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.insert(1, new ByteArrayData(new byte[]{1, 2}));
         assertEquals(7l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -306,8 +128,7 @@ public class ByteArrayPagedDataTest {
         assertEquals((byte) 0x34, instanceA.getByte(3));
         assertEquals((byte) 0x56, instanceA.getByte(4));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.insert(20, new ByteArrayData(new byte[]{1}));
             fail();
@@ -317,8 +138,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testInsert() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.insert(1, new byte[]{5, 7, 1, 2, 10}, 2, 2);
         assertEquals(7l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -327,16 +147,14 @@ public class ByteArrayPagedDataTest {
         assertEquals((byte) 0x34, instanceA.getByte(3));
         assertEquals((byte) 0x56, instanceA.getByte(4));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.insert(20, new byte[]{5, 7, 1, 2, 10}, 2, 1);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        PagedData instanceB2 = new ByteArrayPagedData(8);
-        instanceB2.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.insert(0, new byte[]{5, 7, 1, 2, 10}, 10, 1);
             fail();
@@ -346,8 +164,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testFillData() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.fillData(1, 2);
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -356,16 +173,14 @@ public class ByteArrayPagedDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.fillData(20, 1);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        PagedData instanceB2 = new ByteArrayPagedData(8);
-        instanceB2.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.fillData(0, 20);
             fail();
@@ -375,8 +190,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testFillData_byte() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.fillData(1, 2, (byte) 0x55);
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -385,16 +199,14 @@ public class ByteArrayPagedDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.fillData(20, 1, (byte) 55);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        PagedData instanceB2 = new ByteArrayPagedData(8);
-        instanceB2.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.fillData(0, 20, (byte) 55);
             fail();
@@ -404,8 +216,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testReplace_BinaryData() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.replace(1, new ByteArrayData(new byte[]{1, 2}));
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -414,8 +225,7 @@ public class ByteArrayPagedDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.replace(20, new ByteArrayData(new byte[]{1}));
             fail();
@@ -425,8 +235,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testReplace_BinaryData_offset() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.replace(1, new ByteArrayData(new byte[]{5, 7, 1, 2, 10}), 2, 2);
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -435,16 +244,14 @@ public class ByteArrayPagedDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.replace(20, new ByteArrayData(new byte[]{5, 7, 1, 2, 10}), 2, 2);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        PagedData instanceB2 = new ByteArrayPagedData(8);
-        instanceB2.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.replace(0, new ByteArrayData(new byte[]{5, 7, 1, 2, 10}), 10, 2);
             fail();
@@ -454,8 +261,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testReplace_ByteArray() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.replace(1, new byte[]{1, 2});
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -464,8 +270,7 @@ public class ByteArrayPagedDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.replace(20, new byte[]{1});
             fail();
@@ -475,8 +280,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testReplace_ByteArray_offset() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.replace(1, new byte[]{5, 7, 1, 2, 10}, 2, 2);
         assertEquals(5l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
@@ -485,16 +289,14 @@ public class ByteArrayPagedDataTest {
         assertEquals((byte) 0x78, instanceA.getByte(3));
         assertEquals((byte) 0x9a, instanceA.getByte(4));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.replace(20, new byte[]{5, 7, 1, 2, 10}, 2, 2);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        PagedData instanceB2 = new ByteArrayPagedData(8);
-        instanceB2.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.replace(0, new byte[]{5, 7, 1, 2, 10}, 10, 2);
             fail();
@@ -504,24 +306,21 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testRemove() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.remove(1, 2);
         assertEquals(3l, instanceA.getDataSize());
         assertEquals((byte) 0x12, instanceA.getByte(0));
         assertEquals((byte) 0x78, instanceA.getByte(1));
         assertEquals((byte) 0x9a, instanceA.getByte(2));
 
-        PagedData instanceB = new ByteArrayPagedData(8);
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB.remove(20, 1);
             fail();
         } catch (OutOfBoundsException ex) {
         }
 
-        PagedData instanceB2 = new ByteArrayPagedData(8);
-        instanceB2.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB2 = new ByteArrayEditableData(testUtils.getSampleDataB());
         try {
             instanceB2.remove(5, 100);
             fail();
@@ -531,15 +330,14 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testClear() {
-        PagedData instanceA = new ByteArrayPagedData(8);
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
         instanceA.clear();
         assertEquals(0l, instanceA.getDataSize());
     }
 
     @Test
     public void testLoadFromStream() throws Exception {
-        PagedData instanceA = new ByteArrayPagedData();
+        ByteArrayEditableData instanceA = new ByteArrayEditableData();
         try (InputStream streamA = testUtils.getSampleDataStream(TestUtils.SAMPLE_5BYTES)) {
             instanceA.loadFromStream(streamA);
         }
@@ -547,7 +345,7 @@ public class ByteArrayPagedDataTest {
         assertEquals(0x12, instanceA.getByte(0));
         assertEquals(0x9a, instanceA.getByte(4) & 0xff);
 
-        PagedData instanceB = new ByteArrayPagedData();
+        ByteArrayEditableData instanceB = new ByteArrayEditableData();
         try (InputStream streamB = testUtils.getSampleDataStream(TestUtils.SAMPLE_10BYTES)) {
             instanceB.loadFromStream(streamB);
         }
@@ -555,7 +353,7 @@ public class ByteArrayPagedDataTest {
         assertEquals(0x41, instanceB.getByte(0));
         assertEquals(0x4a, instanceB.getByte(9));
 
-        PagedData instanceC = new ByteArrayPagedData();
+        ByteArrayEditableData instanceC = new ByteArrayEditableData();
         try (InputStream streamC = testUtils.getSampleDataStream(TestUtils.SAMPLE_ALLBYTES)) {
             instanceC.loadFromStream(streamC);
         }
@@ -567,7 +365,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testLoadFromNonBlockingStream() throws Exception {
-        PagedData instanceC = new ByteArrayPagedData();
+        ByteArrayEditableData instanceC = new ByteArrayEditableData();
         try (InputStream streamC = testUtils.getSampleDataStream(TestUtils.SAMPLE_ALLBYTES)) {
             InputStream nonBlockingStream = new InputStream() {
                 @Override
@@ -586,7 +384,7 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testLoadFromStream_offset() throws Exception {
-        PagedData instanceA = new ByteArrayPagedData();
+        ByteArrayEditableData instanceA = new ByteArrayEditableData();
         try (InputStream streamA = testUtils.getSampleDataStream(TestUtils.SAMPLE_ALLBYTES)) {
             instanceA.insert(100, streamA, 100);
         }
@@ -598,16 +396,13 @@ public class ByteArrayPagedDataTest {
 
     @Test
     public void testEquals() {
-        PagedData instanceA = new ByteArrayPagedData();
-        instanceA.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA = new ByteArrayEditableData(testUtils.getSampleDataA());
 
-        PagedData instanceA1 = new ByteArrayPagedData(8);
-        instanceA1.insert(0, testUtils.getSampleDataA());
+        ByteArrayEditableData instanceA1 = new ByteArrayEditableData(testUtils.getSampleDataA());
 
         assertTrue(instanceA.equals(instanceA1));
 
-        PagedData instanceB = new ByteArrayPagedData();
-        instanceB.insert(0, testUtils.getSampleDataB());
+        ByteArrayEditableData instanceB = new ByteArrayEditableData(testUtils.getSampleDataB());
 
         assertFalse(instanceA.equals(instanceB));
     }

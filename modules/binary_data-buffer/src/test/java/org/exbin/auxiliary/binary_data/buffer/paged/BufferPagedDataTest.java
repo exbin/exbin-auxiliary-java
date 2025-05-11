@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data.paged;
+package org.exbin.auxiliary.binary_data.buffer.paged;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nonnull;
 import org.exbin.auxiliary.binary_data.BinaryData;
-import org.exbin.auxiliary.binary_data.BufferData;
+import org.exbin.auxiliary.binary_data.buffer.BufferData;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 import org.exbin.auxiliary.binary_data.TestUtils;
+import org.exbin.auxiliary.binary_data.paged.PagedData;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

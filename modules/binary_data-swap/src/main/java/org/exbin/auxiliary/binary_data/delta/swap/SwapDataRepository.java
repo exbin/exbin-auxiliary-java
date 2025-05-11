@@ -18,7 +18,7 @@ package org.exbin.auxiliary.binary_data.delta.swap;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.BinaryData;
-import org.exbin.auxiliary.binary_data.ByteArrayEditableData;
+import org.exbin.auxiliary.binary_data.array.ByteArrayEditableData;
 import org.exbin.auxiliary.binary_data.EditableBinaryData;
 import org.exbin.auxiliary.binary_data.paged.DataPageProvider;
 import org.exbin.auxiliary.binary_data.delta.SegmentsRepository;
