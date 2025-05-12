@@ -30,4 +30,4 @@ Build commands: "gradle build" and "gradle distZip"
 License
 -------
 
-Please see each module for it's license.
+Default license is Apache License, Version 2.0 - see LICENSE.txt. Specific libraries can have different license.

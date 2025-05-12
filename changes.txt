@@ -1,3 +1,7 @@
+0.2.2 (2025-05-12)
+- Extracted array and buffer modules
+- Added drop down button
+
 0.2.1 (2023-12-30)
 - Renamed back to binary_data + split as regular and paged variant
 - Added data not present support

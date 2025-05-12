@@ -5,7 +5,7 @@ plugins {
     // id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
 
-version = '0.2.2-SNAPSHOT'
+version = '0.2.2'
 
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 
@@ -17,6 +17,12 @@ distributions {
     main {
         contents {
             duplicatesStrategy = 'exclude'
+
+            into('') {
+                from project.rootDir
+                include 'LICENSE.txt'
+                include 'changes.txt'
+            }
 
             from project.rootDir
             from 'src/dist'
