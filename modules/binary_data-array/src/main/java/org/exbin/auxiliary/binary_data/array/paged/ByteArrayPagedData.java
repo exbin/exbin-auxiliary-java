@@ -155,41 +155,41 @@ public class ByteArrayPagedData implements PagedData {
         if (length > MAX_DATA_SIZE - getDataSize()) {
             throw new DataOverflowException("Maximum array size overflow");
         }
+        
+        if (length == 0) {
+            return;
+        }
 
-        if (startFrom >= dataSize) {
-            setDataSize(startFrom + length);
-        } else if (length > 0) {
-            long copyLength = dataSize - startFrom;
-            dataSize = dataSize + length;
-            setDataSize(dataSize);
-            long sourceEnd = dataSize - length;
-            long targetEnd = dataSize;
-            // Backward copy
-            while (copyLength > 0) {
-                byte[] sourcePage = getPageData((int) (sourceEnd / pageSize));
-                int sourceOffset = (int) (sourceEnd % pageSize);
-                if (sourceOffset == 0) {
-                    sourcePage = getPageData((int) ((sourceEnd - 1) / pageSize));
-                    sourceOffset = sourcePage.length;
-                }
-
-                byte[] targetPage = getPageData((int) (targetEnd / pageSize));
-                int targetOffset = (int) (targetEnd % pageSize);
-                if (targetOffset == 0) {
-                    targetPage = getPageData((int) ((targetEnd - 1) / pageSize));
-                    targetOffset = targetPage.length;
-                }
-
-                int copySize = Math.min(sourceOffset, targetOffset);
-                if (copySize > copyLength) {
-                    copySize = (int) copyLength;
-                }
-
-                System.arraycopy(sourcePage, sourceOffset - copySize, targetPage, targetOffset - copySize, copySize);
-                copyLength -= copySize;
-                sourceEnd -= copySize;
-                targetEnd -= copySize;
+        long copyLength = dataSize - startFrom;
+        dataSize = dataSize + length;
+        setDataSize(dataSize);
+        long sourceEnd = dataSize - length;
+        long targetEnd = dataSize;
+        // Backward copy
+        while (copyLength > 0) {
+            byte[] sourcePage = getPageData((int) (sourceEnd / pageSize));
+            int sourceOffset = (int) (sourceEnd % pageSize);
+            if (sourceOffset == 0) {
+                sourcePage = getPageData((int) ((sourceEnd - 1) / pageSize));
+                sourceOffset = sourcePage.length;
             }
+
+            byte[] targetPage = getPageData((int) (targetEnd / pageSize));
+            int targetOffset = (int) (targetEnd % pageSize);
+            if (targetOffset == 0) {
+                targetPage = getPageData((int) ((targetEnd - 1) / pageSize));
+                targetOffset = targetPage.length;
+            }
+
+            int copySize = Math.min(sourceOffset, targetOffset);
+            if (copySize > copyLength) {
+                copySize = (int) copyLength;
+            }
+
+            System.arraycopy(sourcePage, sourceOffset - copySize, targetPage, targetOffset - copySize, copySize);
+            copyLength -= copySize;
+            sourceEnd -= copySize;
+            targetEnd -= copySize;
         }
     }
 

@@ -371,31 +371,34 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
             byte[] buffer = new byte[BUFFER_SIZE];
             if (position < offset) {
                 while (length > 0) {
-                    int block = length > BUFFER_SIZE ? BUFFER_SIZE : length;
+                    int blockSize = length > BUFFER_SIZE ? BUFFER_SIZE : length;
                     source.position(offset);
-                    source.get(buffer, 0, block);
+                    source.get(buffer, 0, blockSize);
                     target.position(position);
-                    target.put(buffer, 0, block);
-                    offset += block;
-                    position += block;
-                    length -= block;
+                    target.put(buffer, 0, blockSize);
+                    offset += blockSize;
+                    position += blockSize;
+                    length -= blockSize;
                 }
             } else if (position > offset) {
                 while (length > 0) {
-                    int block = length > BUFFER_SIZE ? BUFFER_SIZE : length;
-                    source.position(offset + length - block);
-                    source.get(buffer, 0, block);
-                    target.position(position + length - block);
-                    target.put(buffer, 0, block);
-                    length -= block;
+                    int blockSize = length > BUFFER_SIZE ? BUFFER_SIZE : length;
+                    source.position(offset + length - blockSize);
+                    source.get(buffer, 0, blockSize);
+                    target.position(position + length - blockSize);
+                    target.put(buffer, 0, blockSize);
+                    length -= blockSize;
                 }
             }
-        } else {
-            source.position(offset);
-            source.limit(offset + length);
-            target.position(position);
-            target.put(source);
-            source.limit(source.capacity());
+            target.clear();
+            return;
         }
+
+        source.position(offset);
+        source.limit(offset + length);
+        target.position(position);
+        target.put(source);
+        target.clear();
+        source.clear();
     }
 }

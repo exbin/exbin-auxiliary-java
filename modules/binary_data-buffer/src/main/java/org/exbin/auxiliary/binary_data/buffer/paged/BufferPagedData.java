@@ -157,40 +157,40 @@ public class BufferPagedData implements PagedData {
             throw new DataOverflowException("Maximum array size overflow");
         }
 
-        if (startFrom >= dataSize) {
-            setDataSize(startFrom + length);
-        } else if (length > 0) {
-            long copyLength = dataSize - startFrom;
-            dataSize = dataSize + length;
-            setDataSize(dataSize);
-            long sourceEnd = dataSize - length;
-            long targetEnd = dataSize;
-            // Backward copy
-            while (copyLength > 0) {
-                BufferData sourcePage = getPage((int) (sourceEnd / pageSize));
-                int sourceOffset = (int) (sourceEnd % pageSize);
-                if (sourceOffset == 0) {
-                    sourcePage = getPage((int) ((sourceEnd - 1) / pageSize));
-                    sourceOffset = (int) sourcePage.getDataSize();
-                }
+        if (length == 0) {
+            return;
+        }
 
-                BufferData targetPage = getPage((int) (targetEnd / pageSize));
-                int targetOffset = (int) (targetEnd % pageSize);
-                if (targetOffset == 0) {
-                    targetPage = getPage((int) ((targetEnd - 1) / pageSize));
-                    targetOffset = (int) targetPage.getDataSize();
-                }
-
-                int copySize = Math.min(sourceOffset, targetOffset);
-                if (copySize > copyLength) {
-                    copySize = (int) copyLength;
-                }
-
-                BufferPagedData.put(targetPage.getData(), targetOffset - copySize, sourcePage.getData(), sourceOffset - copySize, copySize);
-                copyLength -= copySize;
-                sourceEnd -= copySize;
-                targetEnd -= copySize;
+        long copyLength = dataSize - startFrom;
+        dataSize = dataSize + length;
+        setDataSize(dataSize);
+        long sourceEnd = dataSize - length;
+        long targetEnd = dataSize;
+        // Backward copy
+        while (copyLength > 0) {
+            BufferData sourcePage = getPage((int) (sourceEnd / pageSize));
+            int sourceOffset = (int) (sourceEnd % pageSize);
+            if (sourceOffset == 0) {
+                sourcePage = getPage((int) ((sourceEnd - 1) / pageSize));
+                sourceOffset = (int) sourcePage.getDataSize();
             }
+
+            BufferData targetPage = getPage((int) (targetEnd / pageSize));
+            int targetOffset = (int) (targetEnd % pageSize);
+            if (targetOffset == 0) {
+                targetPage = getPage((int) ((targetEnd - 1) / pageSize));
+                targetOffset = (int) targetPage.getDataSize();
+            }
+
+            int copySize = Math.min(sourceOffset, targetOffset);
+            if (copySize > copyLength) {
+                copySize = (int) copyLength;
+            }
+
+            BufferPagedData.put(targetPage.getData(), targetOffset - copySize, sourcePage.getData(), sourceOffset - copySize, copySize);
+            copyLength -= copySize;
+            sourceEnd -= copySize;
+            targetEnd -= copySize;
         }
     }
 
