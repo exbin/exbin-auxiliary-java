@@ -15,7 +15,6 @@
  */
 package org.exbin.auxiliary.binary_data.delta;
 
-import org.exbin.auxiliary.binary_data.delta.file.FileDataSource;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -23,7 +22,11 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.BinaryData;
+import org.exbin.auxiliary.binary_data.EditableBinaryData;
+import org.exbin.auxiliary.binary_data.array.paged.ByteArrayPagedData;
+import org.exbin.auxiliary.binary_data.delta.file.FileDataSource;
 import org.exbin.auxiliary.binary_data.delta.list.DefaultDoublyLinkedList;
+import org.exbin.auxiliary.binary_data.paged.DataPageProvider;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -94,7 +97,9 @@ public class DeltaDocumentTest {
     @Test
     public void testInsertBinaryData() {
         DeltaDocument document = openDeltaDocument();
-        BinaryData data = new MemoryDataSource(new byte[]{0});
+        ByteArrayPagedData memoryData = new ByteArrayPagedData();
+        memoryData.insert(0, new byte[] {0});
+        BinaryData data = new MemoryDataSource(memoryData);
         document.insert(10, data);
         Assert.assertEquals(SAMPLE_ALLBYTES_SIZE + 1, document.getDataSize());
 
@@ -123,7 +128,27 @@ public class DeltaDocumentTest {
 
     @Nonnull
     public static DeltaDocument openDeltaDocument() {
-        SegmentsRepository segmentsRepository = new SegmentsRepository();
+        SegmentsRepository segmentsRepository = new SegmentsRepository(new DataPageProvider() {
+            @Override
+            public EditableBinaryData createPage() {
+                return new ByteArrayPagedData();
+            }
+
+            @Override
+            public EditableBinaryData createPage(int dataSize) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public EditableBinaryData createPage(BinaryData sourceData) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public EditableBinaryData createPage(byte[] sourceData) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
         try {
             FileDataSource dataSource = new FileDataSource(new File(DeltaDocumentTest.class.getResource(SAMPLE_ALLBYTES).getFile()));
             segmentsRepository.addDataSource(dataSource);

@@ -1,0 +1,8 @@
+rootProject.name = 'binary_data-jna'
+
+if (rootProject.path == ':') {
+    include ':modules:binary_data'
+    include ':modules:binary_data-buffer'
+}
+
+apply from: '../exbin-auxiliary-modules-settings.gradle'

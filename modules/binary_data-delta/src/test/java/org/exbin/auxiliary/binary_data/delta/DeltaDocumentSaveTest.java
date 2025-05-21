@@ -28,6 +28,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.EditableBinaryData;
+import org.exbin.auxiliary.binary_data.array.paged.ByteArrayPagedData;
+import org.exbin.auxiliary.binary_data.paged.DataPageProvider;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -725,7 +727,31 @@ public class DeltaDocumentSaveTest {
 
     @Nonnull
     public static DeltaDocument openTempDeltaDocument() {
-        SegmentsRepository segmentsRepository = new SegmentsRepository();
+        SegmentsRepository segmentsRepository = new SegmentsRepository(new DataPageProvider() {
+            @Nonnull
+            @Override
+            public EditableBinaryData createPage() {
+                return new ByteArrayPagedData();
+            }
+
+            @Nonnull
+            @Override
+            public EditableBinaryData createPage(int dataSize) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Nonnull
+            @Override
+            public EditableBinaryData createPage(BinaryData sourceData) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Nonnull
+            @Override
+            public EditableBinaryData createPage(byte[] sourceData) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
 
         File sampleFile = new File(DeltaDocumentSaveTest.class.getResource(SAMPLE_ALLBYTES).getFile());
         try {

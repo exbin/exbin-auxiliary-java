@@ -27,10 +27,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.BinaryData;
-import org.exbin.auxiliary.binary_data.EditableBinaryData;
 import org.exbin.auxiliary.binary_data.delta.list.DefaultDoublyLinkedList;
 import org.exbin.auxiliary.binary_data.delta.list.DoublyLinkedItem;
-import org.exbin.auxiliary.binary_data.array.paged.ByteArrayPagedData;
 import org.exbin.auxiliary.binary_data.paged.DataPageProvider;
 
 /**
@@ -52,12 +50,8 @@ public class SegmentsRepository {
      * Limit for save processing in bytes.
      */
     private static final int PROCESSING_LIMIT = 4096;
-    @Nullable
+    @Nonnull
     private final DataPageProvider dataPageProvider;
-
-    public SegmentsRepository() {
-        this(null);
-    }
 
     public SegmentsRepository(DataPageProvider dataPageProvider) {
         this.dataPageProvider = dataPageProvider;
@@ -69,13 +63,7 @@ public class SegmentsRepository {
 
     @Nonnull
     public MemoryDataSource openMemorySource() {
-        EditableBinaryData binaryData;
-        if (dataPageProvider != null) {
-            binaryData = dataPageProvider.createPage();
-        } else {
-            binaryData = new ByteArrayPagedData();
-        }
-        MemoryDataSource memorySource = new MemoryDataSource(binaryData);
+        MemoryDataSource memorySource = new MemoryDataSource(dataPageProvider.createPage());
         memorySources.put(memorySource, new DataSegmentsMap());
         return memorySource;
     }
@@ -837,8 +825,8 @@ public class SegmentsRepository {
     /**
      * Mapping of segments to data source.
      * <p>
-     * Segments are supposed to be kept ordered by start position and length with
-     * max position computed.
+     * Segments are supposed to be kept ordered by start position and length
+     * with max position computed.
      */
     @ParametersAreNonnullByDefault
     private class DataSegmentsMap {

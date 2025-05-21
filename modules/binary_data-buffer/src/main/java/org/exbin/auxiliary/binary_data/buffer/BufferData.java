@@ -38,8 +38,8 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 @ParametersAreNonnullByDefault
 public class BufferData implements BinaryData {
 
-    private static final int BUFFER_SIZE = 4096;
-    private BufferAllocationType bufferAllocationType = BufferAllocationType.DIRECT;
+    protected static final int BUFFER_SIZE = 4096;
+    protected BufferAllocationType bufferAllocationType = BufferAllocationType.DIRECT;
 
     @Nonnull
     protected ByteBuffer data;
@@ -68,6 +68,7 @@ public class BufferData implements BinaryData {
         } else {
             this.data = BufferData.this.allocateBuffer(data.length);
             this.data.put(data);
+            this.data.clear();
         }
     }
 

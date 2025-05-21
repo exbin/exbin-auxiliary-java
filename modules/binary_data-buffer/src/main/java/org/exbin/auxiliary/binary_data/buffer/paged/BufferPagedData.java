@@ -47,12 +47,12 @@ public class BufferPagedData implements PagedData {
     public static final int DEFAULT_PAGE_SIZE = 4096;
     public static final long MAX_DATA_SIZE = Long.MAX_VALUE;
 
-    private int pageSize = DEFAULT_PAGE_SIZE;
+    protected int pageSize = DEFAULT_PAGE_SIZE;
     @Nonnull
-    private final List<BufferData> data = new ArrayList<>();
+    protected final List<BufferData> data = new ArrayList<>();
 
     @Nullable
-    private DataPageProvider dataPageProvider = null;
+    protected DataPageProvider dataPageProvider = null;
 
     public BufferPagedData() {
     }
@@ -597,7 +597,7 @@ public class BufferPagedData implements PagedData {
     }
 
     @Nonnull
-    private BufferData createNewPage(byte[] pageData) {
+    protected BufferData createNewPage(byte[] pageData) {
         if (dataPageProvider != null) {
             return (BufferData) dataPageProvider.createPage(pageData);
         }
@@ -606,7 +606,7 @@ public class BufferPagedData implements PagedData {
     }
 
     @Nonnull
-    private BufferData createNewPage(int pageDataSize) {
+    protected BufferData createNewPage(int pageDataSize) {
         if (dataPageProvider != null) {
             return (BufferData) dataPageProvider.createPage(pageDataSize);
         }
