@@ -18,9 +18,10 @@ package org.exbin.auxiliary.binary_data.jna.paged;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import org.exbin.auxiliary.binary_data.EditableBinaryData;
 import org.exbin.auxiliary.binary_data.jna.JnaBufferData;
 import org.exbin.auxiliary.binary_data.buffer.paged.BufferPagedData;
-import org.exbin.auxiliary.binary_data.paged.DataPageProvider;
+import org.exbin.auxiliary.binary_data.paged.DataPageCreator;
 
 /**
  * Paged data stored using JNA byte buffer.
@@ -33,8 +34,8 @@ public class JnaBufferPagedData extends BufferPagedData {
     public JnaBufferPagedData() {
     }
 
-    public JnaBufferPagedData(DataPageProvider dataPageProvider) {
-        this.dataPageProvider = dataPageProvider;
+    public JnaBufferPagedData(DataPageCreator dataPageCreator) {
+        this.dataPageCreator = dataPageCreator;
     }
 
     public JnaBufferPagedData(int pageSize) {
@@ -44,8 +45,10 @@ public class JnaBufferPagedData extends BufferPagedData {
     @Nonnull
     @Override
     protected JnaBufferData createNewPage(byte[] pageData) {
-        if (dataPageProvider != null) {
-            return (JnaBufferData) dataPageProvider.createPage(pageData);
+        if (dataPageCreator != null) {
+            EditableBinaryData page = dataPageCreator.createPage(pageData.length);
+            page.replace(0, pageData);
+            return (JnaBufferData) page;
         }
 
         return new JnaBufferData(pageData);
@@ -54,8 +57,8 @@ public class JnaBufferPagedData extends BufferPagedData {
     @Nonnull
     @Override
     protected JnaBufferData createNewPage(int pageDataSize) {
-        if (dataPageProvider != null) {
-            return (JnaBufferData) dataPageProvider.createPage(pageDataSize);
+        if (dataPageCreator != null) {
+            return (JnaBufferData) dataPageCreator.createPage(pageDataSize);
         }
 
         return new JnaBufferData(pageDataSize);
@@ -63,12 +66,12 @@ public class JnaBufferPagedData extends BufferPagedData {
 
     @Nullable
     @Override
-    public DataPageProvider getDataPageProvider() {
-        return dataPageProvider;
+    public DataPageCreator getDataPageCreator() {
+        return dataPageCreator;
     }
 
     @Override
-    public void setDataPageProvider(@Nullable DataPageProvider dataPageProvider) {
-        this.dataPageProvider = dataPageProvider;
+    public void setDataPageCreator(@Nullable DataPageCreator dataPageCreator) {
+        this.dataPageCreator = dataPageCreator;
     }
 }

@@ -17,14 +17,13 @@ package org.exbin.auxiliary.binary_data.delta.swap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.array.ByteArrayEditableData;
 import org.exbin.auxiliary.binary_data.EditableBinaryData;
-import org.exbin.auxiliary.binary_data.paged.DataPageProvider;
+import org.exbin.auxiliary.binary_data.delta.MemorySegmentCreator;
 import org.exbin.auxiliary.binary_data.delta.SegmentsRepository;
 
 /**
- * Repository for data paging with support for swapping.
+ * TODO: Repository for data paging with support for swapping.
  *
  * @author ExBin Project (https://exbin.org)
  */
@@ -37,17 +36,17 @@ public class SwapDataRepository {
     private long maximumMemoryUsage = 0;
 
     private final SwapFilePages swapFilePages = new SwapFilePages();
-    private final DataPageProvider dataPageProvider;
+    private final MemorySegmentCreator memorySegmentCreator;
     private final SegmentsRepository segmentsRepository;
 
     public SwapDataRepository() {
-        dataPageProvider = new SwapDataPageProvider();
-        segmentsRepository = new SegmentsRepository(dataPageProvider);
+        memorySegmentCreator = new SwapDataSegmentCreator();
+        segmentsRepository = new SegmentsRepository(memorySegmentCreator);
     }
 
     @Nonnull
-    public DataPageProvider getDataPageProvider() {
-        return dataPageProvider;
+    public MemorySegmentCreator getMemorySegmentCreator() {
+        return memorySegmentCreator;
     }
 
     @Nonnull
@@ -70,23 +69,12 @@ public class SwapDataRepository {
     }
 
     @ParametersAreNonnullByDefault
-    private class SwapDataPageProvider implements DataPageProvider {
+    private class SwapDataSegmentCreator implements MemorySegmentCreator {
 
-        @Nonnull
         @Override
-        public EditableBinaryData createPage() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Nonnull
-        @Override
-        public EditableBinaryData createPage(BinaryData sourceData) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Nonnull
-        @Override
-        public EditableBinaryData createPage(byte[] sourceData) {
+        public EditableBinaryData createSegment() {
+            return new ByteArrayEditableData();
+            /*
             if ((maximumMemoryUsage == -1) || (maximumMemoryUsage > sourceData.length)) {
                 EditableBinaryData dataPage = new ByteArrayEditableData(sourceData);
                 maximumMemoryUsage -= sourceData.length;
@@ -95,13 +83,7 @@ public class SwapDataRepository {
 
             long allocatedPage = swapFilePages.allocatePage();
             swapFilePages.setPage(allocatedPage, sourceData);
-            return new SwappedDataPage(SwapDataRepository.this, allocatedPage, sourceData.length);
-        }
-
-        @Nonnull
-        @Override
-        public EditableBinaryData createPage(int dataSize) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return new SwappedDataPage(SwapDataRepository.this, allocatedPage, sourceData.length); */
         }
     }
 }

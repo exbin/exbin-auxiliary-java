@@ -32,9 +32,10 @@ import org.exbin.auxiliary.binary_data.BinaryDataOutputStream;
 import org.exbin.auxiliary.binary_data.buffer.BufferData;
 import org.exbin.auxiliary.binary_data.buffer.BufferEditableData;
 import org.exbin.auxiliary.binary_data.DataOverflowException;
+import org.exbin.auxiliary.binary_data.EditableBinaryData;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
-import org.exbin.auxiliary.binary_data.paged.DataPageProvider;
 import org.exbin.auxiliary.binary_data.paged.PagedData;
+import org.exbin.auxiliary.binary_data.paged.DataPageCreator;
 
 /**
  * Paged data stored using byte buffer.
@@ -52,13 +53,13 @@ public class BufferPagedData implements PagedData {
     protected final List<BufferData> data = new ArrayList<>();
 
     @Nullable
-    protected DataPageProvider dataPageProvider = null;
+    protected DataPageCreator dataPageCreator = null;
 
     public BufferPagedData() {
     }
 
-    public BufferPagedData(DataPageProvider dataPageProvider) {
-        this.dataPageProvider = dataPageProvider;
+    public BufferPagedData(DataPageCreator dataPageCreator) {
+        this.dataPageCreator = dataPageCreator;
     }
 
     public BufferPagedData(int pageSize) {
@@ -598,8 +599,10 @@ public class BufferPagedData implements PagedData {
 
     @Nonnull
     protected BufferData createNewPage(byte[] pageData) {
-        if (dataPageProvider != null) {
-            return (BufferData) dataPageProvider.createPage(pageData);
+        if (dataPageCreator != null) {
+            EditableBinaryData page = dataPageCreator.createPage(pageData.length);
+            page.replace(0, pageData);
+            return (BufferData) page;
         }
 
         return new BufferData(pageData);
@@ -607,20 +610,20 @@ public class BufferPagedData implements PagedData {
 
     @Nonnull
     protected BufferData createNewPage(int pageDataSize) {
-        if (dataPageProvider != null) {
-            return (BufferData) dataPageProvider.createPage(pageDataSize);
+        if (dataPageCreator != null) {
+            return (BufferData) dataPageCreator.createPage(pageDataSize);
         }
 
         return new BufferData(pageDataSize);
     }
 
     @Nullable
-    public DataPageProvider getDataPageProvider() {
-        return dataPageProvider;
+    public DataPageCreator getDataPageCreator() {
+        return dataPageCreator;
     }
 
-    public void setDataPageProvider(@Nullable DataPageProvider dataPageProvider) {
-        this.dataPageProvider = dataPageProvider;
+    public void setDataPageCreator(@Nullable DataPageCreator dataPageCreator) {
+        this.dataPageCreator = dataPageCreator;
     }
 
     @Override

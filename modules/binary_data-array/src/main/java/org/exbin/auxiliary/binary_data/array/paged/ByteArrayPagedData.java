@@ -29,9 +29,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.array.ByteArrayData;
 import org.exbin.auxiliary.binary_data.DataOverflowException;
+import org.exbin.auxiliary.binary_data.EditableBinaryData;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
-import org.exbin.auxiliary.binary_data.paged.DataPageProvider;
 import org.exbin.auxiliary.binary_data.paged.PagedData;
+import org.exbin.auxiliary.binary_data.paged.DataPageCreator;
 
 /**
  * Encapsulation class for binary data blob.
@@ -52,13 +53,13 @@ public class ByteArrayPagedData implements PagedData {
     private final List<ByteArrayData> data = new ArrayList<>();
 
     @Nullable
-    private DataPageProvider dataPageProvider = null;
+    private DataPageCreator dataPageCreator = null;
 
     public ByteArrayPagedData() {
     }
 
-    public ByteArrayPagedData(DataPageProvider dataPageProvider) {
-        this.dataPageProvider = dataPageProvider;
+    public ByteArrayPagedData(DataPageCreator dataPageCreator) {
+        this.dataPageCreator = dataPageCreator;
     }
 
     public ByteArrayPagedData(int pageSize) {
@@ -594,20 +595,22 @@ public class ByteArrayPagedData implements PagedData {
 
     @Nonnull
     private ByteArrayData createNewPage(byte[] pageData) {
-        if (dataPageProvider != null) {
-            return (ByteArrayData) dataPageProvider.createPage(pageData);
+        if (dataPageCreator != null) {
+            EditableBinaryData page = dataPageCreator.createPage(pageData.length);
+            page.replace(0, pageData);
+            return (ByteArrayData) page;
         }
 
         return new ByteArrayData(pageData);
     }
 
     @Nullable
-    public DataPageProvider getDataPageProvider() {
-        return dataPageProvider;
+    public DataPageCreator getDataPageCreator() {
+        return dataPageCreator;
     }
 
-    public void setDataPageProvider(@Nullable DataPageProvider dataPageProvider) {
-        this.dataPageProvider = dataPageProvider;
+    public void setDataPageCreator(@Nullable DataPageCreator dataPageCreator) {
+        this.dataPageCreator = dataPageCreator;
     }
 
     @Override

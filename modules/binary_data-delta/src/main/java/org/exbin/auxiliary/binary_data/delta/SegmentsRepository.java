@@ -29,7 +29,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.delta.list.DefaultDoublyLinkedList;
 import org.exbin.auxiliary.binary_data.delta.list.DoublyLinkedItem;
-import org.exbin.auxiliary.binary_data.paged.DataPageProvider;
 
 /**
  * Repository of delta segments.
@@ -51,10 +50,10 @@ public class SegmentsRepository {
      */
     private static final int PROCESSING_LIMIT = 4096;
     @Nonnull
-    private final DataPageProvider dataPageProvider;
+    private final MemorySegmentCreator memorySegmentCreator;
 
-    public SegmentsRepository(DataPageProvider dataPageProvider) {
-        this.dataPageProvider = dataPageProvider;
+    public SegmentsRepository(MemorySegmentCreator memorySegmentCreator) {
+        this.memorySegmentCreator = memorySegmentCreator;
     }
 
     public void addDataSource(DataSource dataSource) throws IOException {
@@ -63,7 +62,7 @@ public class SegmentsRepository {
 
     @Nonnull
     public MemoryDataSource openMemorySource() {
-        MemoryDataSource memorySource = new MemoryDataSource(dataPageProvider.createPage());
+        MemoryDataSource memorySource = new MemoryDataSource(memorySegmentCreator.createSegment());
         memorySources.put(memorySource, new DataSegmentsMap());
         return memorySource;
     }

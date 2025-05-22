@@ -39,7 +39,6 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 public class BufferData implements BinaryData {
 
     protected static final int BUFFER_SIZE = 4096;
-    protected BufferAllocationType bufferAllocationType = BufferAllocationType.DIRECT;
 
     @Nonnull
     protected ByteBuffer data;
@@ -236,23 +235,7 @@ public class BufferData implements BinaryData {
     }
 
     @Nonnull
-    public BufferAllocationType getBufferAllocationType() {
-        return bufferAllocationType;
-    }
-
-    public void setBufferAllocationType(BufferAllocationType bufferAllocationType) {
-        this.bufferAllocationType = bufferAllocationType;
-    }
-
-    @Nonnull
     protected ByteBuffer allocateBuffer(int capacity) {
-        switch (bufferAllocationType) {
-            case HEAP:
-                return ByteBuffer.allocate(capacity);
-            case DIRECT:
-                return ByteBuffer.allocateDirect(capacity);
-            default:
-                throw new IllegalStateException();
-        }
+        return ByteBuffer.allocate(capacity);
     }
 }

@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data.jna;
+package org.exbin.auxiliary.binary_data.buffer;
 
-import com.sun.jna.Memory;
 import java.nio.ByteBuffer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.auxiliary.binary_data.buffer.BufferData;
 
 /**
- * Implementation of binary data interface using JNA byte buffer.
+ * Implementation of binary data interface using direct byte buffer.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class JnaBufferData extends BufferData {
+public class DirectBufferData extends BufferData {
 
-    public JnaBufferData() {
+    public DirectBufferData() {
         this((ByteBuffer) null);
     }
 
@@ -39,8 +37,8 @@ public class JnaBufferData extends BufferData {
      *
      * @param data byte buffer
      */
-    public JnaBufferData(@Nullable ByteBuffer data) {
-        super(data != null ? data : JnaBufferData.allocateBufferInt(0));
+    public DirectBufferData(@Nullable ByteBuffer data) {
+        super(data != null ? data : DirectBufferData.allocateBufferInt(0));
     }
 
     /**
@@ -48,8 +46,8 @@ public class JnaBufferData extends BufferData {
      *
      * @param data byte array
      */
-    public JnaBufferData(@Nullable byte[] data) {
-        super(JnaBufferData.allocateBufferInt(data));
+    public DirectBufferData(@Nullable byte[] data) {
+        super(DirectBufferData.allocateBufferInt(data));
     }
 
     /**
@@ -57,32 +55,27 @@ public class JnaBufferData extends BufferData {
      *
      * @param dataSize data size
      */
-    public JnaBufferData(int dataSize) {
-        super(JnaBufferData.allocateBufferInt(dataSize));
+    public DirectBufferData(int dataSize) {
+        super(DirectBufferData.allocateBufferInt(dataSize));
     }
 
     @Nonnull
     @Override
     protected ByteBuffer allocateBuffer(int capacity) {
-        return JnaBufferData.allocateBufferInt(capacity);
+        return DirectBufferData.allocateBufferInt(capacity);
     }
 
     @Nonnull
     private static ByteBuffer allocateBufferInt(int capacity) {
-        try {
-            return new Memory(capacity).getByteBuffer(0, capacity);
-        } catch (Throwable tw) {
-            // Fallback to regular byte buffer
-            return ByteBuffer.allocateDirect(capacity);
-        }
+        return ByteBuffer.allocateDirect(capacity);
     }
 
     @Nonnull
     private static ByteBuffer allocateBufferInt(@Nullable byte[] data) {
         if (data == null) {
-            return JnaBufferData.allocateBufferInt(0);
+            return DirectBufferData.allocateBufferInt(0);
         } else {
-            ByteBuffer buffer = JnaBufferData.allocateBufferInt(data.length);
+            ByteBuffer buffer = DirectBufferData.allocateBufferInt(data.length);
             buffer.put(data);
             buffer.clear();
             return buffer;

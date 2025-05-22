@@ -38,7 +38,6 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 @ParametersAreNonnullByDefault
 public class BufferEditableData extends BufferData implements EditableBinaryData {
 
-    public static final int BUFFER_SIZE = 1024;
     public static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 5;
 
     private static final String WRONG_INSERTION_POSITION_ERROR = "Data can be inserted only inside or at the end";
@@ -116,19 +115,8 @@ public class BufferEditableData extends BufferData implements EditableBinaryData
 
     @Override
     public void insert(long startFrom, long length) {
-        if (startFrom > data.capacity()) {
-            throw new OutOfBoundsException(WRONG_INSERTION_POSITION_ERROR);
-        }
-        if (length > MAX_ARRAY_LENGTH - data.capacity()) {
-            throw new DataOverflowException(ARRAY_OVERFLOW_ERROR);
-        }
-
-        if (length > 0) {
-            ByteBuffer newData = allocateBuffer((int) (data.capacity() + length));
-            BufferEditableData.put(newData, 0, data, 0, (int) startFrom);
-            BufferEditableData.put(newData, (int) (startFrom + length), data, (int) startFrom, (int) (data.capacity() - startFrom));
-            data = newData;
-        }
+        insertUninitialized(startFrom, length);
+        fillData(startFrom, length, (byte) 0);
     }
 
     @Override

@@ -64,14 +64,7 @@ public class JnaBufferEditableData extends BufferEditableData {
     @Nonnull
     @Override
     protected ByteBuffer allocateBuffer(int capacity) {
-        switch (bufferAllocationType) {
-            case HEAP:
-                return ByteBuffer.allocate(capacity);
-            case DIRECT:
-                return JnaBufferEditableData.allocateBufferInt(capacity);
-            default:
-                throw new IllegalStateException();
-        }
+        return JnaBufferEditableData.allocateBufferInt(capacity);
     }
 
     @Nonnull
