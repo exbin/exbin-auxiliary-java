@@ -71,7 +71,7 @@ public class TestUtils {
     }
 
     @Nullable
-    private byte[] getSampleData(String dataPath) {
+    protected byte[] getSampleData(String dataPath) {
         byte[] buffer = new byte[1024];
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (InputStream stream = getSampleDataStream(dataPath)) {
