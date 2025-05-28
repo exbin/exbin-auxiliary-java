@@ -13,39 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data;
+package org.exbin.auxiliary.binary_data.zone;
 
+import java.util.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
+import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
- * Simple representation of data range.
+ * Zone types for editation of the binary data.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @Immutable
-public class DataRange {
+public class BinaryDataZone extends DataRange {
 
-    protected final long startPosition;
-    protected final long endPosition;
+    private final ZoneType zoneType;
 
-    public DataRange(long startPosition, long endPosition) {
-        if (endPosition > startPosition) {
-            throw new IllegalStateException("Invalid data range");
-        }
-
-        this.startPosition = startPosition;
-        this.endPosition = endPosition;
+    public BinaryDataZone(long startPosition, long endPosition) {
+        this(null, startPosition, endPosition);
     }
 
-    public long getStartPosition() {
-        return startPosition;
+    public BinaryDataZone(@Nullable ZoneType zoneType, long startPosition, long endPosition) {
+        super(startPosition, endPosition);
+        this.zoneType = zoneType;
     }
 
-    public long getEndPosition() {
-        return endPosition;
-    }
-
-    public long getLength() {
-        return endPosition - startPosition + 1;
+    @Nonnull
+    public Optional<ZoneType> getZoneType() {
+        return Optional.ofNullable(zoneType);
     }
 }
