@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data.zone;
+package org.exbin.auxiliary.zone_data;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
@@ -24,7 +25,32 @@ import org.exbin.auxiliary.binary_data.DataRange;
  *
  * @author ExBin Project (https://exbin.org)
  */
-public interface BinaryDataZoneSource {
+@ParametersAreNonnullByDefault
+public interface ZoneDataSource {
+
+    /**
+     * Returns zone for given index.
+     *
+     * @param zoneIndex zone index
+     * @return zone data
+     */
+    @Nonnull
+    ZoneData getZone(long zoneIndex);
+
+    /**
+     * Returns count of zones.
+     *
+     * @return count
+     */
+    long getZonesCount();
+
+    /**
+     * Updates zone state.
+     *
+     * @param zoneState target zone state
+     * @param zoneIndex zone index
+     */
+    void updateZoneState(ZoneState zoneState, long zoneIndex);
 
     /**
      * Returns zone type for specific data position.
@@ -33,7 +59,7 @@ public interface BinaryDataZoneSource {
      * @return zone type
      */
     @Nonnull
-    Optional<ZoneType> getZoneType(long dataPosition);
+    Optional<ZoneType> findZoneType(long dataPosition);
 
     /**
      * Returns zone for specific data position.
@@ -42,7 +68,7 @@ public interface BinaryDataZoneSource {
      * @return zone
      */
     @Nonnull
-    ZoneType getZone(long dataPosition);
+    ZoneType findZone(long dataPosition);
 
     /**
      * Returns zone range for specific data position.
@@ -51,7 +77,7 @@ public interface BinaryDataZoneSource {
      * @return data range
      */
     @Nonnull
-    DataRange getZoneRange(long dataPosition);
+    DataRange findZoneRange(long dataPosition);
 
     /**
      * Returns start position of the zone on the given data position.
@@ -59,7 +85,7 @@ public interface BinaryDataZoneSource {
      * @param dataPosition data position
      * @return start data position
      */
-    long getZoneStart(long dataPosition);
+    long findZoneStart(long dataPosition);
 
     /**
      * Returns end position of the zone on the given data position.
@@ -67,5 +93,13 @@ public interface BinaryDataZoneSource {
      * @param dataPosition data position
      * @return end data position
      */
-    long getZoneEnd(long dataPosition);
+    long findZoneEnd(long dataPosition);
+
+    /**
+     * Updates zone state for given data position.
+     *
+     * @param zoneState target zone state
+     * @param dataPosition data position
+     */
+    void findZoneState(ZoneState zoneState, long dataPosition);
 }

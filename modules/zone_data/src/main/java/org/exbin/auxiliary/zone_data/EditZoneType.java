@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data.zone;
+package org.exbin.auxiliary.zone_data;
 
 /**
- * Zone types for editation of the binary data.
+ * Zone types for editation.
  *
  * @author ExBin Project (https://exbin.org)
  */
 public enum EditZoneType implements ZoneType {
     /**
-     * Inserted data.
+     * Added data.
      */
-    INSERTED,
+    ADDED,
     /**
-     * Replaced data.
+     * Modified data.
      */
-    REPLACED
+    MODIFIED
 }

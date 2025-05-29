@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.exbin.auxiliary.binary_data.zone;
+package org.exbin.auxiliary.zone_data;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -27,15 +27,15 @@ import org.exbin.auxiliary.binary_data.DataRange;
  * @author ExBin Project (https://exbin.org)
  */
 @Immutable
-public class BinaryDataZone extends DataRange {
+public class ZoneData extends DataRange {
 
     private final ZoneType zoneType;
 
-    public BinaryDataZone(long startPosition, long endPosition) {
+    public ZoneData(long startPosition, long endPosition) {
         this(null, startPosition, endPosition);
     }
 
-    public BinaryDataZone(@Nullable ZoneType zoneType, long startPosition, long endPosition) {
+    public ZoneData(@Nullable ZoneType zoneType, long startPosition, long endPosition) {
         super(startPosition, endPosition);
         this.zoneType = zoneType;
     }

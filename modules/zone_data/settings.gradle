@@ -1,4 +1,4 @@
-rootProject.name = 'binary_data-zone'
+rootProject.name = 'zone_data'
 
 if (rootProject.path == ':') {
     include ':modules:binary_data'
