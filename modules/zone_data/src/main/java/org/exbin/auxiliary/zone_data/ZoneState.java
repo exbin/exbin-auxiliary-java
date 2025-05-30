@@ -17,6 +17,7 @@ package org.exbin.auxiliary.zone_data;
 
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Interface for binary data zone state.
@@ -39,7 +40,7 @@ public interface ZoneState {
      *
      * @param zoneType zone type
      */
-    void setZoneType(ZoneType zoneType);
+    void setZoneType(@Nullable ZoneType zoneType);
 
     /**
      * Returns zone start position.
