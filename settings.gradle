@@ -7,7 +7,7 @@ include ":modules:binary_data-delta"
 include ":modules:binary_data-jna"
 include ":modules:binary_data-swap"
 include ":modules:binary_data-ondemand"
-include ":modules:binary_data-zone"
+include ":modules:zone_data"
 include ":modules:component-dropdownbutton"
 
 gradle.allprojects {

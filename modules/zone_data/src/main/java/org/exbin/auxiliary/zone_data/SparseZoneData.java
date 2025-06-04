@@ -38,7 +38,7 @@ public interface SparseZoneData {
      * any position closer, but greater than given position.
      * <p>
      * Basic implementation can return position + 1 which forces reading and
-     * handling of {@link DataNotPresentException}.
+     * handling of {@link ZoneNotPresentException}.
      *
      * @param position position to check from
      * @return next position to check for presence
@@ -50,7 +50,7 @@ public interface SparseZoneData {
      * changes or any position closer, but lesser than given position.
      * <p>
      * Basic implementation can return position - 1 which forces reading and
-     * handling of {@link DataNotPresentException}.
+     * handling of {@link ZoneNotPresentException}.
      *
      * @param position position to check from
      * @return previous position to check for presence
