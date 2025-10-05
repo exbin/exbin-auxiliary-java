@@ -25,6 +25,7 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
+import javax.swing.WindowConstants;
 
 /**
  * Drop down button.
@@ -35,27 +36,51 @@ import javax.swing.JPopupMenu;
 public class DropDownButton extends JButton {
 
     private final DropDownButtonPanel buttonPanel;
-    private final JPopupMenu popupMenu;
+    private JPopupMenu dropDownMenu = null;
 
-    public DropDownButton(Action action, JPopupMenu popupMenu) {
-        this.popupMenu = popupMenu;
-        buttonPanel = new DropDownButtonPanel();
-
-        init(action);
+    /**
+     * Creates empty instance.
+     */
+    public DropDownButton() {
+        this(DropDownButtonVariant.NORMAL);
     }
 
-    private void init(Action action) {
-        setFocusable(false);
-        setActionText((String) action.getValue(Action.NAME));
-        addActionListener(action);
-        action.addPropertyChangeListener((PropertyChangeEvent evt) -> {
-            setEnabled(action.isEnabled());
-            buttonPanel.setEnabled(action.isEnabled());
-        });
-        String toolTipText = (String) action.getValue(Action.SHORT_DESCRIPTION);
-        setToolTipText(toolTipText);
-        setActionTooltip(toolTipText);
+    /**
+     * Creates empty instance of given variant.
+     *
+     * @param variant variant
+     */
+    public DropDownButton(DropDownButtonVariant variant) {
+        super();
+        buttonPanel = new DropDownButtonPanel(variant);
+        DropDownButton.this.init();
+    }
 
+    /**
+     * Creates instance derived from given parameters.
+     *
+     * @param action action
+     * @param dropDownMenu drop down menu
+     */
+    public DropDownButton(Action action, JPopupMenu dropDownMenu) {
+        this(DropDownButtonVariant.NORMAL, action, dropDownMenu);
+    }
+
+    /**
+     * Creates instance of given variant derived from given parameters.
+     *
+     * @param variant variant
+     * @param action action
+     * @param dropDownMenu drop down menu
+     */
+    public DropDownButton(DropDownButtonVariant variant, Action action, JPopupMenu dropDownMenu) {
+        this(variant);
+        this.dropDownMenu = dropDownMenu;
+        DropDownButton.this.inheritFromAction(action);
+    }
+
+    private void init() {
+        setFocusable(false);
         setMargin(new Insets(0, 0, 0, 0));
         add(buttonPanel);
         JLabel actionButton = buttonPanel.getActionButton();
@@ -95,18 +120,51 @@ public class DropDownButton extends JButton {
         menuButton.addMouseListener(ma);
 
         menuButton.addActionListener((ActionEvent ae) -> {
-            popupMenu.show(actionButton, 0, actionButton.getSize().height);
+            if (dropDownMenu != null) {
+                dropDownMenu.show(actionButton, 0, actionButton.getSize().height);
+            }
         });
+    }
+
+    public void setDropDownMenu(JPopupMenu dropDownMenu) {
+        this.dropDownMenu = dropDownMenu;
+    }
+
+    @Override
+    public void setText(String text) {
+        buttonPanel.getActionButton().setText(text);
+    }
+
+    public void inheritFromAction(Action action) {
+        setActionText((String) action.getValue(Action.NAME));
+        addActionListener(action);
+        action.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            setEnabled(action.isEnabled());
+            buttonPanel.setEnabled(action.isEnabled());
+        });
+        String toolTipText = (String) action.getValue(Action.SHORT_DESCRIPTION);
+        setToolTipText(toolTipText);
+        setActionTooltip(toolTipText);
+    }
+
+    public void setActionText(String value) {
+        buttonPanel.getActionButton().setText(" " + value + " ");
+    }
+
+    public void setActionTooltip(String text) {
+        buttonPanel.getActionButton().setToolTipText(text);
+        buttonPanel.getMenuButton().setToolTipText(text);
     }
 
     @Override
     public void updateUI() {
         super.updateUI();
+        // Could happen in parent constructor before buttonPanel is created
         if (buttonPanel != null) {
             buttonPanel.updateUI();
         }
-        if (popupMenu != null) {
-            popupMenu.updateUI();
+        if (dropDownMenu != null) {
+            dropDownMenu.updateUI();
         }
     }
 
@@ -120,12 +178,20 @@ public class DropDownButton extends JButton {
         menuButton.setBorderPainted(false);
     }
 
-    public void setActionText(String value) {
-        buttonPanel.getActionButton().setText(" " + value + " ");
-    }
-
-    public void setActionTooltip(String text) {
-        buttonPanel.getActionButton().setToolTipText(text);
-        buttonPanel.getMenuButton().setToolTipText(text);
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> {
+            javax.swing.JFrame frame = new javax.swing.JFrame();
+            DropDownButton button = new DropDownButton();
+            button.setText("TEST");
+            frame.setContentPane(button);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setVisible(true);
+        });
     }
 }
