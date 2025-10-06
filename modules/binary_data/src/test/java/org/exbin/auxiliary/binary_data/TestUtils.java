@@ -45,9 +45,9 @@ public class TestUtils {
     private final byte[] sampleDataC;
 
     public TestUtils() {
-        sampleDataA = getSampleData(SAMPLE_5BYTES);
-        sampleDataB = getSampleData(SAMPLE_10BYTES);
-        sampleDataC = getSampleData(SAMPLE_ALLBYTES);
+        sampleDataA = TestUtils.this.getSampleData(SAMPLE_5BYTES);
+        sampleDataB = TestUtils.this.getSampleData(SAMPLE_10BYTES);
+        sampleDataC = TestUtils.this.getSampleData(SAMPLE_ALLBYTES);
     }
 
     @Nonnull
