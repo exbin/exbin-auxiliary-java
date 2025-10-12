@@ -42,7 +42,7 @@ public interface EditableBinaryData extends BinaryData {
     void setDataSize(long size);
 
     /**
-     * Sets byte to given position.
+     * Sets byte data on the given position.
      *
      * @param position position
      * @param value byte value to be set

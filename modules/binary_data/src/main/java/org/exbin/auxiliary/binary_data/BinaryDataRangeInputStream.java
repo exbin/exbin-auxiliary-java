@@ -21,25 +21,52 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
- * Input stream for binary data.
+ * Input stream for binary data range.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinaryDataInputStream extends InputStream implements SeekableStream, FinishableStream {
+public class BinaryDataRangeInputStream extends InputStream implements SeekableStream, FinishableStream {
 
     @Nonnull
     protected final BinaryData data;
+    protected final long startPosition;
+    protected final long length;
     protected long position = 0;
     protected long mark = 0;
 
-    public BinaryDataInputStream(BinaryData data) {
+    public BinaryDataRangeInputStream(BinaryData data) {
         this.data = data;
+        this.startPosition = 0;
+        this.position = 0;
+        this.length = data.getDataSize();
+    }
+
+    public BinaryDataRangeInputStream(BinaryData data, DataRange dataRange) {
+        this(data, dataRange.startPosition, dataRange.getLength());
+    }
+
+    public BinaryDataRangeInputStream(BinaryData data, long startPosition, long length) {
+        if (startPosition < 0) {
+            throw new IllegalArgumentException("Negative position not allowed");
+        }
+        if (length < 0) {
+            throw new IllegalArgumentException("Negative length not allowed");
+        }
+        long sourceDataSize = data.getDataSize();
+        if (startPosition + length > sourceDataSize) {
+            throw new OutOfBoundsException("Target area is outside of available data");
+        }
+
+        this.data = data;
+        this.startPosition = startPosition;
+        this.position = startPosition;
+        this.length = length;
     }
 
     @Override
     public int read() throws IOException {
-        if (position > data.getDataSize()) {
+        if (position > startPosition + length) {
             return -1;
         }
 
@@ -56,12 +83,11 @@ public class BinaryDataInputStream extends InputStream implements SeekableStream
             return 0;
         }
 
-        long dataSize = data.getDataSize();
-        if (position > dataSize - len) {
-            if (position >= dataSize) {
+        if (position > startPosition + length - len) {
+            if (position >= startPosition + length) {
                 return -1;
             }
-            len = (int) (dataSize - position);
+            len = (int) (startPosition + length - position);
         }
 
         data.copyToArray(position, output, off, len);
@@ -76,28 +102,32 @@ public class BinaryDataInputStream extends InputStream implements SeekableStream
 
     @Override
     public int available() throws IOException {
-        return (int) (data.getDataSize() - position);
+        return (int) ((startPosition + length) - position);
     }
 
     @Override
     public void seek(long position) throws IOException {
-        this.position = position;
+        if (position < 0 || position > length) {
+            throw new OutOfBoundsException("Position is outside of available range");
+        }
+
+        this.position = startPosition + position;
     }
 
     @Override
     public long finish() throws IOException {
-        position = data.getDataSize();
-        return position;
+        position = startPosition + length;
+        return length;
     }
 
     @Override
     public long getProcessedSize() {
-        return position;
+        return position - startPosition;
     }
 
     @Override
     public long getStreamSize() {
-        return data.getDataSize();
+        return length;
     }
 
     @Override
@@ -117,14 +147,13 @@ public class BinaryDataInputStream extends InputStream implements SeekableStream
 
     @Override
     public long skip(long n) throws IOException {
-        long dataSize = data.getDataSize();
-        if (position + n < dataSize) {
+        if (position - startPosition + n < length) {
             position += n;
             return n;
         }
 
-        long skipped = dataSize - position;
-        position = dataSize;
+        long skipped = startPosition + length - position;
+        position = startPosition + length;
         return skipped;
     }
 }

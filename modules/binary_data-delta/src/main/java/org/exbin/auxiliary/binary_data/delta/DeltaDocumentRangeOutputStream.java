@@ -25,51 +25,70 @@ import org.exbin.auxiliary.binary_data.SeekableStream;
 
 /**
  * Delta document output stream.
- * <p>
- * Data are expanded as needed.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DeltaDocumentOutputStream extends OutputStream implements SeekableStream, FinishableStream {
+public class DeltaDocumentRangeOutputStream extends OutputStream implements SeekableStream, FinishableStream {
 
     @Nonnull
     private final DeltaDocumentWindow data;
-    private long position = 0;
+    protected final long startPosition;
+    protected final long length;
+    protected long position = 0;
 
-    public DeltaDocumentOutputStream(DeltaDocument document) {
+    public DeltaDocumentRangeOutputStream(DeltaDocument document) {
         this.data = new DeltaDocumentWindow(document);
+        this.startPosition = 0;
+        this.length = document.getDataSize();
     }
 
-    @Override
-    public void write(int value) throws IOException {
-        long dataSize = data.getDataSize();
-        if (position == dataSize) {
-            dataSize++;
-            data.setDataSize(dataSize);
+    public DeltaDocumentRangeOutputStream(DeltaDocument document, long startPosition, long length) {
+        if (startPosition < 0) {
+            throw new IllegalArgumentException("Negative position not allowed");
+        }
+        if (length < 0) {
+            throw new IllegalArgumentException("Negative length not allowed");
+        }
+        long sourceDataSize = document.getDataSize();
+        if (startPosition + length > sourceDataSize) {
+            throw new OutOfBoundsException("Target area is outside of available data");
         }
 
+        this.data = new DeltaDocumentWindow(document);
+        this.startPosition = startPosition;
+        this.position = startPosition;
+        this.length = length;
+    }
+    
+    @Override
+    public void write(int value) throws IOException {
+        if (position >= startPosition + length) {
+            throw new IOException("Position is outside of available range");
+        }
         data.setByte(position++, (byte) value);
     }
 
     @Override
-    public void write(byte[] input, int offset, int length) throws IOException {
-        if (length == 0) {
+    public void write(byte[] input, int offset, int len) throws IOException {
+        if (len == 0) {
             return;
         }
 
-        data.insert(position, input, offset, length);
-        position += length;
+        if (position + len > startPosition + length) {
+            throw new OutOfBoundsException("Target area is outside of available data");
+        }
+
+        // TODO replace
+        data.remove(position, len);
+        data.insert(position, input, offset, len);
+        position += len;
     }
 
     @Override
     public void seek(long position) throws IOException {
-        if (position < 0) {
+        if (position < 0 || position > length) {
             throw new OutOfBoundsException("Position is outside of available range");
-        }
-
-        if (position > data.getDataSize()) {
-            data.setDataSize(position);
         }
 
         this.position = position;
@@ -77,12 +96,12 @@ public class DeltaDocumentOutputStream extends OutputStream implements SeekableS
 
     @Override
     public long getStreamSize() {
-        return data.getDataSize();
+        return length;
     }
 
     @Override
     public long getProcessedSize() {
-        return position;
+        return position - startPosition;
     }
 
     @Override
@@ -92,7 +111,7 @@ public class DeltaDocumentOutputStream extends OutputStream implements SeekableS
 
     @Override
     public long finish() throws IOException {
-        position = data.getDataSize();
-        return position;
+        position = startPosition + length;
+        return length;
     }
 }

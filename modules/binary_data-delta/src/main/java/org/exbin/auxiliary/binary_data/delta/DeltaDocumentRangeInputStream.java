@@ -20,6 +20,7 @@ import java.io.InputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import org.exbin.auxiliary.binary_data.FinishableStream;
+import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 import org.exbin.auxiliary.binary_data.SeekableStream;
 
 /**
@@ -28,20 +29,43 @@ import org.exbin.auxiliary.binary_data.SeekableStream;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DeltaDocumentInputStream extends InputStream implements SeekableStream, FinishableStream {
+public class DeltaDocumentRangeInputStream extends InputStream implements SeekableStream, FinishableStream {
 
     @Nonnull
     private final DeltaDocumentWindow data;
-    private long position = 0;
+    protected final long startPosition;
+    protected final long length;
+    protected long position = 0;
     private long mark = 0;
 
-    public DeltaDocumentInputStream(DeltaDocument document) {
+    public DeltaDocumentRangeInputStream(DeltaDocument document) {
         this.data = new DeltaDocumentWindow(document);
+        this.startPosition = 0;
+        this.position = 0;
+        this.length = document.getDataSize();
+    }
+
+    public DeltaDocumentRangeInputStream(DeltaDocument document, long startPosition, long length) {
+        if (startPosition < 0) {
+            throw new IllegalArgumentException("Negative position not allowed");
+        }
+        if (length < 0) {
+            throw new IllegalArgumentException("Negative length not allowed");
+        }
+        long sourceDataSize = document.getDataSize();
+        if (startPosition + length > sourceDataSize) {
+            throw new OutOfBoundsException("Target area is outside of available data");
+        }
+
+        this.data = new DeltaDocumentWindow(document);
+        this.startPosition = startPosition;
+        this.position = startPosition;
+        this.length = length;
     }
 
     @Override
     public int read() throws IOException {
-        if (position >= data.getDataSize()) {
+        if (position > startPosition + length) {
             return -1;
         }
 
@@ -53,23 +77,21 @@ public class DeltaDocumentInputStream extends InputStream implements SeekableStr
     }
 
     @Override
-    public int read(byte[] output, int offset, int length) throws IOException {
-        if (output.length == 0 || length == 0) {
+    public int read(byte[] output, int offset, int len) throws IOException {
+        if (output.length == 0 || len == 0) {
             return 0;
         }
 
-        long dataSize = data.getDataSize();
-        if (position >= dataSize) {
-            return -1;
+        if (position > startPosition + length - len) {
+            if (position >= startPosition + length) {
+                return -1;
+            }
+            len = (int) (startPosition + length - position);
         }
 
-        if (position + length > dataSize) {
-            length = (int) (dataSize - position);
-        }
-
-        data.copyToArray(position, output, offset, length);
-        position += length;
-        return length;
+        data.copyToArray(position, output, offset, len);
+        position += len;
+        return len;
     }
 
     @Override
@@ -79,28 +101,32 @@ public class DeltaDocumentInputStream extends InputStream implements SeekableStr
 
     @Override
     public int available() throws IOException {
-        return (int) (data.getDataSize() - position);
+        return (int) ((startPosition + length) - position);
     }
 
     @Override
     public void seek(long position) throws IOException {
-        this.position = position;
+        if (position < 0 || position > length) {
+            throw new OutOfBoundsException("Position is outside of available range");
+        }
+
+        this.position = startPosition + position;
     }
 
     @Override
     public long finish() throws IOException {
-        position = data.getDataSize();
-        return position;
+        position = startPosition + length;
+        return length;
     }
 
     @Override
     public long getProcessedSize() {
-        return position;
+        return position - startPosition;
     }
 
     @Override
     public long getStreamSize() {
-        return data.getDataSize();
+        return length;
     }
 
     @Override
@@ -120,14 +146,13 @@ public class DeltaDocumentInputStream extends InputStream implements SeekableStr
 
     @Override
     public long skip(long n) throws IOException {
-        long dataSize = data.getDataSize();
-        if (position + n < dataSize) {
+        if (position - startPosition + n < length) {
             position += n;
             return n;
         }
 
-        long skipped = dataSize - position;
-        position = dataSize;
+        long skipped = startPosition + length - position;
+        position = startPosition + length;
         return skipped;
     }
 }

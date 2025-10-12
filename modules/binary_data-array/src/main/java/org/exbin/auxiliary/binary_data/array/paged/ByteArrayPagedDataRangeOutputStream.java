@@ -25,30 +25,47 @@ import org.exbin.auxiliary.binary_data.SeekableStream;
 
 /**
  * Output stream for paged data.
- * <p>
- * Data are expanded as needed.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ByteArrayPagedDataOutputStream extends OutputStream implements SeekableStream, FinishableStream {
+public class ByteArrayPagedDataRangeOutputStream extends OutputStream implements SeekableStream, FinishableStream {
 
     @Nonnull
     private final ByteArrayPagedData data;
-    private long position = 0;
+    protected final long startPosition;
+    protected final long length;
+    protected long position = 0;
 
-    public ByteArrayPagedDataOutputStream(ByteArrayPagedData data) {
+    public ByteArrayPagedDataRangeOutputStream(ByteArrayPagedData data) {
         this.data = data;
+        this.startPosition = 0;
+        this.length = data.getDataSize();
     }
 
-    @Override
-    public void write(int value) throws IOException {
-        long dataSize = data.getDataSize();
-        if (position == dataSize) {
-            dataSize++;
-            data.insertUninitialized(position, 1);
+    public ByteArrayPagedDataRangeOutputStream(ByteArrayPagedData data, long startPosition, long length) {
+        if (startPosition < 0) {
+            throw new IllegalArgumentException("Negative position not allowed");
+        }
+        if (length < 0) {
+            throw new IllegalArgumentException("Negative length not allowed");
+        }
+        long sourceDataSize = data.getDataSize();
+        if (startPosition + length > sourceDataSize) {
+            throw new OutOfBoundsException("Target area is outside of available data");
         }
 
+        this.data = data;
+        this.startPosition = startPosition;
+        this.position = startPosition;
+        this.length = length;
+    }
+    
+    @Override
+    public void write(int value) throws IOException {
+        if (position >= startPosition + length) {
+            throw new IOException("Position is outside of available range");
+        }
         data.setByte(position++, (byte) value);
     }
 
@@ -58,20 +75,18 @@ public class ByteArrayPagedDataOutputStream extends OutputStream implements Seek
             return;
         }
 
-        long dataSize = data.getDataSize();
-        if (position + len > dataSize) {
-            long expand = position + len - dataSize;
-            data.insertUninitialized(position, expand);
+        if (position + len > startPosition + length) {
+            throw new OutOfBoundsException("Target area is outside of available data");
         }
 
-        int length = len;
+        int remaining = len;
         int offset = off;
-        while (length > 0) {
+        while (remaining > 0) {
             byte[] page = data.getPage((int) (position / data.getPageSize())).getData();
             int srcPos = (int) (position % data.getPageSize());
             int copyLength = page.length - srcPos;
-            if (copyLength > length) {
-                copyLength = length;
+            if (copyLength > remaining) {
+                copyLength = remaining;
             }
 
             if (copyLength == 0) {
@@ -79,7 +94,7 @@ public class ByteArrayPagedDataOutputStream extends OutputStream implements Seek
             }
 
             System.arraycopy(input, offset, page, srcPos, copyLength);
-            length -= copyLength;
+            remaining -= copyLength;
             position += copyLength;
             offset += copyLength;
         }
@@ -87,25 +102,21 @@ public class ByteArrayPagedDataOutputStream extends OutputStream implements Seek
 
     @Override
     public void seek(long position) throws IOException {
-        if (position < 0) {
+        if (position < 0 || position > length) {
             throw new OutOfBoundsException("Position is outside of available range");
         }
 
-        if (position > data.getDataSize()) {
-            data.setDataSize(position);
-        }
-
-        this.position = position;
+        this.position = startPosition + position;
     }
 
     @Override
     public long getStreamSize() {
-        return data.getDataSize();
+        return length;
     }
 
     @Override
     public long getProcessedSize() {
-        return position;
+        return position - startPosition;
     }
 
     @Override
@@ -115,7 +126,7 @@ public class ByteArrayPagedDataOutputStream extends OutputStream implements Seek
 
     @Override
     public long finish() throws IOException {
-        position = data.getDataSize();
-        return position;
+        position = startPosition + length;
+        return length;
     }
 }
