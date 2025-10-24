@@ -28,7 +28,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinaryDataOutputStream extends OutputStream implements SeekableStream, FinishableStream {
+public class BinaryDataOutputStream extends OutputStream implements SeekableStream {
 
     @Nonnull
     protected final EditableBinaryData data;
@@ -80,22 +80,15 @@ public class BinaryDataOutputStream extends OutputStream implements SeekableStre
 
     @Override
     public long getStreamSize() {
-        return data.getDataSize();
+        return -1;
     }
 
-    @Override
     public long getProcessedSize() {
         return position;
     }
 
     @Override
     public void close() throws IOException {
-        finish();
-    }
-
-    @Override
-    public long finish() throws IOException {
         position = data.getDataSize();
-        return position;
     }
 }

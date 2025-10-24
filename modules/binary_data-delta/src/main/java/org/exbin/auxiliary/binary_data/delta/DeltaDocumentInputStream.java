@@ -19,16 +19,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.auxiliary.binary_data.FinishableStream;
 import org.exbin.auxiliary.binary_data.SeekableStream;
 
 /**
  * Delta document input stream.
+ * <p>
+ * Can process expanding document.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class DeltaDocumentInputStream extends InputStream implements SeekableStream, FinishableStream {
+public class DeltaDocumentInputStream extends InputStream implements SeekableStream {
 
     @Nonnull
     private final DeltaDocumentWindow data;
@@ -74,7 +75,7 @@ public class DeltaDocumentInputStream extends InputStream implements SeekableStr
 
     @Override
     public void close() throws IOException {
-        finish();
+        position = data.getDataSize();
     }
 
     @Override
@@ -87,20 +88,13 @@ public class DeltaDocumentInputStream extends InputStream implements SeekableStr
         this.position = position;
     }
 
-    @Override
-    public long finish() throws IOException {
-        position = data.getDataSize();
-        return position;
-    }
-
-    @Override
     public long getProcessedSize() {
         return position;
     }
 
     @Override
     public long getStreamSize() {
-        return data.getDataSize();
+        return -1;
     }
 
     @Override

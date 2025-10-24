@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.auxiliary.binary_data.FinishableStream;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 import org.exbin.auxiliary.binary_data.SeekableStream;
 
@@ -31,7 +30,7 @@ import org.exbin.auxiliary.binary_data.SeekableStream;
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ByteArrayPagedDataOutputStream extends OutputStream implements SeekableStream, FinishableStream {
+public class ByteArrayPagedDataOutputStream extends OutputStream implements SeekableStream {
 
     @Nonnull
     private final ByteArrayPagedData data;
@@ -100,22 +99,15 @@ public class ByteArrayPagedDataOutputStream extends OutputStream implements Seek
 
     @Override
     public long getStreamSize() {
-        return data.getDataSize();
+        return -1;
     }
 
-    @Override
     public long getProcessedSize() {
         return position;
     }
 
     @Override
     public void close() throws IOException {
-        finish();
-    }
-
-    @Override
-    public long finish() throws IOException {
         position = data.getDataSize();
-        return position;
     }
 }

@@ -22,11 +22,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Input stream for binary data.
+ * <p>
+ * Can process expanding data source.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class BinaryDataInputStream extends InputStream implements SeekableStream, FinishableStream {
+public class BinaryDataInputStream extends InputStream implements SeekableStream {
 
     @Nonnull
     protected final BinaryData data;
@@ -71,7 +73,7 @@ public class BinaryDataInputStream extends InputStream implements SeekableStream
 
     @Override
     public void close() throws IOException {
-        finish();
+        position = data.getDataSize();
     }
 
     @Override
@@ -84,20 +86,13 @@ public class BinaryDataInputStream extends InputStream implements SeekableStream
         this.position = position;
     }
 
-    @Override
-    public long finish() throws IOException {
-        position = data.getDataSize();
-        return position;
-    }
-
-    @Override
     public long getProcessedSize() {
         return position;
     }
 
     @Override
     public long getStreamSize() {
-        return data.getDataSize();
+        return -1;
     }
 
     @Override

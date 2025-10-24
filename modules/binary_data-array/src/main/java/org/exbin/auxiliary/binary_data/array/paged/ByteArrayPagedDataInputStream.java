@@ -19,16 +19,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import org.exbin.auxiliary.binary_data.FinishableStream;
 import org.exbin.auxiliary.binary_data.SeekableStream;
 
 /**
  * Input stream for paged data.
+ * <p>
+ * Can process expanding data source.
  *
  * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
-public class ByteArrayPagedDataInputStream extends InputStream implements SeekableStream, FinishableStream {
+public class ByteArrayPagedDataInputStream extends InputStream implements SeekableStream {
 
     @Nonnull
     private final ByteArrayPagedData data;
@@ -84,7 +85,7 @@ public class ByteArrayPagedDataInputStream extends InputStream implements Seekab
 
     @Override
     public void close() throws IOException {
-        finish();
+        position = data.getDataSize();
     }
 
     @Override
@@ -97,20 +98,13 @@ public class ByteArrayPagedDataInputStream extends InputStream implements Seekab
         this.position = position;
     }
 
-    @Override
-    public long finish() throws IOException {
-        position = data.getDataSize();
-        return position;
-    }
-
-    @Override
     public long getProcessedSize() {
         return position;
     }
 
     @Override
     public long getStreamSize() {
-        return data.getDataSize();
+        return -1;
     }
 
     @Override
