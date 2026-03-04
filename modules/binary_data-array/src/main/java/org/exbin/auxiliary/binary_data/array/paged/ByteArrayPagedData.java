@@ -457,11 +457,12 @@ public class ByteArrayPagedData implements PagedData {
                     int offset = (int) (targetPosition % pageSize);
 
                     byte[] sourcePage = ((ByteArrayPagedData) replacingData).getPageData((int) (startFrom / ((ByteArrayPagedData) replacingData).getPageSize()));
+                    int sourcePageSize = sourcePage.length;
                     int sourceOffset = (int) (startFrom % ((ByteArrayPagedData) replacingData).getPageSize());
 
                     int copySize = pageSize - offset;
-                    if (copySize > ((ByteArrayPagedData) replacingData).getPageSize() - sourceOffset) {
-                        copySize = ((ByteArrayPagedData) replacingData).getPageSize() - sourceOffset;
+                    if (copySize > sourcePageSize - sourceOffset) {
+                        copySize = sourcePageSize - sourceOffset;
                     }
                     if (copySize > length) {
                         copySize = (int) length;
