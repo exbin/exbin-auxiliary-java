@@ -24,8 +24,6 @@ import org.exbin.auxiliary.binary_data.delta.SegmentsRepository;
 
 /**
  * TODO: Repository for data paging with support for swapping.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SwapDataRepository {

@@ -22,8 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Output stream for binary data.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BinaryDataRengeOutputStream extends OutputStream implements SeekableStream, FinishableStream {

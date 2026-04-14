@@ -24,8 +24,6 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * Empty read-only binary data.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 @Immutable

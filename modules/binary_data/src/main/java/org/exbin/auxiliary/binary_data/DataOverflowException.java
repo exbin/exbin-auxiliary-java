@@ -20,8 +20,6 @@ import javax.annotation.Nullable;
 /**
  * Exception for overflow situation where more data is inserted/added than it is
  * allowed to handle.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class DataOverflowException extends RuntimeException {
 

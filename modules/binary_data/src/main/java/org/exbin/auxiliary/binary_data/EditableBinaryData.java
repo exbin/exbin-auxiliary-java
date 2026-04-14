@@ -25,8 +25,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Interface for editable binary data - sequence of bytes.
  * <p>
  * Provides methods to read/write whole or part of the data to array or stream.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface EditableBinaryData extends BinaryData {

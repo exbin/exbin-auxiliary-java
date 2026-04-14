@@ -23,8 +23,6 @@ import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
  * Zone types for editation of the binary data.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @Immutable
 public class ZoneData extends DataRange {

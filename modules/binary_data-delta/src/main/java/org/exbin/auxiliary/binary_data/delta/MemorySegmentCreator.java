@@ -21,8 +21,6 @@ import org.exbin.auxiliary.binary_data.EditableBinaryData;
 
 /**
  * Memory segment creator.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface MemorySegmentCreator {

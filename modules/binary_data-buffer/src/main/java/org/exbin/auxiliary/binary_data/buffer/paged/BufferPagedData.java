@@ -39,8 +39,6 @@ import org.exbin.auxiliary.binary_data.paged.DataPageCreator;
 
 /**
  * Paged data stored using byte buffer.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BufferPagedData implements PagedData {

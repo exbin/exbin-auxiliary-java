@@ -17,8 +17,6 @@ package org.exbin.auxiliary.zone_data;
 
 /**
  * Interface for binary data zone type.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ZoneType {
 }

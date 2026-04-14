@@ -24,8 +24,6 @@ import javax.annotation.Nullable;
  * <p>
  * Exception can optionally provide information about range of data which are
  * not present, but it doesn't have to be full segment.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class DataNotPresentException extends RuntimeException {
 

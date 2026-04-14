@@ -21,8 +21,6 @@ import javax.annotation.Nullable;
 
 /**
  * Interface for binary data zone state.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface ZoneState {
 

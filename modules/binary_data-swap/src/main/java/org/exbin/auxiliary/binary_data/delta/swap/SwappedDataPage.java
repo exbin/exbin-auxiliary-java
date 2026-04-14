@@ -25,8 +25,6 @@ import org.exbin.auxiliary.binary_data.EditableBinaryData;
 
 /**
  * Data page swapped to swap file.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SwappedDataPage implements EditableBinaryData {

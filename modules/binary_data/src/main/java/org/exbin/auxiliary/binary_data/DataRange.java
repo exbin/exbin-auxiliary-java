@@ -21,8 +21,6 @@ import javax.annotation.concurrent.Immutable;
  * Simple representation of data range.
  * <p>
  * Range includes both start and end positions.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @Immutable
 public class DataRange {

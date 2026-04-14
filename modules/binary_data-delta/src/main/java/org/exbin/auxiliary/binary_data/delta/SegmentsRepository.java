@@ -32,8 +32,6 @@ import org.exbin.auxiliary.binary_data.delta.list.DoublyLinkedItem;
 
 /**
  * Repository of delta segments.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SegmentsRepository {

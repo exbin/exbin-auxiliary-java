@@ -22,8 +22,6 @@ import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
  * Interface for binary data zone source.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface ZoneDataSource {

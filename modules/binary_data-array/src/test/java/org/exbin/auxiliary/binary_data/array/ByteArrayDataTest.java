@@ -25,8 +25,6 @@ import org.junit.Test;
 
 /**
  * Tests for ByteArrayData class.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class ByteArrayDataTest {
 

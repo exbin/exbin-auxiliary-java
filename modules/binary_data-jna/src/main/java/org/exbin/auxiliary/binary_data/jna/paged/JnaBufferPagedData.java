@@ -25,8 +25,6 @@ import org.exbin.auxiliary.binary_data.paged.DataPageCreator;
 
 /**
  * Paged data stored using JNA byte buffer.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class JnaBufferPagedData extends BufferPagedData {

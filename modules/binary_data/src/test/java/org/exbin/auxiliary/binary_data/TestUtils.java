@@ -26,8 +26,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Tests for ByteArrayData class.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TestUtils {

@@ -29,8 +29,6 @@ import javax.swing.WindowConstants;
 
 /**
  * Drop down button.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DropDownButton extends JButton {

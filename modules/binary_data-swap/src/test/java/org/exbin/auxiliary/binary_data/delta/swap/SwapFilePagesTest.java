@@ -25,8 +25,6 @@ import org.junit.Test;
 
 /**
  * Tests for swap file pages handling.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class SwapFilePagesTest {
 

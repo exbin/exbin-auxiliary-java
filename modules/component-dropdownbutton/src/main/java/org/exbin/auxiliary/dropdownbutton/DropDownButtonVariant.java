@@ -19,8 +19,6 @@ package org.exbin.auxiliary.dropdownbutton;
  * Drop down button variant.
  * <p>
  * TODO: There could be a way how to make single variant for both purposes
- *
- * @author ExBin Project (https://exbin.org)
  */
 public enum DropDownButtonVariant {
     /**

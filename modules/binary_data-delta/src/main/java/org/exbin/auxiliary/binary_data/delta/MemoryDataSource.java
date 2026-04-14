@@ -25,8 +25,6 @@ import org.exbin.auxiliary.binary_data.EditableBinaryData;
 
 /**
  * Data source for binary data stored in memory.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class MemoryDataSource implements EditableBinaryData {

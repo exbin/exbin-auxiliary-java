@@ -39,8 +39,6 @@ import org.exbin.auxiliary.binary_data.paged.DataPageCreator;
  * <p>
  * Data are stored using paging. Last page might be shorter than page size, but
  * not empty.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ByteArrayPagedData implements PagedData {

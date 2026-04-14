@@ -21,8 +21,6 @@ import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
  * Interface for data loaded event.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface DataLoadingObserver {

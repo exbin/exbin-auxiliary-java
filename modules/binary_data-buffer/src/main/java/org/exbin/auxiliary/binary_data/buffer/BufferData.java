@@ -32,8 +32,6 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
  * <p>
  * To allow parallel reading, read operations must be synchronized due to split
  * nature of the ByteBuffer position and depending operation.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BufferData implements BinaryData {

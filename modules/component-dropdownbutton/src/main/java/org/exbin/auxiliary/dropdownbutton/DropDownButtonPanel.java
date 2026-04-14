@@ -29,8 +29,6 @@ import javax.swing.plaf.basic.BasicArrowButton;
 
 /**
  * Drop down button panel.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DropDownButtonPanel extends javax.swing.JPanel {

@@ -17,8 +17,6 @@ package org.exbin.auxiliary.zone_data;
 
 /**
  * Zone types for difference.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public enum DiffZoneType implements ZoneType {
     /**

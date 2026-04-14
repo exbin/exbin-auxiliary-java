@@ -32,8 +32,6 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 
 /**
  * Implementation of editable binary data interface using byte buffer.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BufferEditableData extends BufferData implements EditableBinaryData {

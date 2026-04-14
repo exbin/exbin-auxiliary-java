@@ -29,8 +29,6 @@ import org.junit.Test;
 
 /**
  * Tests for PagedData class.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class ByteArrayPagedDataTest {
 

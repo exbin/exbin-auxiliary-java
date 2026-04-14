@@ -33,8 +33,6 @@ import org.exbin.auxiliary.binary_data.array.paged.ByteArrayPagedData;
 
 /**
  * Repository for swap file.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SwapFilePages {

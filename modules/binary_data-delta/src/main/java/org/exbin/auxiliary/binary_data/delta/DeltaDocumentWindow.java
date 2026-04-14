@@ -24,8 +24,6 @@ import org.exbin.auxiliary.binary_data.delta.list.DefaultDoublyLinkedList;
 
 /**
  * Access window for delta document.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DeltaDocumentWindow {

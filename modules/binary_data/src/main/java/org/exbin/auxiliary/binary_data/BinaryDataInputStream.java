@@ -24,8 +24,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Input stream for binary data.
  * <p>
  * Can process expanding data source.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class BinaryDataInputStream extends InputStream implements SeekableStream {

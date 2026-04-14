@@ -21,8 +21,6 @@ import javax.annotation.Nullable;
 
 /**
  * Paged data with support for customizable page creator.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface CustomizablePagedData extends PagedData {
 

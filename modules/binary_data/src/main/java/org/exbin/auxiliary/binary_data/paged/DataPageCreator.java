@@ -20,8 +20,6 @@ import org.exbin.auxiliary.binary_data.EditableBinaryData;
 
 /**
  * Data page creator.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface DataPageCreator {
 

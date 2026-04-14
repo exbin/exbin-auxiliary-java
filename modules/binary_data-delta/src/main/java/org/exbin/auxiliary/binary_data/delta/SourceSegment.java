@@ -21,8 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Data segment pointing to source data.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class SourceSegment extends DataSegment {

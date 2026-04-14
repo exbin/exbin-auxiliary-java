@@ -20,8 +20,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for item of doubly linked list.
- *
- * @author ExBin Project (https://exbin.org)
  * @param <T> instance class
  */
 @ParametersAreNonnullByDefault

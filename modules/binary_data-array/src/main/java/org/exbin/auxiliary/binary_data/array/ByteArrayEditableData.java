@@ -35,8 +35,6 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
  * <p>
  * This implementation is highly inefficient with resources and is not
  * recommended for frequently changed data as each change creates copy of data.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ByteArrayEditableData extends ByteArrayData implements EditableBinaryData {

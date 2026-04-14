@@ -26,8 +26,6 @@ import org.exbin.auxiliary.binary_data.DataRange;
  * <p>
  * Exception can optionally provide information about range of data which are
  * not loaded, but it doesn't have to be full segment.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DataNotLoadedException extends RuntimeException {

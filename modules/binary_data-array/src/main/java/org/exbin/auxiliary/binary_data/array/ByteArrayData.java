@@ -28,8 +28,6 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 
 /**
  * Implementation of binary data interface using byte array.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ByteArrayData implements BinaryData {

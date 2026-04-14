@@ -23,8 +23,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Interface for binary data with support for on demand retrieval.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface OnDemandBinaryData {

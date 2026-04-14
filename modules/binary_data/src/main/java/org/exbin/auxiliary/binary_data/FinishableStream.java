@@ -20,8 +20,6 @@ import java.io.IOException;
 /**
  * Interface for finish-able stream - allows to skip/process data to identify
  * size of remaining data.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface FinishableStream {
 

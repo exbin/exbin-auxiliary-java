@@ -26,8 +26,6 @@ import org.exbin.auxiliary.binary_data.SeekableStream;
  * Delta document output stream.
  * <p>
  * Data are expanded as needed.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DeltaDocumentOutputStream extends OutputStream implements SeekableStream {

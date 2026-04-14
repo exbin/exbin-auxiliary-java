@@ -22,8 +22,6 @@ import org.junit.Assert;
 
 /**
  * Tests utilities.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class TestUtils {

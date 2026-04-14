@@ -22,8 +22,6 @@ import org.exbin.auxiliary.binary_data.delta.list.DoublyLinkedItem;
 
 /**
  * Abstract data segment of delta data source.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public abstract class DataSegment implements DoublyLinkedItem<DataSegment> {

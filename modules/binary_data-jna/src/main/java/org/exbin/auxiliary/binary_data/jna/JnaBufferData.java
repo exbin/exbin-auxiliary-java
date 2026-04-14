@@ -24,8 +24,6 @@ import org.exbin.auxiliary.binary_data.buffer.BufferData;
 
 /**
  * Implementation of binary data interface using JNA byte buffer.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class JnaBufferData extends BufferData {

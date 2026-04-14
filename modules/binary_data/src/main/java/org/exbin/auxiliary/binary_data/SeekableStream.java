@@ -19,8 +19,6 @@ import java.io.IOException;
 
 /**
  * Interface for seekable stream - allows to change current position.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface SeekableStream {
 

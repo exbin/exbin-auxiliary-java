@@ -25,8 +25,6 @@ import org.exbin.auxiliary.binary_data.DataRange;
  * <p>
  * Exception can optionally provide information about range of data which are
  * not present, but it doesn't have to be full segment.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class ZoneNotPresentException extends RuntimeException {
 

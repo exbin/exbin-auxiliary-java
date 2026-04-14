@@ -25,8 +25,6 @@ import org.junit.Test;
 
 /**
  * Tests for JnaBufferData class.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class JnaBufferDataTest {
 

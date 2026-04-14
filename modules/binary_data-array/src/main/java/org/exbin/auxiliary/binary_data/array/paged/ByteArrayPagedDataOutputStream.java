@@ -26,8 +26,6 @@ import org.exbin.auxiliary.binary_data.SeekableStream;
  * Output stream for paged data.
  * <p>
  * Data are expanded as needed.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class ByteArrayPagedDataOutputStream extends OutputStream implements SeekableStream {

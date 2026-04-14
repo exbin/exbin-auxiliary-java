@@ -25,8 +25,6 @@ import org.exbin.auxiliary.binary_data.SeekableStream;
 
 /**
  * Delta document input stream.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DeltaDocumentRangeInputStream extends InputStream implements SeekableStream, FinishableStream {

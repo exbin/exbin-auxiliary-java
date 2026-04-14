@@ -22,8 +22,6 @@ import org.junit.Test;
 
 /**
  * Tests for swap paging repository.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class SwapDataRepositoryTest {
 

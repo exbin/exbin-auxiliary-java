@@ -24,8 +24,6 @@ import org.exbin.auxiliary.binary_data.buffer.BufferEditableData;
 
 /**
  * Implementation of editable binary data interface using JNA byte buffer.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class JnaBufferEditableData extends BufferEditableData {

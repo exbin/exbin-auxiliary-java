@@ -27,8 +27,6 @@ import org.exbin.auxiliary.binary_data.delta.DataSource;
 
 /**
  * Data source for access to file resource locking it for exclusive access.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class FileDataSource implements DataSource {

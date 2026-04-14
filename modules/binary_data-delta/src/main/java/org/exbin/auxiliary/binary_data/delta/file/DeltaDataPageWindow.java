@@ -23,8 +23,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Access window for delta data.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DeltaDataPageWindow {

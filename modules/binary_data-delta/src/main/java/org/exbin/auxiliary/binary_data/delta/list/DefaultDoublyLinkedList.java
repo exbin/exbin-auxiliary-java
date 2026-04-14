@@ -28,8 +28,6 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 
 /**
  * Default implementation of doubly linked list of items.
- *
- * @author ExBin Project (https://exbin.org)
  * @param <T> doubly linked list item
  */
 @ParametersAreNonnullByDefault

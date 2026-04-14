@@ -30,8 +30,6 @@ import org.junit.Test;
 
 /**
  * Tests for delta document.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public class DeltaDocumentTest {

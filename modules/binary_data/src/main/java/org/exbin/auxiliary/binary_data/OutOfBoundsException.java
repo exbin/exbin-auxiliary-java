@@ -19,8 +19,6 @@ import javax.annotation.Nullable;
 
 /**
  * Exception for out of bounds issues with binary data manipulation operations.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public class OutOfBoundsException extends RuntimeException {
 

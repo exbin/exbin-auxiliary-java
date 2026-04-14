@@ -20,8 +20,6 @@ import javax.swing.event.ChangeListener;
 
 /**
  * Interface for data loaded event.
- *
- * @author ExBin Project (https://exbin.org)
  */
 @ParametersAreNonnullByDefault
 public interface DataLoadingProgressObserver extends DataLoadingObserver {

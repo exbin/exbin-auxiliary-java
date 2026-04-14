@@ -21,8 +21,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Doubly linked list of items.
- *
- * @author ExBin Project (https://exbin.org)
  * @param <T> doubly linked list item
  */
 @ParametersAreNonnullByDefault

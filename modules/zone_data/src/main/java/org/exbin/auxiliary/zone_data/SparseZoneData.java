@@ -20,8 +20,6 @@ package org.exbin.auxiliary.zone_data;
  * <p>
  * Expected use is to either check presence per position or zones or to read
  * data and handle presence only when {@link ZoneNotPresentException} is thrown.
- *
- * @author ExBin Project (https://exbin.org)
  */
 public interface SparseZoneData {
 
