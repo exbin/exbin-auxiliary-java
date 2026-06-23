@@ -20,14 +20,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Tests for ByteArrayData class.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class TestUtils {
 
     public final static String SAMPLE_FILES_PATH = "/org/exbin/auxiliary/binary_data/resources/";
@@ -35,11 +34,8 @@ public class TestUtils {
     public final static String SAMPLE_10BYTES = SAMPLE_FILES_PATH + "10bytes.dat";
     public final static String SAMPLE_ALLBYTES = SAMPLE_FILES_PATH + "allbytes.dat";
 
-    @Nonnull
     private final byte[] sampleDataA;
-    @Nonnull
     private final byte[] sampleDataB;
-    @Nonnull
     private final byte[] sampleDataC;
 
     public TestUtils() {
@@ -48,17 +44,14 @@ public class TestUtils {
         sampleDataC = TestUtils.this.getSampleData(SAMPLE_ALLBYTES);
     }
 
-    @Nonnull
     public byte[] getSampleDataA() {
         return sampleDataA;
     }
 
-    @Nonnull
     public byte[] getSampleDataB() {
         return sampleDataB;
     }
 
-    @Nonnull
     public byte[] getSampleDataC() {
         return sampleDataC;
     }

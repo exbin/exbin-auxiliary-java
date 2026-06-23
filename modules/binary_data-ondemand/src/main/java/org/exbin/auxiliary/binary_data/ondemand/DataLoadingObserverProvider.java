@@ -15,13 +15,12 @@
  */
 package org.exbin.auxiliary.binary_data.ondemand;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Interface to provide data loading observer.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public interface DataLoadingObserverProvider {
 
     /**
@@ -29,6 +28,5 @@ public interface DataLoadingObserverProvider {
      *
      * @return data loading observer
      */
-    @Nonnull
     DataLoadingObserver getDataLoadedObserver();
 }

@@ -15,14 +15,14 @@
  */
 package org.exbin.auxiliary.binary_data.ondemand;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
  * Interface for data loaded event.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public interface DataLoadingObserver {
 
     /**

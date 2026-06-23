@@ -16,8 +16,7 @@
 package org.exbin.auxiliary.zone_data;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
@@ -64,7 +63,6 @@ public class ZoneNotPresentException extends RuntimeException {
         dataRange = null;
     }
 
-    @Nonnull
     public Optional<DataRange> getDataRange() {
         return Optional.ofNullable(dataRange);
     }

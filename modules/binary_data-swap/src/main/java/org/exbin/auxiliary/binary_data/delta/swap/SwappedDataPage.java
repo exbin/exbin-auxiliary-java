@@ -18,15 +18,14 @@ package org.exbin.auxiliary.binary_data.delta.swap;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.EditableBinaryData;
 
 /**
  * Data page swapped to swap file.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class SwappedDataPage implements EditableBinaryData {
 
     private final SwapDataRepository repository;
@@ -48,7 +47,6 @@ public class SwappedDataPage implements EditableBinaryData {
         this.pageIndex = pageIndex;
     }
 /*
-    @Nonnull
     @Override
     public byte[] getData() {
         return repository.getSwapFilePages().getPagePart(pageIndex, length);
@@ -80,13 +78,11 @@ public class SwappedDataPage implements EditableBinaryData {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Nonnull
     @Override
     public BinaryData copy() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Nonnull
     @Override
     public BinaryData copy(long startFrom, long length) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -102,7 +98,6 @@ public class SwappedDataPage implements EditableBinaryData {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Nonnull
     @Override
     public InputStream getDataInputStream() {
         throw new UnsupportedOperationException("Not supported yet.");

@@ -16,8 +16,7 @@
 package org.exbin.auxiliary.zone_data;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.annotation.concurrent.Immutable;
 import org.exbin.auxiliary.binary_data.DataRange;
 
@@ -38,7 +37,6 @@ public class ZoneData extends DataRange {
         this.zoneType = zoneType;
     }
 
-    @Nonnull
     public Optional<ZoneType> getZoneType() {
         return Optional.ofNullable(zoneType);
     }

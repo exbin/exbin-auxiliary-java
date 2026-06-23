@@ -18,7 +18,6 @@ package org.exbin.auxiliary.binary_data.jna.paged;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.annotation.Nonnull;
 import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.jna.JnaBufferData;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
@@ -32,7 +31,6 @@ import org.junit.Test;
  */
 public class JnaBufferPagedDataTest {
 
-    @Nonnull
     private final TestUtils testUtils = new TestUtils();
 
     public JnaBufferPagedDataTest() {

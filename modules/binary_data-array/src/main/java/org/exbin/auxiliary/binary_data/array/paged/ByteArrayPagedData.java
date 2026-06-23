@@ -23,9 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.array.ByteArrayData;
 import org.exbin.auxiliary.binary_data.DataOverflowException;
@@ -40,14 +39,13 @@ import org.exbin.auxiliary.binary_data.paged.DataPageCreator;
  * Data are stored using paging. Last page might be shorter than page size, but
  * not empty.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class ByteArrayPagedData implements PagedData {
 
     public static final int DEFAULT_PAGE_SIZE = 4096;
     public static final long MAX_DATA_SIZE = Long.MAX_VALUE;
 
     private int pageSize = DEFAULT_PAGE_SIZE;
-    @Nonnull
     private final List<ByteArrayData> data = new ArrayList<>();
 
     @Nullable
@@ -318,7 +316,6 @@ public class ByteArrayPagedData implements PagedData {
         }
     }
 
-    @Nonnull
     @Override
     public ByteArrayPagedData copy() {
         ByteArrayPagedData targetData = new ByteArrayPagedData();
@@ -326,7 +323,6 @@ public class ByteArrayPagedData implements PagedData {
         return targetData;
     }
 
-    @Nonnull
     @Override
     public ByteArrayPagedData copy(long startFrom, long length) {
         ByteArrayPagedData targetData = new ByteArrayPagedData();
@@ -405,7 +401,6 @@ public class ByteArrayPagedData implements PagedData {
      * @param pageIndex page index
      * @return data page
      */
-    @Nonnull
     @Override
     public ByteArrayData getPage(int pageIndex) {
         try {
@@ -582,19 +577,16 @@ public class ByteArrayPagedData implements PagedData {
         }
     }
 
-    @Nonnull
     @Override
     public OutputStream getDataOutputStream() {
         return new ByteArrayPagedDataOutputStream(this);
     }
 
-    @Nonnull
     @Override
     public InputStream getDataInputStream() {
         return new ByteArrayPagedDataInputStream(this);
     }
 
-    @Nonnull
     private ByteArrayData createNewPage(byte[] pageData) {
         if (dataPageCreator != null) {
             EditableBinaryData page = dataPageCreator.createPage(pageData.length);

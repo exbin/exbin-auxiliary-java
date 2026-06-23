@@ -16,14 +16,13 @@
 package org.exbin.auxiliary.binary_data.ondemand;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Exception for data reading when data are not available.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class DataRequestedException extends RuntimeException {
 
     private final DataLoadingObserverProvider dataLoadingObserverProvider;
@@ -61,7 +60,6 @@ public class DataRequestedException extends RuntimeException {
         dataLoadingObserverProvider = null;
     }
 
-    @Nonnull
     public Optional<DataLoadingObserverProvider> getDataLoadingObserverProvider() {
         return Optional.ofNullable(dataLoadingObserverProvider);
     }

@@ -16,14 +16,13 @@
 package org.exbin.auxiliary.zone_data;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
  * Interface for binary data zone source.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public interface ZoneDataSource {
 
     /**
@@ -32,7 +31,6 @@ public interface ZoneDataSource {
      * @param zoneIndex zone index
      * @return zone data
      */
-    @Nonnull
     ZoneData getZone(long zoneIndex);
 
     /**
@@ -56,7 +54,6 @@ public interface ZoneDataSource {
      * @param dataPosition data position
      * @return zone type
      */
-    @Nonnull
     Optional<ZoneType> findZoneType(long dataPosition);
 
     /**
@@ -65,7 +62,6 @@ public interface ZoneDataSource {
      * @param dataPosition data position
      * @return zone
      */
-    @Nonnull
     ZoneType findZone(long dataPosition);
 
     /**
@@ -74,7 +70,6 @@ public interface ZoneDataSource {
      * @param dataPosition data position
      * @return data range
      */
-    @Nonnull
     DataRange findZoneRange(long dataPosition);
 
     /**

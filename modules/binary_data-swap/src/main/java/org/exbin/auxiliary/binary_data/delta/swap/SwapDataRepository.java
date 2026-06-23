@@ -15,8 +15,7 @@
  */
 package org.exbin.auxiliary.binary_data.delta.swap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.array.ByteArrayEditableData;
 import org.exbin.auxiliary.binary_data.EditableBinaryData;
 import org.exbin.auxiliary.binary_data.delta.MemorySegmentCreator;
@@ -25,7 +24,7 @@ import org.exbin.auxiliary.binary_data.delta.SegmentsRepository;
 /**
  * TODO: Repository for data paging with support for swapping.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class SwapDataRepository {
 
     /**
@@ -42,17 +41,14 @@ public class SwapDataRepository {
         segmentsRepository = new SegmentsRepository(memorySegmentCreator);
     }
 
-    @Nonnull
     public MemorySegmentCreator getMemorySegmentCreator() {
         return memorySegmentCreator;
     }
 
-    @Nonnull
     public SwapFilePages getSwapFilePages() {
         return swapFilePages;
     }
 
-    @Nonnull
     public SegmentsRepository getSegmentsRepository() {
         return segmentsRepository;
     }
@@ -66,7 +62,7 @@ public class SwapDataRepository {
         // TODO
     }
 
-    @ParametersAreNonnullByDefault
+    @NullMarked
     private class SwapDataSegmentCreator implements MemorySegmentCreator {
 
         @Override

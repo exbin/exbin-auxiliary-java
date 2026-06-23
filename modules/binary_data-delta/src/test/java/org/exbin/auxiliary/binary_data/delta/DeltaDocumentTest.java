@@ -19,8 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.array.paged.ByteArrayPagedData;
 import org.exbin.auxiliary.binary_data.delta.file.FileDataSource;
@@ -31,7 +30,7 @@ import org.junit.Test;
 /**
  * Tests for delta document.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class DeltaDocumentTest {
 
     public static final String SAMPLE_FILES_PATH = "/org/exbin/auxiliary/binary_data/delta/resources/test/";
@@ -122,7 +121,6 @@ public class DeltaDocumentTest {
         Assert.assertEquals(0, document.getSegments().size());
     }
 
-    @Nonnull
     public static DeltaDocument openDeltaDocument() {
         SegmentsRepository segmentsRepository = new SegmentsRepository(() -> new ByteArrayPagedData());
         try {

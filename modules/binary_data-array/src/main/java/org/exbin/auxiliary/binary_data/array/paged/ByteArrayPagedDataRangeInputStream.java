@@ -17,8 +17,7 @@ package org.exbin.auxiliary.binary_data.array.paged;
 
 import java.io.IOException;
 import java.io.InputStream;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.FinishableStream;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 import org.exbin.auxiliary.binary_data.SeekableStream;
@@ -26,10 +25,9 @@ import org.exbin.auxiliary.binary_data.SeekableStream;
 /**
  * Input stream for paged data.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class ByteArrayPagedDataRangeInputStream extends InputStream implements SeekableStream, FinishableStream {
 
-    @Nonnull
     private final ByteArrayPagedData data;
     protected final long startPosition;
     protected final long length;

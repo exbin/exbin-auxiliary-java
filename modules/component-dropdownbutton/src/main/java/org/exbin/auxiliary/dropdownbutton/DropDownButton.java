@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -30,7 +30,7 @@ import javax.swing.WindowConstants;
 /**
  * Drop down button.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class DropDownButton extends JButton {
 
     private final DropDownButtonPanel buttonPanel;

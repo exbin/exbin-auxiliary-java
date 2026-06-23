@@ -19,9 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.BinaryDataInputStream;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
@@ -29,10 +28,9 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 /**
  * Implementation of binary data interface using byte array.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class ByteArrayData implements BinaryData {
 
-    @Nonnull
     protected byte[] data;
 
     public ByteArrayData() {
@@ -53,7 +51,6 @@ public class ByteArrayData implements BinaryData {
      *
      * @return byte array
      */
-    @Nonnull
     public byte[] getData() {
         return data;
     }
@@ -77,14 +74,12 @@ public class ByteArrayData implements BinaryData {
         }
     }
 
-    @Nonnull
     @Override
     public BinaryData copy() {
         byte[] copy = Arrays.copyOf(data, data.length);
         return new ByteArrayData(copy);
     }
 
-    @Nonnull
     @Override
     public BinaryData copy(long startFrom, long length) {
         if (length > Integer.MAX_VALUE) {
@@ -112,7 +107,6 @@ public class ByteArrayData implements BinaryData {
         outputStream.write(data);
     }
 
-    @Nonnull
     @Override
     public InputStream getDataInputStream() {
         return new BinaryDataInputStream(this);

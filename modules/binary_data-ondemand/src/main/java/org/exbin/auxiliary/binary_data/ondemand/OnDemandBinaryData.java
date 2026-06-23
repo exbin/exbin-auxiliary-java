@@ -18,13 +18,12 @@ package org.exbin.auxiliary.binary_data.ondemand;
 import org.exbin.auxiliary.binary_data.BinaryData;
 
 import java.util.concurrent.Future;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Interface for binary data with support for on demand retrieval.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public interface OnDemandBinaryData {
 
     /**
@@ -44,6 +43,5 @@ public interface OnDemandBinaryData {
      * @param length length of area
      * @return retrieval future object
      */
-    @Nonnull
     Future<BinaryData> retrieveData(long startFrom, long length);
 }

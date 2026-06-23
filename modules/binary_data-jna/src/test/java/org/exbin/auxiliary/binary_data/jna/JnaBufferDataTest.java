@@ -16,7 +16,6 @@
 package org.exbin.auxiliary.binary_data.jna;
 
 import java.io.ByteArrayOutputStream;
-import javax.annotation.Nonnull;
 import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 import org.exbin.auxiliary.binary_data.TestUtils;
@@ -28,7 +27,6 @@ import org.junit.Test;
  */
 public class JnaBufferDataTest {
 
-    @Nonnull
     private final TestUtils testUtils = new TestUtils();
 
     public JnaBufferDataTest() {

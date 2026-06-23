@@ -16,9 +16,8 @@
 package org.exbin.auxiliary.binary_data.ondemand;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
@@ -27,7 +26,7 @@ import org.exbin.auxiliary.binary_data.DataRange;
  * Exception can optionally provide information about range of data which are
  * not loaded, but it doesn't have to be full segment.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class DataNotLoadedException extends RuntimeException {
 
     private final DataRange dataRange;
@@ -65,7 +64,6 @@ public class DataNotLoadedException extends RuntimeException {
         dataRange = null;
     }
 
-    @Nonnull
     public Optional<DataRange> getDataRange() {
         return Optional.ofNullable(dataRange);
     }

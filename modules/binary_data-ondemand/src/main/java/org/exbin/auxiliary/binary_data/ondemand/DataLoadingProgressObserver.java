@@ -15,13 +15,13 @@
  */
 package org.exbin.auxiliary.binary_data.ondemand;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import javax.swing.event.ChangeListener;
 
 /**
  * Interface for data loaded event.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public interface DataLoadingProgressObserver extends DataLoadingObserver {
 
     /**

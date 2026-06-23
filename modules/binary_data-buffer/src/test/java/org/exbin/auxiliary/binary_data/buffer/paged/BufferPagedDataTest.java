@@ -18,7 +18,6 @@ package org.exbin.auxiliary.binary_data.buffer.paged;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.annotation.Nonnull;
 import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.buffer.BufferData;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
@@ -32,7 +31,6 @@ import org.junit.Test;
  */
 public class BufferPagedDataTest {
 
-    @Nonnull
     private final TestUtils testUtils = new TestUtils();
 
     public BufferPagedDataTest() {

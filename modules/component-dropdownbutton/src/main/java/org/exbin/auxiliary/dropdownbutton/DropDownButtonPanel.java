@@ -18,8 +18,7 @@ package org.exbin.auxiliary.dropdownbutton;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -30,7 +29,7 @@ import javax.swing.plaf.basic.BasicArrowButton;
 /**
  * Drop down button panel.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class DropDownButtonPanel extends javax.swing.JPanel {
 
     private javax.swing.JLabel actionLabel;
@@ -92,12 +91,10 @@ public class DropDownButtonPanel extends javax.swing.JPanel {
         );
     }
 
-    @Nonnull
     public JLabel getActionButton() {
         return actionLabel;
     }
 
-    @Nonnull
     public JButton getMenuButton() {
         return menuButton;
     }

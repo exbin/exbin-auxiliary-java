@@ -17,13 +17,13 @@ package org.exbin.auxiliary.binary_data.delta;
 
 import java.io.IOException;
 import java.io.InputStream;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import org.junit.Assert;
 
 /**
  * Tests utilities.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class TestUtils {
 
     private TestUtils() {

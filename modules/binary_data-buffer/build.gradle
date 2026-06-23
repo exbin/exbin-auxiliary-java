@@ -25,8 +25,8 @@ repositories {
 
 dependencies {
     implementation moduleDep('ExbinAuxiliaryJava', 'org.exbin.auxiliary', 'modules', 'binary_data')
-    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    compileOnly group: 'org.jspecify', name: 'jspecify', version: '1.0.0'
     testImplementation group : 'junit', name: 'junit', version: '4.13.2'
     testImplementation project(path: moduleDepPath('ExbinAuxiliaryJava', 'modules', 'binary_data'), configuration: 'tests')
-    testCompileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    testCompileOnly group: 'org.jspecify', name: 'jspecify', version: '1.0.0'
 }

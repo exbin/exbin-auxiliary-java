@@ -16,8 +16,7 @@
 package org.exbin.auxiliary.zone_data;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface for binary data zone state.
@@ -30,7 +29,6 @@ public interface ZoneState {
      * @param dataPosition data position
      * @return zone type
      */
-    @Nonnull
     Optional<ZoneType> getZoneType(long dataPosition);
 
     /**

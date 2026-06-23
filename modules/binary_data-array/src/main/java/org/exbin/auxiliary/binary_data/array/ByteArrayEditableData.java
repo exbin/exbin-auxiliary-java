@@ -21,9 +21,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.InvalidParameterException;
 import java.util.Arrays;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.BinaryData;
 import org.exbin.auxiliary.binary_data.BinaryDataOutputStream;
 import org.exbin.auxiliary.binary_data.DataOverflowException;
@@ -36,7 +35,7 @@ import org.exbin.auxiliary.binary_data.OutOfBoundsException;
  * This implementation is highly inefficient with resources and is not
  * recommended for frequently changed data as each change creates copy of data.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class ByteArrayEditableData extends ByteArrayData implements EditableBinaryData {
 
     public static final int BUFFER_SIZE = 1024;
@@ -306,14 +305,12 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
         }
     }
 
-    @Nonnull
     @Override
     public ByteArrayEditableData copy() {
         byte[] copy = Arrays.copyOf(data, data.length);
         return new ByteArrayEditableData(copy);
     }
 
-    @Nonnull
     @Override
     public ByteArrayEditableData copy(long startFrom, long length) {
         if (startFrom + length > data.length) {
@@ -344,7 +341,6 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
         }
     }
 
-    @Nonnull
     @Override
     public OutputStream getDataOutputStream() {
         return new BinaryDataOutputStream(this);

@@ -24,9 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.OutOfBoundsException;
 import org.exbin.auxiliary.binary_data.delta.file.FileDataSource;
 import org.exbin.auxiliary.binary_data.array.paged.ByteArrayPagedData;
@@ -34,7 +33,7 @@ import org.exbin.auxiliary.binary_data.array.paged.ByteArrayPagedData;
 /**
  * Repository for swap file.
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class SwapFilePages {
 
     private static final String DEFAULT_SWAPFILE_PREFIX = "swap";
@@ -143,14 +142,12 @@ public class SwapFilePages {
         }
     }
 
-    @Nonnull
     public byte[] getPage(long pageIndex) {
         byte[] page = new byte[pageSize];
         getPage(pageIndex, page);
         return page;
     }
 
-    @Nonnull
     public byte[] getPagePart(long pageIndex, int length) {
         byte[] page = new byte[length];
         getPage(pageIndex, page);
