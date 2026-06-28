@@ -25,7 +25,6 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
-import javax.swing.WindowConstants;
 
 /**
  * Drop down button.
@@ -174,22 +173,5 @@ public class DropDownButton extends JButton {
     protected void unsetRolloverBorder() {
         JButton menuButton = buttonPanel.getMenuButton();
         menuButton.setBorderPainted(false);
-    }
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            javax.swing.JFrame frame = new javax.swing.JFrame();
-            DropDownButton button = new DropDownButton();
-            button.setText("TEST");
-            frame.setContentPane(button);
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.pack();
-            frame.setVisible(true);
-        });
     }
 }

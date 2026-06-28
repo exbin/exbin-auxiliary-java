@@ -23,7 +23,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 /**
@@ -106,7 +105,6 @@ public class DropDownButtonPanel extends javax.swing.JPanel {
     }
 
     private void initComponents() {
-
         actionLabel = new javax.swing.JLabel();
         menuButton = new BasicArrowButton(SwingConstants.SOUTH);
 
@@ -120,22 +118,5 @@ public class DropDownButtonPanel extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setFocusable(false);
         setOpaque(false);
-    }
-
-    /**
-     * Test method for this panel.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            javax.swing.JFrame frame = new javax.swing.JFrame();
-            DropDownButtonPanel panel = new DropDownButtonPanel();
-            panel.getActionButton().setText("TEST");
-            frame.setContentPane(panel);
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.pack();
-            frame.setVisible(true);
-        });
     }
 }
