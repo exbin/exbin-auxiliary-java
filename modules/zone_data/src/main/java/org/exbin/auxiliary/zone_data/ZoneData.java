@@ -21,7 +21,7 @@ import javax.annotation.concurrent.Immutable;
 import org.exbin.auxiliary.binary_data.DataRange;
 
 /**
- * Zone types for editation of the binary data.
+ * Zone types for editing of the binary data.
  */
 @Immutable
 public class ZoneData extends DataRange {

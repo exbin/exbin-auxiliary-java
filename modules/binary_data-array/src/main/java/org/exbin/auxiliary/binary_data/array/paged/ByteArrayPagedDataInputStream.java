@@ -114,7 +114,7 @@ public class ByteArrayPagedDataInputStream extends InputStream implements Seekab
     }
 
     @Override
-    public synchronized void mark(int readlimit) {
+    public synchronized void mark(int readLimit) {
         mark = position;
     }
 

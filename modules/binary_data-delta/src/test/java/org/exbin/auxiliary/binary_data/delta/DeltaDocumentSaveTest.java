@@ -86,12 +86,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_BEGIN).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_BEGIN).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -113,12 +113,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_MIDDLE).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_MIDDLE).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -140,12 +140,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_END).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_END).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -169,12 +169,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_BEGIN).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_BEGIN).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -198,12 +198,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_MIDDLE).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_MIDDLE).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -227,12 +227,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_END).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_INSERTED_END).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -254,12 +254,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_BEGIN).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_BEGIN).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -281,12 +281,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_MIDDLE).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_MIDDLE).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -308,12 +308,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_END).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_END).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -337,12 +337,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_BEGIN).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_BEGIN).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -366,12 +366,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_MIDDLE).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_MIDDLE).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -395,12 +395,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_END).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_OVERWRITTEN_END).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -422,12 +422,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_REMOVED_BEGIN).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_REMOVED_BEGIN).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -449,12 +449,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_REMOVED_MIDDLE).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_REMOVED_MIDDLE).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -476,12 +476,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_REMOVED_END).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_REMOVED_END).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -507,12 +507,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_SWAP_HALF).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_SWAP_HALF).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -538,12 +538,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_SWAP_MIDDLE).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_SWAP_MIDDLE).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -575,12 +575,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_SWAP_DOUBLE).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_SWAP_DOUBLE).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -606,12 +606,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_SWAP_FIRST_QUARTER).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_SWAP_FIRST_QUARTER).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -637,12 +637,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_SWAP_LAST_QUARTER).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_SWAP_LAST_QUARTER).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -669,12 +669,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_REVERSE).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_REVERSE).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());
@@ -704,12 +704,12 @@ public class DeltaDocumentSaveTest {
         try {
             document.save();
 
-            InputStream comparisionFile;
+            InputStream comparisonFile;
             try (InputStream dataInputStream = document.getDataInputStream()) {
-                comparisionFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_REVERSE).getFile());
-                TestUtils.assertEqualsInputStream(comparisionFile, dataInputStream);
+                comparisonFile = new FileInputStream(DeltaDocumentSaveTest.class.getResource(SAMPLE_REVERSE).getFile());
+                TestUtils.assertEqualsInputStream(comparisonFile, dataInputStream);
             }
-            comparisionFile.close();
+            comparisonFile.close();
         } catch (IOException ex) {
             Logger.getLogger(DeltaDocumentSaveTest.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail("Exception: " + ex.getMessage());

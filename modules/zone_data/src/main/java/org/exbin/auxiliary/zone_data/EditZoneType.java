@@ -16,7 +16,7 @@
 package org.exbin.auxiliary.zone_data;
 
 /**
- * Zone types for editation.
+ * Zone types for editing.
  */
 public enum EditZoneType implements ZoneType {
     /**
