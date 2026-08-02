@@ -25,6 +25,7 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public class DataRequestedException extends RuntimeException {
 
+    @Nullable
     private final DataLoadingObserverProvider dataLoadingObserverProvider;
 
     public DataRequestedException() {

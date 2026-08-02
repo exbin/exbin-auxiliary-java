@@ -42,7 +42,7 @@ public class ByteArrayData implements BinaryData {
      *
      * @param data byte array
      */
-    public ByteArrayData(@Nullable byte[] data) {
+    public ByteArrayData(byte @Nullable [] data) {
         this.data = data != null ? data : new byte[0];
     }
 

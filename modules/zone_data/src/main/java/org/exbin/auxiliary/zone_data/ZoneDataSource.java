@@ -18,6 +18,7 @@ package org.exbin.auxiliary.zone_data;
 import java.util.Optional;
 import org.jspecify.annotations.NullMarked;
 import org.exbin.auxiliary.binary_data.DataRange;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface for binary data zone source.

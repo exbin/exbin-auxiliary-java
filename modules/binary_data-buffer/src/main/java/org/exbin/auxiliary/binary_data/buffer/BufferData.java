@@ -57,7 +57,7 @@ public class BufferData implements BinaryData {
      *
      * @param data byte array
      */
-    public BufferData(@Nullable byte[] data) {
+    public BufferData(byte @Nullable [] data) {
         if (data == null) {
             this.data = BufferData.this.allocateBuffer(0);
         } else {

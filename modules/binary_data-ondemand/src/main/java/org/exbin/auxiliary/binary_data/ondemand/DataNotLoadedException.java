@@ -29,6 +29,7 @@ import org.exbin.auxiliary.binary_data.DataRange;
 @NullMarked
 public class DataNotLoadedException extends RuntimeException {
 
+    @Nullable
     private final DataRange dataRange;
 
     public DataNotLoadedException() {

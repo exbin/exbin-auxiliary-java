@@ -56,7 +56,6 @@ public class TestUtils {
         return sampleDataC;
     }
 
-    @Nullable
     public InputStream getSampleDataStream(String sampleDataPath) {
         return TestUtils.class.getResourceAsStream(sampleDataPath);
     }

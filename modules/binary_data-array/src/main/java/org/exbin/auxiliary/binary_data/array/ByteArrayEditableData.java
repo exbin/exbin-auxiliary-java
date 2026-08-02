@@ -49,7 +49,7 @@ public class ByteArrayEditableData extends ByteArrayData implements EditableBina
         this(null);
     }
 
-    public ByteArrayEditableData(@Nullable byte[] data) {
+    public ByteArrayEditableData(byte @Nullable [] data) {
         super(data);
     }
 

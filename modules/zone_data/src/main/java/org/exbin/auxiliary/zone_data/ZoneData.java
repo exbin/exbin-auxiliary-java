@@ -26,6 +26,7 @@ import org.exbin.auxiliary.binary_data.DataRange;
 @Immutable
 public class ZoneData extends DataRange {
 
+    @Nullable
     private final ZoneType zoneType;
 
     public ZoneData(long startPosition, long endPosition) {
